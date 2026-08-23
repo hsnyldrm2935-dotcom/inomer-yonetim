@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>INOMER ENERJİ | Stok & Saha Yönetim Paneli</title>
+
+<!-- Supabase & Barkod Kütüphaneleri -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://unpkg.com/html5-qrcode"></script>
+
+<style>
+:root {
+  --primary: #e50914; /* INOMER Kurumsal Kırmızı */
+  --primary-dark: #b80710;
+  --bg-color: #f2f2f2; /* Logo Arka Planı ile Birebir Aynı Renk */
+  --card-bg: #ffffff;
+  --border-color: #e2e8f0;
+  --text-dark: #0f172a;
+}
+
+* { box-sizing: border-box; }
+body { 
+  margin: 0; 
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; 
+  color: var(--text-dark);
+  background-color: var(--bg-color);
+  min-height: 100vh;
+}
+
+/* HEADER & LOGO ALANI */
+header { 
+  background: transparent; 
+  padding: 30px 20px 10px 20px; 
+  position: relative;
+}
+
+header::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 5px;
+  background: linear-gradient(90deg, var(--primary) 0%, #ff4d4d 50%, var(--primary) 100%);
+}
+
+.header { 
+  max-width: 1200px; 
+  margin: auto; 
+  display: flex; 
+  justify-content: center; 
+  align-items: center; 
+  text-align: center;
+}
+
+.logo-area { 
+  display: flex; 
+  flex-direction: column; 
+  align-items: center; 
+  justify-content: center;
+  gap: 8px; 
+  width: 100%;
+}
+
+.logo-img { 
+  max-width: 380px; 
+  width: 100%; 
+  height: auto; 
+  max-height: 110px;
+  object-fit: contain; 
+  display: block;
+  margin: 0 auto;
+  mix-blend-mode: multiply;
+}
+
+.logo-fallback {
+  display: none;
+  font-size: 36px;
+  font-weight: 900;
+  color: var(--primary);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.logo-sub { 
+  color: #334155; 
+  font-size: 13px; 
+  font-weight: 800; 
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-top: 4px;
+}
+
+.container { max-width: 1200px; margin: 20px auto 40px auto; padding: 0 20px; }
+
+/* NAV TABS */
+.nav-tabs { display: flex; gap: 10px; margin-bottom: 25px; flex-wrap: wrap; justify-content: center; }
+.tab-btn { 
+  background: #ffffff; 
+  color: #475569; 
+  padding: 12px 20px; 
+  border-radius: 12px; 
+  font-weight: 700; 
+  cursor: pointer; 
+  border: 1px solid var(--border-color); 
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.03);
+  transition: all 0.25s ease; 
+}
+.tab-btn:hover { background: #ffe6e6; color: var(--primary); border-color: var(--primary); transform: translateY(-2px); }
+.tab-btn.active { 
+  background: var(--primary); 
+  color: white;
+  border-color: var(--primary);
+  box-shadow: 0 6px 15px rgba(229, 9, 20, 0.3); 
+}
+
+/* METRİKLER */
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 18px; margin-bottom: 25px; }
+.card { 
+  background: var(--card-bg); 
+  border-radius: 16px; 
+  padding: 22px; 
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05); 
+  border-top: 4px solid var(--primary);
+  position: relative;
+  overflow: hidden;
+}
+.card-title { color: #64748b; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
+.card-value { font-size: 28px; font-weight: 900; color: #0f172a; margin-top: 8px; }
+
+/* PANELLER */
+.panel { 
+  background: var(--card-bg); 
+  border-radius: 20px; 
+  padding: 30px; 
+  box-shadow: 0 15px 30px -10px rgba(0,0,0,0.06); 
+  border: 1px solid var(--border-color);
+  display: none; 
+  animation: fadeIn 0.3s ease-in-out;
+}
+.panel.active { display: block; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+.panel-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; border-bottom: 2px solid #f1f5f9; padding-bottom: 15px; }
+.panel h2 { margin: 0; font-size: 22px; color: #0f172a; font-weight: 800; }
+
+.topbar { display: flex; gap: 12px; margin-bottom: 20px; }
+.topbar input { flex: 1; padding: 14px 18px; border: 1.5px solid #cbd5e1; border-radius: 12px; font-size: 15px; outline: none; transition: 0.2s; background: #fafafa; }
+.topbar input:focus { border-color: var(--primary); background: #ffffff; box-shadow: 0 0 0 4px rgba(229, 9, 20, 0.12); }
+
+/* BUTONLAR */
+button { border: none; border-radius: 10px; padding: 11px 18px; cursor: pointer; font-weight: 700; transition: all 0.2s; }
+button:hover { transform: translateY(-1px); }
+.btn-main { background: #1e293b; color: white; }
+.btn-main:hover { background: #334155; }
+.btn-green { background: #10b981; color: white; }
+.btn-green:hover { background: #059669; }
+.btn-red { background: var(--primary); color: white; }
+.btn-red:hover { background: var(--primary-dark); }
+
+/* ÇÖP KUTUSU BUTONU */
+.btn-delete {
+  background: #fee2e2;
+  color: #ef4444;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: 0.2s;
+}
+.btn-delete:hover {
+  background: #ef4444;
+  color: white;
+}
+
+/* LİSTE ELEMANLARI */
+.list-item { display: flex; justify-content: space-between; align-items: center; padding: 18px 0; border-bottom: 1px solid #f1f5f9; gap: 15px; }
+.list-item:last-child { border-bottom: none; }
+.item-title { font-weight: 800; font-size: 16px; color: #0f172a; }
+.item-sub { color: #64748b; font-size: 13px; margin-top: 4px; }
+.saha-photo-preview { width: 90px; height: 90px; object-fit: cover; border-radius: 10px; border: 1px solid #cbd5e1; cursor: pointer; }
+
+/* MODALLAR */
+.modal { display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.65); backdrop-filter: blur(5px); z-index: 1000; padding: 15px; overflow-y: auto; }
+.modal-box { max-width: 520px; margin: 40px auto; background: white; border-radius: 20px; padding: 30px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); border-top: 5px solid var(--primary); }
+.modal-box h2 { margin-top: 0; font-size: 20px; color: #0f172a; border-bottom: 2px solid #f1f5f9; padding-bottom: 12px; font-weight: 800; }
+.input { width: 100%; padding: 12px 15px; margin: 8px 0; border: 1px solid #cbd5e1; border-radius: 10px; font-size: 14px; outline: none; }
+.input:focus { border-color: var(--primary); }
+.save { width: 100%; background: var(--primary); color: white; margin-top: 15px; padding: 14px; font-size: 15px; border-radius: 10px; }
+.save:hover { background: var(--primary-dark); }
+.cancel { width: 100%; background: #e2e8f0; color: #475569; margin-top: 8px; padding: 10px; border-radius: 10px; }
+
+/* BİLDİRİM VE BOŞ DURUM */
+.message { display: none; padding: 14px; border-radius: 12px; margin-bottom: 20px; font-weight: 700; text-align: center; }
+.success { display: block; background: #d1fae5; color: #065f46; border: 1px solid #a7f3d0; }
+.error { display: block; background: #ffe4e6; color: #9f1239; border: 1px solid #fecdd3; }
+.empty { color: #94a3b8; padding: 20px 0; text-align: center; font-size: 15px; font-weight: 600; }
+
+@media(max-width: 768px) {
+  .logo-img { max-width: 280px; }
+  .nav-tabs { flex-direction: column; }
+  .topbar { flex-direction: column; }
+  .list-item { flex-direction: column; align-items: flex-start; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header">
+    <div class="logo-area">
+      <img id="companyLogo" src="inomer-logo.jpg.jpg" alt="INOMER ENERJİ" class="logo-img" onerror="tryNextLogo(this)">
+      <div id="fallbackLogo" class="logo-fallback">INOMER ENERJİ</div>
+      <div class="logo-sub">Güneş Enerjisi, Trafo & Elektrik Mühendislik Hizmetleri</div>
+    </div>
+  </div>
+</header>
+
+<div class="container">
+  <div id="message" class="message"></div>
+
+  <!-- NAV TABS -->
+  <div class="nav-tabs">
+    <button class="tab-btn active" onclick="switchTab('stok-tab', event)">📦 Stok & Ürünler</button>
+    <button class="tab-btn" onclick="switchTab('arazi-ges-tab', event)">☀️ Arazi Tipi GES Projeleri</button>
+    <button class="tab-btn" onclick="switchTab('cati-trafo-tab', event)">🏭 Çatı GES & Trafo</button>
+    <button class="tab-btn" onclick="switchTab('saha-tab', event)">📝 Saha Fişleri & Fotoğraf</button>
+    <button class="tab-btn" onclick="switchTab('personel-tab', event)">👷 Personel & İzin/Avans</button>
+    <button class="tab-btn" onclick="switchTab('musteri-tab', event)">👥 Müşteriler & Cari</button>
+  </div>
+
+  <!-- METRİKLER -->
+  <div class="cards">
+    <div class="card"><div class="card-title">Toplam Ürün Çeşidi</div><div id="totalProducts" class="card-value">0</div></div>
+    <div class="card"><div class="card-title">Toplam Stok Adedi</div><div id="totalStock" class="card-value">0</div></div>
+    <div class="card"><div class="card-title">Kritik Stok Uyarısı</div><div id="criticalStock" class="card-value" style="color:var(--primary);">0</div></div>
+    <div class="card"><div class="card-title">Aktif Saha Personeli</div><div id="totalStaff" class="card-value">0</div></div>
+  </div>
+
+  <!-- 1. STOK & ÜRÜNLER -->
+  <div id="stok-tab" class="panel active">
+    <div class="panel-header">
+      <h2>📦 Ürün ve Depo Yönetimi</h2>
+      <div style="display:flex; gap:8px; flex-wrap:wrap;">
+        <button class="btn-green" onclick="openModal('stockInModal')">➕ Stok Giriş</button>
+        <button class="btn-red" onclick="openModal('stockOutModal')">➖ Stok Çıkış</button>
+        <button class="btn-main" onclick="openModal('productModal')">➕ Yeni Ürün</button>
+      </div>
+    </div>
+    <div class="topbar">
+      <input id="search" type="text" placeholder="Ürün adı, marka veya barkod arayın..." oninput="loadProducts()">
+    </div>
+    <div id="productList">Yükleniyor...</div>
+  </div>
+
+  <!-- 2. ARAZİ GES PROJELERİ -->
+  <div id="arazi-ges-tab" class="panel">
+    <div class="panel-header">
+      <h2>☀️ Arazi Tipi Güneş Enerjisi (GES) Projeleri</h2>
+      <button class="btn-main" onclick="openModal('araziModal')">➕ Yeni Arazi Projesi</button>
+    </div>
+    <div id="araziList"><div class="empty">Yükleniyor...</div></div>
+  </div>
+
+  <!-- 3. ÇATI GES & TRAFO -->
+  <div id="cati-trafo-tab" class="panel">
+    <div class="panel-header">
+      <h2>🏭 Çatı GES & Trafo Projeleri</h2>
+      <button class="btn-main" onclick="openModal('catiTrafoModal')">➕ Yeni Proje Ekle</button>
+    </div>
+    <div id="catiTrafoList"><div class="empty">Yükleniyor...</div></div>
+  </div>
+
+  <!-- 4. SAHA FİŞLERİ & FOTOĞRAF -->
+  <div id="saha-tab" class="panel">
+    <div class="panel-header">
+      <h2>📝 Günlük Saha İş Fişleri & Saha Görselleri</h2>
+      <button class="btn-main" onclick="openModal('sahaModal')">➕ Yeni Fiş & Fotoğraf Ekle</button>
+    </div>
+    <div id="sahaList">Yükleniyor...</div>
+  </div>
+
+  <!-- 5. PERSONEL -->
+  <div id="personel-tab" class="panel">
+    <div class="panel-header">
+      <h2>👷 Personel Yönetimi</h2>
+      <div style="display:flex; gap:8px;">
+        <button class="btn-main" onclick="openModal('personelModal')">➕ Personel Ekle</button>
+        <button class="btn-green" onclick="openModal('izinAvansModal')">📝 İzin / Avans Gir</button>
+      </div>
+    </div>
+    <div id="personelList">Yükleniyor...</div>
+  </div>
+
+  <!-- 6. MÜŞTERİLER -->
+  <div id="musteri-tab" class="panel">
+    <div class="panel-header">
+      <h2>👥 Müşteri & Cari Hesap Takibi</h2>
+      <button class="btn-main" onclick="openModal('musteriModal')">➕ Yeni Müşteri Ekle</button>
+    </div>
+    <div id="musteriList">Yükleniyor...</div>
+  </div>
+</div>
+
+<!-- MODALLAR -->
+<div id="sahaModal" class="modal">
+  <div class="modal-box">
+    <h2>📝 Günlük Saha Fişi & Fotoğraf Yükle</h2>
+    <input id="sfMusteri" class="input" placeholder="Müşteri / Saha Proje Adı">
+    <input id="sfPersonel" class="input" placeholder="Görevli Saha Personeli">
+    <textarea id="sfIslem" class="input" rows="3" placeholder="Yapılan Çalışma & Kullanılan Malzemeler"></textarea>
+    <input id="sfTutar" class="input" type="number" placeholder="Toplam Fiş Tutarı (TL)">
+    <label style="font-size:12px; font-weight:bold; color:#64748b; margin-top:8px; display:block;">Saha Görseli / Fotoğraf Seçin:</label>
+    <input id="sfPhoto" class="input" type="file" accept="image/*" onchange="previewSahaImage(event)">
+    <img id="sfPhotoPreview" style="display:none; width:100%; height:150px; object-fit:cover; border-radius:8px; margin-top:8px;">
+    <button class="save" onclick="saveSahaFisi()">Fişi ve Fotoğrafı Kaydet</button>
+    <button class="cancel" onclick="closeModal('sahaModal')">Kapat</button>
+  </div>
+</div>
+
+<div id="araziModal" class="modal">
+  <div class="modal-box">
+    <h2>☀️ Yeni Arazi GES Projesi</h2>
+    <input id="aProjeAdi" class="input" placeholder="Proje / Müşteri Adı *">
+    <input id="aGuc" class="input" placeholder="Kurulu Güç (kWp / MWp)">
+    <input id="aKonum" class="input" placeholder="Arazi Konumu / İlçe / Ada-Parsel">
+    <select id="aDurum" class="input">
+      <option value="Planlama">Planlama Aşamasında</option>
+      <option value="Devam Ediyor">Saha Kurulumu Devam Ediyor</option>
+      <option value="Tamamlandı">Tamamlandı / Devreye Alındı</option>
+    </select>
+    <button class="save" onclick="saveAraziProje()">Projeyi Kaydet</button>
+    <button class="cancel" onclick="closeModal('araziModal')">Kapat</button>
+  </div>
+</div>
+
+<div id="catiTrafoModal" class="modal">
+  <div class="modal-box">
+    <h2>🏭 Yeni Çatı GES & Trafo Projesi</h2>
+    <input id="ctProjeAdi" class="input" placeholder="Proje / Firma Adı *">
+    <select id="ctTur" class="input">
+      <option value="Çatı GES">Çatı Tipi GES</option>
+      <option value="Trafo Merkezi">Trafo & YB Merkezi</option>
+      <option value="Çatı GES + Trafo">Çatı GES + Trafo Entegre</option>
+    </select>
+    <input id="ctGuc" class="input" placeholder="Güç / Trafo KVA Değeri">
+    <select id="ctDurum" class="input">
+      <option value="Devam Ediyor">Devam Ediyor</option>
+      <option value="Tamamlandı">Tamamlandı</option>
+    </select>
+    <button class="save" onclick="saveCatiTrafoProje()">Projeyi Kaydet</button>
+    <button class="cancel" onclick="closeModal('catiTrafoModal')">Kapat</button>
+  </div>
+</div>
+
+<div id="imageViewerModal" class="modal" onclick="closeModal('imageViewerModal')">
+  <div class="modal-box" style="text-align:center; background:transparent; box-shadow:none;">
+    <img id="fullImage" style="max-width:100%; max-height:80vh; border-radius:12px; border:3px solid white;">
+  </div>
+</div>
+
+<div id="productModal" class="modal">
+  <div class="modal-box">
+    <h2>📦 Yeni Ürün Tanımla</h2>
+    <input id="pBarcode" class="input" placeholder="Barkod Kodu">
+    <input id="pName" class="input" placeholder="Ürün Adı *">
+    <input id="pBrand" class="input" placeholder="Marka (Lexron, Daxler vb.)">
+    <input id="pCategory" class="input" placeholder="Kategori">
+    <input id="pUnit" class="input" placeholder="Birim (Adet, Metre)">
+    <input id="pStock" class="input" type="number" placeholder="Mevcut Stok">
+    <input id="pMinStock" class="input" type="number" placeholder="Kritik Stok Sınırı">
+    <input id="pPurchase" class="input" type="number" step="0.01" placeholder="Alış Fiyatı (TL)">
+    <input id="pSale" class="input" type="number" step="0.01" placeholder="Satış Fiyatı (TL)">
+    <input id="pShelf" class="input" placeholder="Depo / Raf Kodu">
+    <button class="save" onclick="saveProduct()">Ürünü Kaydet</button>
+    <button class="cancel" onclick="closeModal('productModal')">Kapat</button>
+  </div>
+</div>
+
+<div id="stockInModal" class="modal">
+  <div class="modal-box">
+    <h2>➕ Stok Girişi</h2>
+    <input id="inBarcode" class="input" placeholder="Ürün Barkodu">
+    <input id="inQuantity" class="input" type="number" placeholder="Gelen Miktar">
+    <button class="save" onclick="stockMovement('in')">Stok Girişini Onayla</button>
+    <button class="cancel" onclick="closeModal('stockInModal')">Kapat</button>
+  </div>
+</div>
+
+<div id="stockOutModal" class="modal">
+  <div class="modal-box">
+    <h2>➖ Stok Çıkışı</h2>
+    <input id="outBarcode" class="input" placeholder="Ürün Barkodu">
+    <input id="outQuantity" class="input" type="number" placeholder="Çıkan Miktar">
+    <button class="save" onclick="stockMovement('out')">Stok Çıkışını Onayla</button>
+    <button class="cancel" onclick="closeModal('stockOutModal')">Kapat</button>
+  </div>
+</div>
+
+<div id="personelModal" class="modal">
+  <div class="modal-box">
+    <h2>👷 Yeni Personel Ekle</h2>
+    <input id="staffName" class="input" placeholder="Ad Soyad *">
+    <input id="staffTitle" class="input" placeholder="Görevi (Mühendis, Tekniker, Usta)">
+    <input id="staffPhone" class="input" placeholder="Telefon Numarası">
+    <button class="save" onclick="savePersonel()">Personeli Kaydet</button>
+    <button class="cancel" onclick="closeModal('personelModal')">Kapat</button>
+  </div>
+</div>
+
+<div id="izinAvansModal" class="modal">
+  <div class="modal-box">
+    <h2>📝 İzin / Avans / Mesai Girişi</h2>
+    <input id="iaStaffName" class="input" placeholder="Personel Adı Soyadı">
+    <select id="iaType" class="input">
+      <option value="İzin">İzin Talebi</option>
+      <option value="Avans">Avans Talebi</option>
+      <option value="Mesai">Saha Mesai Kaydı</option>
+    </select>
+    <input id="iaDetail" class="input" placeholder="Açıklama / Tutar / Gün Sayısı">
+    <button class="save" onclick="saveIzinAvans()">Talebi İşle</button>
+    <button class="cancel" onclick="closeModal('izinAvansModal')">Kapat</button>
+  </div>
+</div>
+
+<div id="musteriModal" class="modal">
+  <div class="modal-box">
+    <h2>👥 Yeni Müşteri / Cari Kart</h2>
+    <input id="mName" class="input" placeholder="Müşteri veya Firma Adı *">
+    <input id="mPhone" class="input" placeholder="İletişim Telefonu">
+    <input id="mAddress" class="input" placeholder="Proje Adresi / Bölge">
+    <input id="mBalance" class="input" type="number" placeholder="Başlangıç Bakiye/Borç Tutarı">
+    <button class="save" onclick="saveMusteri()">Cari Kartı Oluştur</button>
+    <button class="cancel" onclick="closeModal('musteriModal')">Kapat</button>
+  </div>
+</div>
+
+<!-- SCRIPT BLOĞU -->
+<script>
+const SUPABASE_URL = "https://bvjkazksmgrpkfbveexs.supabase.co";
+const SUPABASE_KEY = "sb_publishable_PvrAcrEvc8yloCgf6EnuZw_GWDXtzxW";
+const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+let selectedFile = null;
+let logoAttempt = 0;
+
+function tryNextLogo(imgElement) {
+  logoAttempt++;
+  if (logoAttempt === 1) {
+    imgElement.src = "inomer-logo.jpg";
+  } else if (logoAttempt === 2) {
+    imgElement.src = "inomer-logo.png";
+  } else {
+    imgElement.style.display = "none";
+    document.getElementById("fallbackLogo").style.display = "block";
+  }
+}
+
+function switchTab(tabId, evt) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(tabId).classList.add('active');
+  if (evt && evt.currentTarget) evt.currentTarget.classList.add('active');
+}
+
+function openModal(id) { document.getElementById(id).style.display = "block"; }
+function closeModal(id) { document.getElementById(id).style.display = "none"; }
+
+function showMessage(text, type) {
+  const box = document.getElementById("message");
+  box.innerText = text;
+  box.className = "message " + type;
+  setTimeout(() => { box.className = "message"; }, 4000);
+}
+
+/* 1. STOK İŞLEMLERİ & SİLME */
+async function loadProducts() {
+  try {
+    const searchVal = document.getElementById("search") ? document.getElementById("search").value.trim() : "";
+    let query = db.from("products").select("*").order("created_at", { ascending: false });
+    if (searchVal) query = query.ilike("name", `%${searchVal}%`);
+     
+    const { data, error } = await query;
+    const list = document.getElementById("productList");
+    if (error || !data || !data.length) { list.innerHTML = "<div class='empty'>Kayıtlı ürün bulunamadı.</div>"; return; }
+
+    list.innerHTML = "";
+    let totalStk = 0, critStk = 0;
+
+    data.forEach(p => {
+      totalStk += Number(p.stock || 0);
+      if (Number(p.stock || 0) <= Number(p.min_stock || 0)) critStk++;
+
+      const row = document.createElement("div");
+      row.className = "list-item";
+      row.innerHTML = `
+        <div>
+          <div class="item-title">${p.name}</div>
+          <div class="item-sub">Barkod: ${p.barcode || '-'} | Kategori: ${p.category || '-'} | Raf: ${p.shelf || '-'} | Satış: ${p.sale_price || 0} TL</div>
+        </div>
+        <div style="display:flex; align-items:center; gap:15px;">
+          <div style="font-weight:800; font-size:18px; color:${Number(p.stock) <= Number(p.min_stock) ? 'var(--primary)' : '#0f172a'}">
+            ${p.stock || 0} ${p.unit || 'adet'}
+          </div>
+          <button class="btn-delete" onclick="deleteRecord('products', '${p.id}', loadProducts)" title="Sil">🗑️</button>
+        </div>
+      `;
+      list.appendChild(row);
+    });
+
+    document.getElementById("totalProducts").innerText = data.length;
+    document.getElementById("totalStock").innerText = totalStk;
+    document.getElementById("criticalStock").innerText = critStk;
+  } catch(e) { console.error(e); }
+}
+
+async function saveProduct() {
+  const prod = {
+    barcode: document.getElementById("pBarcode").value.trim() || null,
+    name: document.getElementById("pName").value.trim(),
+    brand: document.getElementById("pBrand").value.trim() || null,
+    category: document.getElementById("pCategory").value.trim() || null,
+    unit: document.getElementById("pUnit").value.trim() || "adet",
+    stock: Number(document.getElementById("pStock").value) || 0,
+    min_stock: Number(document.getElementById("pMinStock").value) || 0,
+    purchase_price: Number(document.getElementById("pPurchase").value) || 0,
+    sale_price: Number(document.getElementById("pSale").value) || 0,
+    shelf: document.getElementById("pShelf").value.trim() || null
+  };
+
+  if (!prod.name) { showMessage("Ürün adı zorunludur.", "error"); return; }
+  const { error } = await db.from("products").insert(prod);
+  if (error) { showMessage(error.message, "error"); return; }
+
+  showMessage("Ürün eklendi. ✅", "success");
+  closeModal("productModal");
+  loadProducts();
+}
+
+async function stockMovement(type) {
+  const barcode = type === 'in' ? document.getElementById("inBarcode").value.trim() : document.getElementById("outBarcode").value.trim();
+  const qty = Number(type === 'in' ? document.getElementById("inQuantity").value : document.getElementById("outQuantity").value);
+
+  if (!barcode || !qty) { showMessage("Barkod ve miktar girilmelidir.", "error"); return; }
+
+  const { data: prod } = await db.from("products").select("*").eq("barcode", barcode).maybeSingle();
+  if (!prod) { showMessage("Bu barkoda sahip ürün bulunamadı.", "error"); return; }
+
+  const newStock = type === 'in' ? (prod.stock + qty) : (prod.stock - qty);
+  await db.from("products").update({ stock: newStock }).eq("id", prod.id);
+
+  showMessage("Stok güncellendi. ✅", "success");
+  closeModal(type === 'in' ? "stockInModal" : "stockOutModal");
+  loadProducts();
+}
+
+/* 2. ARAZİ GES PROJELERİ & SİLME */
+async function saveAraziProje() {
+  const name = document.getElementById("aProjeAdi").value.trim();
+  if (!name) { showMessage("Proje adı zorunludur.", "error"); return; }
+  const data = {
+    title: name,
+    capacity: document.getElementById("aGuc").value.trim() || null,
+    location: document.getElementById("aKonum").value.trim() || null,
+    status: document.getElementById("aDurum").value
+  };
+  const { error } = await db.from("arazi_ges").insert(data);
+  if (error) { showMessage(error.message, "error"); return; }
+  showMessage("Arazi GES projesi eklendi. ✅", "success");
+  closeModal("araziModal");
+  loadAraziProje();
+}
+
+async function loadAraziProje() {
+  try {
+    const { data, error } = await db.from("arazi_ges").select("*").order("created_at", { ascending: false });
+    const list = document.getElementById("araziList");
+    if (error || !data || !data.length) { list.innerHTML = "<div class='empty'>Kayıtlı arazi GES projesi yok.</div>"; return; }
+    list.innerHTML = "";
+    data.forEach(p => {
+      list.innerHTML += `
+        <div class="list-item">
+          <div>
+            <div class="item-title">${p.title}</div>
+            <div class="item-sub">Güç: ${p.capacity || '-'} | Konum: ${p.location || '-'}</div>
+          </div>
+          <div style="display:flex; align-items:center; gap:15px;">
+            <span style="background:#fee2e2; color:var(--primary); padding:6px 12px; border-radius:6px; font-weight:bold; font-size:13px;">${p.status || 'Aktif'}</span>
+            <button class="btn-delete" onclick="deleteRecord('arazi_ges', '${p.id}', loadAraziProje)" title="Sil">🗑️</button>
+          </div>
+        </div>`;
+    });
+  } catch(e) { console.error(e); }
+}
+
+/* 3. ÇATI GES & TRAFO & SİLME */
+async function saveCatiTrafoProje() {
+  const name = document.getElementById("ctProjeAdi").value.trim();
+  if (!name) { showMessage("Proje adı zorunludur.", "error"); return; }
+  const data = {
+    title: name,
+    project_type: document.getElementById("ctTur").value,
+    capacity: document.getElementById("ctGuc").value.trim() || null,
+    status: document.getElementById("ctDurum").value
+  };
+  const { error } = await db.from("cati_trafo").insert(data);
+  if (error) { showMessage(error.message, "error"); return; }
+  showMessage("Çatı GES/Trafo projesi eklendi. ✅", "success");
+  closeModal("catiTrafoModal");
+  loadCatiTrafoProje();
+}
+
+async function loadCatiTrafoProje() {
+  try {
+    const { data, error } = await db.from("cati_trafo").select("*").order("created_at", { ascending: false });
+    const list = document.getElementById("catiTrafoList");
+    if (error || !data || !data.length) { list.innerHTML = "<div class='empty'>Kayıtlı çatı GES/trafo projesi yok.</div>"; return; }
+    list.innerHTML = "";
+    data.forEach(p => {
+      list.innerHTML += `
+        <div class="list-item">
+          <div>
+            <div class="item-title">${p.title} <small style="color:#64748b;">(${p.project_type})</small></div>
+            <div class="item-sub">Kapasite / Değer: ${p.capacity || '-'}</div>
+          </div>
+          <div style="display:flex; align-items:center; gap:15px;">
+            <span style="background:#e0f2fe; color:#0369a1; padding:6px 12px; border-radius:6px; font-weight:bold; font-size:13px;">${p.status || 'Devam Ediyor'}</span>
+            <button class="btn-delete" onclick="deleteRecord('cati_trafo', '${p.id}', loadCatiTrafoProje)" title="Sil">🗑️</button>
+          </div>
+        </div>`;
+    });
+  } catch(e) { console.error(e); }
+}
+
+/* 4. SAHA FİŞLERİ & FOTOĞRAF & SİLME */
+function previewSahaImage(event) {
+  const file = event.target.files[0];
+  if (file) {
+    selectedFile = file;
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      const prev = document.getElementById("sfPhotoPreview");
+      prev.src = e.target.result;
+      prev.style.display = "block";
+    };
+    reader.readAsDataURL(file);
+  }
+}
+
+function compressImage(file, maxWidth = 800, quality = 0.6) {
+  return new Promise((resolve) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = (event) => {
+      const img = new Image();
+      img.src = event.target.result;
+      img.onload = () => {
+        const canvas = document.createElement("canvas");
+        let width = img.width;
+        let height = img.height;
+        if (width > maxWidth) {
+          height = Math.round((height * maxWidth) / width);
+          width = maxWidth;
+        }
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0, width, height);
+        canvas.toBlob((blob) => { resolve(blob); }, "image/jpeg", quality);
+      };
+    };
+  });
+}
+
+async function saveSahaFisi() {
+  const musteri = document.getElementById("sfMusteri").value.trim();
+  const personel = document.getElementById("sfPersonel").value.trim();
+  const islem = document.getElementById("sfIslem").value.trim();
+  const tutar = Number(document.getElementById("sfTutar").value) || 0;
+
+  if (!musteri && !personel) {
+    showMessage("Müşteri veya personel alanı doldurulmalıdır.", "error");
+    return;
+  }
+
+  let photoBase64 = null;
+
+  if (selectedFile) {
+    try {
+      showMessage("Fotoğraf sıkıştırılıyor...", "success");
+      const compressedBlob = await compressImage(selectedFile);
+       
+      photoBase64 = await new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onloadend = () => resolve(reader.result);
+        reader.readAsDataURL(compressedBlob);
+      });
+    } catch (err) {
+      console.error("Fotoğraf işleme hatası:", err);
+    }
+  }
+
+  const data = {
+    title: musteri || "Saha Fişi",
+    description: `Personel: ${personel || '-'} | Tutar: ${tutar} TL`,
+    status: "Tamamlandı",
+    islem: islem || null,
+    photo: photoBase64
+  };
+
+  const { error } = await db.from("saha_fisleri").insert(data);
+  if (error) {
+    showMessage("Fiş kaydedilemedi: " + error.message, "error");
+    return;
+  }
+
+  showMessage("Saha fişi ve fotoğrafı başarıyla eklendi! ✅", "success");
+  selectedFile = null;
+  document.getElementById("sfPhotoPreview").style.display = "none";
+  document.getElementById("sfPhoto").value = "";
+  document.getElementById("sfMusteri").value = "";
+  document.getElementById("sfPersonel").value = "";
+  document.getElementById("sfIslem").value = "";
+  document.getElementById("sfTutar").value = "";
+  closeModal("sahaModal");
+  loadSahaFisleri();
+}
+
+async function loadSahaFisleri() {
+  try {
+    const { data, error } = await db.from("saha_fisleri").select("*").order("created_at", { ascending: false });
+    const list = document.getElementById("sahaList");
+    if (error || !data || !data.length) { list.innerHTML = "<div class='empty'>Kayıtlı saha fişi yok.</div>"; return; }
+    list.innerHTML = "";
+    data.forEach(f => {
+      const imgHtml = f.photo 
+        ? `<img src="${f.photo}" class="saha-photo-preview" onclick="viewImage('${f.photo}')">` 
+        : `<span style="font-size:12px; color:#94a3b8;">Görsel Yok</span>`;
+
+      list.innerHTML += `
+        <div class="list-item">
+          <div>
+            <strong>${f.title || 'Genel Proje'}</strong><br>
+            <small>${f.description || ''}</small><br>
+            <small style="color:var(--primary); font-weight:bold;">${f.islem || ''}</small>
+          </div>
+          <div style="display:flex; align-items:center; gap:15px;">
+            ${imgHtml}
+            <button class="btn-delete" onclick="deleteRecord('saha_fisleri', '${f.id}', loadSahaFisleri)" title="Sil">🗑️</button>
+          </div>
+        </div>`;
+    });
+  } catch(e) { console.error(e); }
+}
+
+function viewImage(url) {
+  document.getElementById("fullImage").src = url;
+  openModal("imageViewerModal");
+}
+
+/* 5. PERSONEL İŞLEMLERİ & SİLME */
+async function savePersonel() {
+  const name = document.getElementById("staffName").value.trim();
+  const title = document.getElementById("staffTitle").value.trim();
+  const phone = document.getElementById("staffPhone").value.trim();
+
+  if (!name) { showMessage("Personel adı zorunludur.", "error"); return; }
+
+  const { error } = await db.from("staff").insert({ name: name, title: title || null, phone: phone || null });
+  if (error) { showMessage("Personel eklenemedi: " + error.message, "error"); return; }
+
+  showMessage("Personel başarıyla kaydedildi. ✅", "success");
+  document.getElementById("staffName").value = "";
+  document.getElementById("staffTitle").value = "";
+  document.getElementById("staffPhone").value = "";
+  closeModal("personelModal"); 
+  loadPersonel();
+}
+
+async function loadPersonel() {
+  try {
+    const { data, error } = await db.from("staff").select("*").order("created_at", { ascending: false });
+    const list = document.getElementById("personelList");
+    if (error || !data || !data.length) { list.innerHTML = "<div class='empty'>Kayıtlı personel bulunamadı.</div>"; return; }
+    list.innerHTML = "";
+    document.getElementById("totalStaff").innerText = data.length;
+    data.forEach(s => {
+      list.innerHTML += `
+        <div class="list-item">
+          <div>
+            <strong>${s.name}</strong><br>
+            <small>${s.title || 'Mühendislik / Saha'}</small>
+          </div>
+          <div style="display:flex; align-items:center; gap:15px;">
+            <span>${s.phone || '-'}</span>
+            <button class="btn-delete" onclick="deleteRecord('staff', '${s.id}', loadPersonel)" title="Sil">🗑️</button>
+          </div>
+        </div>`;
+    });
+  } catch(e) { console.error(e); }
+}
+
+async function saveIzinAvans() {
+  const name = document.getElementById("iaStaffName").value.trim();
+  const type = document.getElementById("iaType").value;
+  const detail = document.getElementById("iaDetail").value.trim();
+
+  if (!name) { showMessage("Personel adı girilmelidir.", "error"); return; }
+
+  const { error } = await db.from("staff_requests").insert({ staff_name: name, request_type: type, detail: detail || null });
+  if (error) { showMessage("Kayıt oluşturulamadı: " + error.message, "error"); return; }
+
+  showMessage("Talep başarıyla işlendi. ✅", "success");
+  closeModal("izinAvansModal");
+}
+
+/* 6. MÜŞTERİLER & SİLME */
+async function saveMusteri() {
+  const name = document.getElementById("mName").value.trim();
+  const phone = document.getElementById("mPhone").value.trim();
+  const address = document.getElementById("mAddress").value.trim();
+  const balance = Number(document.getElementById("mBalance").value) || 0;
+
+  if (!name) { showMessage("Müşteri adı zorunludur.", "error"); return; }
+
+  const { error } = await db.from("customers").insert({ name: name, phone: phone || null, address: address || null, balance: balance });
+  if (error) { showMessage("Müşteri kaydedilemedi: " + error.message, "error"); return; }
+
+  showMessage("Müşteri cari kartı oluşturuldu. ✅", "success");
+  document.getElementById("mName").value = "";
+  document.getElementById("mPhone").value = "";
+  document.getElementById("mAddress").value = "";
+  document.getElementById("mBalance").value = "";
+  closeModal("musteriModal");
+  loadMusteri();
+}
+
+async function loadMusteri() {
+  try {
+    const { data, error } = await db.from("customers").select("*").order("created_at", { ascending: false });
+    const list = document.getElementById("musteriList");
+    if (error || !data || !data.length) { list.innerHTML = "<div class='empty'>Kayıtlı müşteri bulunamadı.</div>"; return; }
+    list.innerHTML = "";
+    data.forEach(m => {
+      list.innerHTML += `
+        <div class="list-item">
+          <div>
+            <strong>${m.name}</strong><br>
+            <small>Adres / Bölge: ${m.address || '-'}</small>
+          </div>
+          <div style="display:flex; align-items:center; gap:15px;">
+            <div style="text-align:right;">
+              <div>${m.phone || '-'}</div>
+              <small style="color:var(--primary); font-weight:bold;">Bakiye: ${m.balance || 0} TL</small>
+            </div>
+            <button class="btn-delete" onclick="deleteRecord('customers', '${m.id}', loadMusteri)" title="Sil">🗑️</button>
+          </div>
+        </div>`;
+    });
+  } catch(e) { console.error(e); }
+}
+
+/* GENEL SİLME FONKSİYONU */
+async function deleteRecord(tableName, id, reloadFunc) {
+  if (!confirm("Bu kaydı silmek istediğinize emin misiniz?")) return;
+  const { error } = await db.from(tableName).delete().eq("id", id);
+  if (error) {
+    showMessage("Silme başarısız: " + error.message, "error");
+    return;
+  }
+  showMessage("Kayıt başarıyla silindi. 🗑️", "success");
+  reloadFunc();
+}
+
+// İlk Açılışta Verileri Yükle
+loadProducts();
+loadAraziProje();
+loadCatiTrafoProje();
+loadSahaFisleri();
+loadPersonel();
+loadMusteri();
+</script>
+</body>
+</html>
