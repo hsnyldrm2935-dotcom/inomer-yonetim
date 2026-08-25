@@ -461,6 +461,18 @@
             padding: 16px;
         }
 
+        .notif-item {
+            font-size: 0.8rem;
+            margin-bottom: 10px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--slate-100);
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        .notif-item:hover {
+            color: var(--primary);
+        }
+
         @media(max-width: 768px) {
             .sidebar {
                 position: fixed;
@@ -507,35 +519,35 @@
             </div>
             <ul class="sidebar-menu">
                 <div class="menu-section-title">🏠 Genel</div>
-                <li><button class="nav-btn active" onclick="switchTab('anaSayfa', this)">🏠 Ana Sayfa</button></li>
+                <li><button class="nav-btn active" id="menu-anaSayfa" onclick="switchTab('anaSayfa', this)">🏠 Ana Sayfa</button></li>
 
                 <div class="menu-section-title">📦 Operasyon</div>
-                <li><button class="nav-btn" onclick="switchTab('stokDepo', this)">📦 Stok & Ürünler</button></li>
-                <li><button class="nav-btn" onclick="switchTab('araziGes', this)">☀️ Arazi GES</button></li>
-                <li><button class="nav-btn" onclick="switchTab('catiGes', this)">🏭 Çatı GES & Trafo</button></li>
-                <li><button class="nav-btn" onclick="switchTab('sahaFisi', this)">📝 Saha Fişleri</button></li>
-                <li><button class="nav-btn" onclick="switchTab('araclar', this)">🚚 Araçlar</button></li>
-                <li><button class="nav-btn" onclick="switchTab('ekipmanlar', this)">🔧 Ekipmanlar</button></li>
+                <li><button class="nav-btn" id="menu-stokDepo" onclick="switchTab('stokDepo', this)">📦 Stok & Ürünler</button></li>
+                <li><button class="nav-btn" id="menu-araziGes" onclick="switchTab('araziGes', this)">☀️ Arazi GES</button></li>
+                <li><button class="nav-btn" id="menu-catiGes" onclick="switchTab('catiGes', this)">🏭 Çatı GES & Trafo</button></li>
+                <li><button class="nav-btn" id="menu-sahaFisi" onclick="switchTab('sahaFisi', this)">📝 Saha Fişleri</button></li>
+                <li><button class="nav-btn" id="menu-araclar" onclick="switchTab('araclar', this)">🚚 Araçlar</button></li>
+                <li><button class="nav-btn" id="menu-ekipmanlar" onclick="switchTab('ekipmanlar', this)">🔧 Ekipmanlar</button></li>
 
                 <div class="menu-section-title">👥 Personel</div>
-                <li><button class="nav-btn" onclick="switchTab('personel', this)">👥 Personel</button></li>
-                <li><button class="nav-btn" onclick="switchTab('izinTalebi', this)">🌴 İzin Talepleri</button></li>
-                <li><button class="nav-btn" onclick="switchTab('avansTalebi', this)">💰 Avans Talepleri</button></li>
+                <li><button class="nav-btn" id="menu-personel" onclick="switchTab('personel', this)">👥 Personel</button></li>
+                <li><button class="nav-btn" id="menu-izinTalebi" onclick="switchTab('izinTalebi', this)">🌴 İzin Talepleri</button></li>
+                <li><button class="nav-btn" id="menu-avansTalebi" onclick="switchTab('avansTalebi', this)">💰 Avans Talepleri</button></li>
 
                 <div class="menu-section-title">💰 Muhasebe & KolayBi</div>
-                <li><button class="nav-btn" onclick="switchTab('kolayBi', this)">📊 KolayBİ & Fatura</button></li>
-                <li><button class="nav-btn" onclick="switchTab('musteri', this)">🤝 Müşteriler & Cari</button></li>
-                <li><button class="nav-btn" onclick="switchTab('teklifler', this)">📄 Teklifler</button></li>
-                <li><button class="nav-btn" onclick="switchTab('siparisler', this)">🧾 Siparişler</button></li>
+                <li><button class="nav-btn" id="menu-kolayBi" onclick="switchTab('kolayBi', this)">📊 KolayBİ & Fatura</button></li>
+                <li><button class="nav-btn" id="menu-musteri" onclick="switchTab('musteri', this)">🤝 Müşteriler & Cari</button></li>
+                <li><button class="nav-btn" id="menu-teklifler" onclick="switchTab('teklifler', this)">📄 Teklifler</button></li>
+                <li><button class="nav-btn" id="menu-siparisler" onclick="switchTab('siparisler', this)">🧾 Siparişler</button></li>
 
                 <div class="menu-section-title">📊 Raporlar</div>
-                <li><button class="nav-btn" onclick="switchTab('raporlar', this)">📈 Raporlar</button></li>
-                <li><button class="nav-btn" onclick="switchTab('hareketler', this)">📋 Hareketler</button></li>
+                <li><button class="nav-btn" id="menu-raporlar" onclick="switchTab('raporlar', this)">📈 Raporlar</button></li>
+                <li><button class="nav-btn" id="menu-hareketler" onclick="switchTab('hareketler', this)">📋 Hareketler</button></li>
 
                 <div class="menu-section-title">⚙️ Sistem & Yönetim</div>
-                <li><button class="nav-btn" onclick="switchTab('belgeler', this)">📁 Belgeler Arşivi</button></li>
-                <li><button class="nav-btn" onclick="switchTab('ayarlar', this)">⚙️ Ayarlar (KolayBi API)</button></li>
-                <li><button class="nav-btn" onclick="switchTab('copKutusu', this)">🗑️ Çöp Kutusu & Veri Yönetimi</button></li>
+                <li><button class="nav-btn" id="menu-belgeler" onclick="switchTab('belgeler', this)">📁 Belgeler Arşivi</button></li>
+                <li><button class="nav-btn" id="menu-ayarlar" onclick="switchTab('ayarlar', this)">⚙️ Ayarlar (KolayBi API)</button></li>
+                <li><button class="nav-btn" id="menu-copKutusu" onclick="switchTab('copKutusu', this)">🗑️ Çöp Kutusu & Veri Yönetimi</button></li>
             </ul>
         </aside>
 
@@ -566,12 +578,16 @@
                 </div>
             </div>
 
-            <!-- BİLDİRİM PANELİ -->
+            <!-- BİLDİRİM PANELİ (Tıklanabilir) -->
             <div id="notificationDropdown">
                 <h4 style="font-size: 0.9rem; margin-bottom: 10px; border-bottom:1px solid var(--border); padding-bottom:6px; color:var(--slate-900);">Sistem Uyarıları</h4>
                 <div id="notificationList">
-                    <div style="font-size:0.8rem; margin-bottom:8px; color:var(--text-main);">⚠️ <b>KolayBi API</b> bağlantısı aktif durumda.</div>
-                    <div style="font-size:0.8rem; color:var(--text-main);">🔔 Bekleyen 1 yeni personel izin talebi var.</div>
+                    <div class="notif-item" onclick="goToTabFromNotification('kolayBi')">
+                        ⚠️ <b>KolayBi API</b> bağlantısı aktif durumda. (Git ➔)
+                    </div>
+                    <div class="notif-item" onclick="goToTabFromNotification('izinTalebi')">
+                        🔔 Bekleyen 1 yeni personel izin talebi var. (İncele ➔)
+                    </div>
                 </div>
             </div>
 
@@ -770,23 +786,37 @@
                 </div>
             </div>
 
-            <!-- 9. 🌴 İZİN TALEPLERİ -->
+            <!-- 9. 🌴 İZİN TALEPLERİ (Onay/Ret Butonlu) -->
             <div id="izinTalebi" class="tab-pane">
                 <div class="card">
                     <div class="card-header"><h3>İzin Talepleri</h3></div>
                     <div class="form-grid">
-                        <div class="form-group"><label>Barkod</label><input type="text" id="izinBarkod"></div>
-                        <div class="form-group"><label>Personel</label><input type="text" id="izinAd"></div>
-                        <div class="form-group"><label>Gün</label><input type="number" id="izinGun"></div>
-                        <div class="form-group full"><label>📸 Fotoğraflar</label><input type="file" id="izinDosya" multiple accept="image/*"></div>
+                        <div class="form-group"><label>Barkod</label><input type="text" id="izinBarkod" value="IZN-01"></div>
+                        <div class="form-group"><label>Personel</label><input type="text" id="izinAd" placeholder="Personel Adı"></div>
+                        <div class="form-group"><label>Gün</label><input type="number" id="izinGun" value="3"></div>
+                        <div class="form-group full"><label>📸 Fotoğraflar / Belge</label><input type="file" id="izinDosya" multiple accept="image/*"></div>
                     </div>
-                    <button class="btn" style="width:auto;" onclick="addItem('izin')">Kaydet</button>
+                    <button class="btn" style="width:auto;" onclick="addItem('izin')">İzin Talebi Oluştur</button>
                 </div>
                 <div class="card">
+                    <div class="card-header"><h3>Bekleyen ve Geçmiş İzin Talepleri</h3></div>
                     <div class="table-container">
                         <table>
-                            <thead><tr><th>Barkod</th><th>Personel</th><th>Gün</th><th>Fotoğraflar</th><th>İşlem</th></tr></thead>
-                            <tbody id="izinTableBody"></tbody>
+                            <thead><tr><th>Barkod</th><th>Personel</th><th>Gün</th><th>Durum / İşlem</th><th>Sil</th></tr></thead>
+                            <tbody id="izinTableBody">
+                                <!-- Örnek Bekleyen Talep -->
+                                <tr>
+                                    <td><span class="barcode-badge">IZN-001</span></td>
+                                    <td>Ahmet Yılmaz</td>
+                                    <td>3 Gün</td>
+                                    <td>
+                                        <span id="status-izn1" style="font-weight:600; color:#d97706; margin-right:10px;">Bekliyor ⏳</span>
+                                        <button class="btn btn-success" onclick="approveIzin('izn1')">Onayla ✅</button>
+                                        <button class="btn btn-danger" onclick="rejectIzin('izn1')">Reddet ❌</button>
+                                    </td>
+                                    <td><button class="btn btn-danger" onclick="deleteRow(this)">Sil 🗑️</button></td>
+                                </tr>
+                            </tbody>
                         </table>
                     </div>
                 </div>
@@ -935,7 +965,7 @@
                         <table>
                             <thead><tr><th>Tarih</th><th>Kullanıcı</th><th>İşlem</th></tr></thead>
                             <tbody>
-                                <tr><td>25.08.2026</td><td>Sistem Kullanıcısı</td><td>KolayBi API entegrasyonu doğrulandı.</td></tr>
+                                <tr><td>25.08.2026</td><td>Sistem Kullanıcısı</td><td>KolayBi API entegrasyonu ve İzin onay modülü güncellendi.</td></tr>
                             </tbody>
                         </table>
                     </div>
@@ -1018,7 +1048,7 @@
 
             // Yetkili kullanıcılar ve şifreleri
             const validUsers = [
-                { email: 'bugrayildiriiim@inomerenerji', pass: 'Bugra134679++', name: 'Hasan Buğra Yıldırım' },
+                { email: 'bugrayildiriiim@inomerenerji.com', pass: 'Bugra134679++', name: 'Hasan Buğra Yıldırım' },
                 { email: 'halilfatih.tulek@inomerenerji.com', pass: '260513', name: 'Halil Fatih Tülek' }
             ];
 
@@ -1046,7 +1076,9 @@
             document.querySelectorAll('.tab-pane').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
             document.getElementById(tabId).classList.add('active');
-            if(btn) btn.classList.add('active');
+            
+            let targetBtn = btn || document.getElementById('menu-' + tabId);
+            if(targetBtn) targetBtn.classList.add('active');
         }
 
         function toggleSidebar() {
@@ -1057,6 +1089,29 @@
         function toggleNotifications() {
             let drop = document.getElementById('notificationDropdown');
             drop.style.display = drop.style.display === 'block' ? 'none' : 'block';
+        }
+
+        function goToTabFromNotification(tabId) {
+            toggleNotifications();
+            switchTab(tabId);
+        }
+
+        function approveIzin(id) {
+            let statusSpan = document.getElementById('status-' + id);
+            if(statusSpan) {
+                statusSpan.innerHTML = 'Onaylandı ✅';
+                statusSpan.style.color = 'var(--success)';
+            }
+            alert('İzin talebi başarıyla onaylandı!');
+        }
+
+        function rejectIzin(id) {
+            let statusSpan = document.getElementById('status-' + id);
+            if(statusSpan) {
+                statusSpan.innerHTML = 'Reddedildi ❌';
+                statusSpan.style.color = 'var(--danger)';
+            }
+            alert('İzin talebi reddedildi.');
         }
 
         function saveKolayBiSettings() {
@@ -1118,6 +1173,7 @@
             let barkod = document.getElementById(type + 'Barkod') ? document.getElementById(type + 'Barkod').value || 'N/A' : 'N/A';
             let bHtml = `<span class="barcode-badge">${barkod}</span>`;
             let delBtnHtml = `<td><button class="btn btn-danger" onclick="deleteRow(this)">Sil 🗑️</button></td>`;
+            let uniqueId = 'row_' + Math.random().toString(36).substr(2, 6);
 
             if (type === 'stok') {
                 let a = document.getElementById('stokAd').value || 'Ürün';
@@ -1151,7 +1207,7 @@
             } else if (type === 'izin') {
                 let ad = document.getElementById('izinAd').value || 'Personel';
                 let gun = document.getElementById('izinGun').value || '1';
-                row.innerHTML = `<td>${bHtml}</td><td>${ad}</td><td>${gun} Gün</td><td><div class="file-preview-box">${thumbsHtml}</div></td>${delBtnHtml}`;
+                row.innerHTML = `<td>${bHtml}</td><td>${ad}</td><td>${gun} Gün</td><td><span id="status-${uniqueId}" style="font-weight:600; color:#d97706; margin-right:10px;">Bekliyor ⏳</span> <button class="btn btn-success" onclick="approveIzin('${uniqueId}')">Onayla ✅</button> <button class="btn btn-danger" onclick="rejectIzin('${uniqueId}')">Reddet ❌</button></td>${delBtnHtml}`;
             } else if (type === 'avans') {
                 let ad = document.getElementById('avansAd').value || 'Personel';
                 let tutar = document.getElementById('avansTutar').value || '0';
