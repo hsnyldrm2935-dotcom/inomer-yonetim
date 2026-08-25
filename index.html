@@ -8,7 +8,7 @@
     <script src="https://unpkg.com/html5-qrcode"></script>
     <style>
         :root {
-            --primary: #dc2626;       /* Kırmızı */
+            --primary: #de1616;       /* Kırmızı */
             --primary-dark: #b91c1c;  /* Koyu Kırmızı */
             --primary-light: #fef2f2; /* Çok açık kırmızı zemin */
             --slate-900: #18181b;
@@ -849,6 +849,26 @@
                 <div class="card">
                     <div class="card-header">
                         <h3>KolayBİ & Fatura Entegrasyonu</h3>
+                        <div style="margin-bottom: 15px;">
+    <button class="btn btn-success" onclick="fetchKolayBiInvoices()">🔄 KolayBi'den Faturaları Güncelle / Çek</button>
+</div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Fatura No</th>
+            <th>Müşteri</th>
+            <th>Tarih</th>
+            <th>Tutar</th>
+            <th>Durum</th>
+        </tr>
+    </thead>
+    <tbody id="kolayBiInvoicesTable">
+        <tr>
+            <td colspan="5" style="text-align: center; padding: 12px;">Faturaları görmek için yukarıdaki butona tıklayın.</td>
+        </tr>
+    </tbody>
+</table>
                         <button class="btn btn-success" onclick="syncKolayBi('Tüm Faturalar')">KolayBi ile Senkronize Et</button>
                     </div>
                     <div class="form-grid">
