@@ -42,6 +42,55 @@
 
     <!-- ================= GİRİŞ EKRANI ================= -->
     <div id="loginScreen" class="fixed inset-0 bg-inomerDarker z-50 flex items-center justify-center p-4">
+        <div class="flex flex-col items-center justify-center h-full w-full bg-inomerDarker p-4">
+    <div class="bg-inomerCard p-8 rounded-xl shadow-lg w-full max-w-md border border-gray-800">
+        <h2 class="text-2xl font-bold text-white mb-6 text-center">İNOMER ENERJİ GİRİŞ</h2>
+        
+        <div class="mb-4">
+            <label class="block text-inomerSilver text-sm mb-2">E-posta Adresi</label>
+            <input type="email" id="loginEmail" class="w-full bg-gray-900 border border-gray-700 rounded px-3 py-2 text-white focus:outline-none focus:border-inomerRed" placeholder="ornek@inomerenerji.com">
+        </div>
+
+        <div class="mb-6">
+            <label class="block text-inomerSilver text-sm mb-2">Şifre</label>
+            <input type="password" id="loginPassword" class="w-full bg-gray-900 border border-gray-700 rounded px-3 py-2 text-white focus:outline-none focus:border-inomerRed" placeholder="********">
+        </div>
+
+        <button onclick="bypassaGirisYap()" class="w-full bg-inomerRed hover:bg-red-700 text-white font-bold py-2 px-4 rounded transition duration-200">
+            Giriş Yap
+        </button>
+    </div>
+</div>
+
+<script>
+function bypassaGirisYap() {
+    const email = document.getElementById('loginEmail').value.trim();
+    const pass = document.getElementById('loginPassword').value.trim();
+
+    // Senin ve Halil Fatih'in bilgileri
+    if (
+        (email === "bugrayildiriiim@inomerenerji.com" && pass === "Bugra134679++") ||
+        (email === "halilfatih.tulek@inomerenerji.com" && pass === "260513")
+    ) {
+        // Giriş başarılı, login ekranını gizle, paneli aç
+        document.getElementById('loginScreen').classList.add('hidden');
+        document.getElementById('appContainer').classList.remove('hidden');
+        localStorage.setItem('isLoggedIn', 'true');
+        localStorage.setItem('userEmail', email);
+        if (typeof renderAll === 'function') renderAll();
+    } else {
+        alert("E-posta veya şifre hatalı!");
+    }
+}
+
+// Sayfa yenilendiğinde zaten giriş yaptıysa direkt paneli açmak için:
+window.addEventListener('DOMContentLoaded', () => {
+    if (localStorage.getItem('isLoggedIn') === 'true') {
+        document.getElementById('loginScreen').classList.add('hidden');
+        document.getElementById('appContainer').classList.remove('hidden');
+    }
+});
+</script>
         <div class="bg-inomerCard border border-inomerRed/40 rounded-2xl p-8 w-full max-w-md shadow-2xl relative overflow-hidden">
             <div class="absolute top-0 left-0 w-full h-2 bg-inomerRed"></div>
             <div class="text-center mb-8">
