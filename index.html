@@ -9,14 +9,10 @@
     <style>
         :root {
             --primary-color: #0284c7;
-            --primary-dark: #0369a1;
             --secondary-color: #0f172a;
             --accent-color: #f59e0b;
             --danger-color: #ef4444;
             --success-color: #22c55e;
-            --bg-color: #ffffff;
-            --card-bg: #ffffff;
-            --text-main: #334155;
             --border-color: #e2e8f0;
         }
 
@@ -28,16 +24,16 @@
         }
 
         body {
-            background-color: var(--bg-color);
-            color: var(--text-main);
+            background-color: #ffffff;
+            color: #334155;
             padding: 20px;
         }
 
-        /* Login Ekranı Stili */
+        /* Giriş Ekranı */
         #loginOverlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(15, 23, 42, 0.85);
+            background: rgba(15, 23, 42, 0.9);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -50,7 +46,7 @@
             border-radius: 12px;
             width: 100%;
             max-width: 400px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
         }
 
         .login-card h2 {
@@ -59,7 +55,7 @@
             text-align: center;
         }
 
-        /* Ana İçerik ve Header Tasarımı (Görseldeki Gibi) */
+        /* Ana İçerik Konteyneri */
         .container {
             max-width: 1400px;
             margin: 0 auto;
@@ -85,7 +81,7 @@
             margin-top: 4px;
         }
 
-        /* Üst Menü Butonları (Görseldeki Buton Dizilimi) */
+        /* Görseldeki Üst Menü Butonları Dizilimi */
         .nav-buttons {
             display: flex;
             gap: 12px;
@@ -113,7 +109,7 @@
             border-color: var(--primary-color);
         }
 
-        /* İstatistik Kartları */
+        /* İstatistik Kartları (Görseldeki Gibi) */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -151,7 +147,6 @@
             display: block;
         }
 
-        /* Formlar ve Tablolar */
         .card {
             background: #fff;
             border: 1px solid var(--border-color);
@@ -226,7 +221,7 @@
 </head>
 <body>
 
-    <!-- GİRİŞ EKRANI (Supabase Auth & Halil Fatih Tülek Entegrasyonu) -->
+    <!-- GİRİŞ EKRANI (Supabase Auth & Halil Fatih Tülek) -->
     <div id="loginOverlay">
         <div class="login-card">
             <h2>⚡ İNOMER ENERJİ Giriş</h2>
@@ -253,12 +248,12 @@
                 <p>Güneş Enerjisi, Trafo & Elektrik Mühendislik Hizmetleri</p>
             </div>
             <div style="text-align: right;">
-                <span style="font-weight: 600; font-size: 0.9rem;" id="currentUserLabel">Halil Fatih Tülek</span><br>
+                <span style="font-weight: 600; font-size: 0.9rem;">Halil Fatih Tülek</span><br>
                 <button onclick="handleLogout()" style="background:none; border:none; color:var(--danger-color); cursor:pointer; font-size:0.8rem; margin-top:4px;">Çıkış Yap</button>
             </div>
         </div>
 
-        <!-- Üst Navigasyon Butonları (Görseldeki Düzen) -->
+        <!-- Üst Navigasyon Butonları (Görseldeki Sıralama Tamamen Korundu) -->
         <div class="nav-buttons">
             <button class="nav-btn active" onclick="switchTab('stokDepo', this)">📦 Stok & Ürünler</button>
             <button class="nav-btn" onclick="switchTab('araziGes', this)">☀️ Arazi Tipi GES Projeleri</button>
@@ -288,14 +283,13 @@
             </div>
         </div>
 
-        <!-- 1. STOK & ÜRÜN YÖNETİMİ SEKMESİ -->
+        <!-- 1. STOK & ÜRÜNLER -->
         <div id="stokDepo" class="tab-pane active">
             <div class="card">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
                     <h3>Ürün ve Depo Yönetimi</h3>
                     <div>
-                        <button class="btn btn-success" onclick="openStokModal('giris')">+ Stok Giriş</button>
-                        <button class="btn" onclick="openStokModal('yeni')">+ Yeni Ürün</button>
+                        <button class="btn btn-success" onclick="addStokModal()">+ Yeni Ürün Ekle</button>
                     </div>
                 </div>
                 <div class="search-box">
@@ -304,7 +298,7 @@
                 <table>
                     <thead>
                         <tr>
-                            <th>Barkod / Kod</th>
+                            <th>Kod</th>
                             <th>Ürün Adı</th>
                             <th>Kategori</th>
                             <th>Miktar</th>
@@ -312,64 +306,60 @@
                             <th>İşlemler</th>
                         </tr>
                     </thead>
-                    <tbody id="stokTableBody">
-                        <!-- Dinamik -->
-                    </tbody>
+                    <tbody id="stokTableBody"></tbody>
                 </table>
             </div>
         </div>
 
-        <!-- 2. ARAZİ TİPİ GES PROJELERİ SEKMESİ -->
+        <!-- 2. ARAZİ TİPİ GES PROJELERİ -->
         <div id="araziGes" class="tab-pane">
             <div class="card">
-                <h3>Arazi Tipi GES Proje Takibi</h3>
-                <p style="color: #64748b; margin-top: 8px; margin-bottom: 16px;">Megawatt ölçekli arazi GES projeleri, trafo merkezi ve DC/AC kablolama takibi.</p>
-                <div class="form-group">
-                    <label>Proje Adı & Lokasyon</label>
-                    <input type="text" id="araziProjeAd" placeholder="Örn: Aliağa 5MW Arazi GES">
+                <h3>Arazi Tipi GES Projeleri</h3>
+                <div class="form-group" style="margin-top: 15px;">
+                    <label>Proje Adı</label>
+                    <input type="text" id="araziAd" placeholder="Örn: Aliağa Arazi GES">
                 </div>
                 <div class="form-group">
-                    <label>Kurulu Güç (MW / kW)</label>
-                    <input type="text" id="araziGuc" placeholder="Örn: 5000 kW">
+                    <label>Güç (kW / MW)</label>
+                    <input type="text" id="araziGuc" placeholder="Örn: 1000 kW">
                 </div>
-                <button class="btn" onclick="addAraziProje()">Proje Ekle</button>
+                <button class="btn" onclick="addArazi()">Proje Ekle</button>
                 <table style="margin-top: 20px;">
-                    <thead><tr><th>Proje Adı</th><th>Güç</th><th>Durum</th><th>İşlem</th></tr></thead>
+                    <thead><tr><th>Proje Adı</th><th>Güç</th><th>İşlem</th></tr></thead>
                     <tbody id="araziTableBody"></tbody>
                 </table>
             </div>
         </div>
 
-        <!-- 3. ÇATI GES & TRAFO SEKMESİ -->
+        <!-- 3. ÇATI GES & TRAFO -->
         <div id="catiGes" class="tab-pane">
             <div class="card">
-                <h3>Çatı GES & Trafo Merkezleri</h3>
-                <p style="color: #64748b; margin-top: 8px; margin-bottom: 16px;">Endüstriyel çatı projeleri ve OG hücre / trafo entegrasyonları.</p>
-                <div class="form-group">
+                <h3>Çatı GES & Trafo Projeleri</h3>
+                <div class="form-group" style="margin-top: 15px;">
                     <label>Tesis Adı</label>
-                    <input type="text" id="catiTesis" placeholder="Örn: Fabrika Çatısı GES Projesi">
+                    <input type="text" id="catiTesis" placeholder="Fabrika Çatısı GES">
                 </div>
-                <button class="btn" onclick="addCatiProje()">Çatı Projesi Kaydet</button>
+                <button class="btn" onclick="addCati()">Proje Kaydet</button>
                 <table style="margin-top: 20px;">
-                    <thead><tr><th>Tesis Adı</th><th>Kayıt Tarihi</th><th>İşlem</th></tr></thead>
+                    <thead><tr><th>Tesis Adı</th><th>Tarih</th><th>İşlem</th></tr></thead>
                     <tbody id="catiTableBody"></tbody>
                 </table>
             </div>
         </div>
 
-        <!-- 4. SAHA FİŞLERİ & FOTOĞRAF SEKMESİ -->
+        <!-- 4. SAHA FİŞLERİ & FOTOĞRAF -->
         <div id="sahaFisi" class="tab-pane">
             <div class="card">
-                <h3>Saha Fişi & Operasyon Formu</h3>
-                <div class="form-group">
+                <h3>Saha Fişleri & Operasyon Takibi</h3>
+                <div class="form-group" style="margin-top: 15px;">
                     <label>Müşteri / Şantiye</label>
                     <input type="text" id="sahaMusteri" placeholder="Şantiye Adı">
                 </div>
                 <div class="form-group">
-                    <label>Yapılan İş / Açıklama</label>
-                    <textarea id="sahaAciklama" rows="3" placeholder="Saha detayları..."></textarea>
+                    <label>Açıklama</label>
+                    <textarea id="sahaAciklama" rows="3" placeholder="Yapılan işlemler..."></textarea>
                 </div>
-                <button class="btn" onclick="saveSahaFisi()">Saha Fişini Kaydet</button>
+                <button class="btn" onclick="addSaha()">Fişi Kaydet</button>
                 <table style="margin-top: 20px;">
                     <thead><tr><th>Tarih</th><th>Müşteri</th><th>Açıklama</th><th>İşlem</th></tr></thead>
                     <tbody id="sahaTableBody"></tbody>
@@ -377,17 +367,17 @@
             </div>
         </div>
 
-        <!-- 5. PERSONEL & İZİN/AVANS SEKMESİ -->
+        <!-- 5. PERSONEL & İZİN/AVANS -->
         <div id="personel" class="tab-pane">
             <div class="card">
-                <h3>Personel, İzin ve Avans Yönetimi</h3>
-                <div class="form-group">
+                <h3>Personel Yönetimi</h3>
+                <div class="form-group" style="margin-top: 15px;">
                     <label>Personel Adı Soyadı</label>
                     <input type="text" id="personelAd" placeholder="Ad Soyad">
                 </div>
                 <div class="form-group">
-                    <label>Pozisyon</label>
-                    <input type="text" id="personelUnvan" placeholder="Elektrik Mühendisi / Tekniker">
+                    <label>Unvan</label>
+                    <input type="text" id="personelUnvan" placeholder="Elektrik Mühendisi">
                 </div>
                 <button class="btn" onclick="addPersonel()">Personel Ekle</button>
                 <table style="margin-top: 20px;">
@@ -397,27 +387,27 @@
             </div>
         </div>
 
-        <!-- 6. MÜŞTERİLER & CARİ SEKMESİ -->
+        <!-- 6. MÜŞTERİLER & CARİ -->
         <div id="musteri" class="tab-pane">
             <div class="card">
                 <h3>Müşteriler & Cari Hesaplar</h3>
-                <div class="form-group">
-                    <label>Firma / Müşteri Ünvanı</label>
+                <div class="form-group" style="margin-top: 15px;">
+                    <label>Firma Ünvanı</label>
                     <input type="text" id="musteriUnvan" placeholder="Firma Adı">
                 </div>
                 <button class="btn" onclick="addMusteri()">Müşteri Ekle</button>
                 <table style="margin-top: 20px;">
-                    <thead><tr><th>Firma Ünvanı</th><th>Kayıt Tarihi</th><th>İşlem</th></tr></thead>
+                    <thead><tr><th>Firma Ünvanı</th><th>Tarih</th><th>İşlem</th></tr></thead>
                     <tbody id="musteriTableBody"></tbody>
                 </table>
             </div>
         </div>
 
-        <!-- 7. ÇÖP KUTUSU & ARŞİV SEKMESİ (Önemli: Kesinlikle Kaldırılmadı) -->
+        <!-- 7. ÇÖP KUTUSU & ARŞİV -->
         <div id="copKutusu" class="tab-pane">
             <div class="card" style="border: 2px dashed var(--danger-color); background: #fef2f2;">
                 <h3 style="color: var(--danger-color);">🗑️ Çöp Kutusu ve Silinen Öğeler Arşivi</h3>
-                <p style="margin-top: 6px; font-size: 0.9rem; color: #7f1d1d;">Silinen tüm veriler burada saklanır. Dilediğiniz zaman geri yükleyebilirsiniz.</p>
+                <p style="margin-top: 6px; font-size: 0.9rem; color: #7f1d1d;">Silinen veriler burada saklanır, dilediğiniz zaman geri yükleyebilirsiniz.</p>
                 <table style="margin-top: 15px;">
                     <thead>
                         <tr>
@@ -436,21 +426,9 @@
 
     </div>
 
-    <!-- JavaScript Kod Blokları ve Supabase Entegrasyonu -->
+    <!-- JavaScript Mantığı -->
     <script>
-        // Supabase Bağlantı Konfigürasyonu (İstediğiniz hesap entegre edildi)
-        const SUPABASE_URL = "https://your-supabase-project.supabase.co"; // Kendi proje linkinizi buraya yazabilirsiniz
-        const SUPABASE_ANON_KEY = "your-anon-key";
-        
-        // Supabase Client başlatma (Eğer kütüphane yüklüyse)
-        let supabaseClient = null;
-        try {
-            if(window.supabase) {
-                supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-            }
-        } catch(e) { console.warn("Supabase client init uyarı:", e); }
-
-        // Giriş Kontrol Mantığı (halilfatih.tulek@inomerenerji.com / 260513)
+        // Giriş Kontrolü (halilfatih.tulek@inomerenerji.com / 260513)
         function handleLogin() {
             const email = document.getElementById('loginEmail').value.trim();
             const pass = document.getElementById('loginPassword').value.trim();
@@ -460,7 +438,7 @@
                 localStorage.setItem("inomer_logged", "true");
                 document.getElementById('loginOverlay').style.display = 'none';
                 document.getElementById('appContainer').style.display = 'block';
-                initAppData();
+                initApp();
             } else {
                 errEl.innerText = "Hatalı e-posta veya şifre! (Şifre: 260513)";
             }
@@ -471,28 +449,24 @@
             location.reload();
         }
 
-        // Sayfa açıldığında oturum kontrolü
         window.onload = function() {
             if(localStorage.getItem("inomer_logged") === "true") {
                 document.getElementById('loginOverlay').style.display = 'none';
                 document.getElementById('appContainer').style.display = 'block';
-                initAppData();
+                initApp();
             }
         };
 
-        // Sekme Değiştirme Fonksiyonu
-        function switchTab(tabId, btnElement) {
+        function switchTab(tabId, btn) {
             document.querySelectorAll('.tab-pane').forEach(el => el.classList.remove('active'));
-            document.querySelectorAll('.nav-buttons button').forEach(el => el.classList.remove('active'));
-            
+            document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
             document.getElementById(tabId).classList.add('active');
-            if(btnElement) btnElement.classList.add('active');
+            if(btn) btn.classList.add('active');
         }
 
-        // Veri Yapıları ve State (LocalStorage tabanlı kalıcı mimari + Çöp Kutusu)
+        // State Yönetimi
         let stoklar = JSON.parse(localStorage.getItem('inomer_stok')) || [
-            { id: 1, barkod: '868001', ad: 'Daxler 585W TOPCon Panel', kategori: 'Solar Panel', miktar: 14, birim: 'Adet' },
-            { id: 2, barkod: '35NYAF01', ad: '35 mm² NYAF Bakır Kablo', kategori: 'Kablo', miktar: 250, birim: 'Metre' }
+            { id: 1, kod: 'SKU-01', ad: 'Daxler 585W TOPCon Panel', kategori: 'Solar', miktar: 14, birim: 'Adet' }
         ];
         let araziProjeler = JSON.parse(localStorage.getItem('inomer_arazi')) || [];
         let catiProjeler = JSON.parse(localStorage.getItem('inomer_cati')) || [];
@@ -503,7 +477,7 @@
         let musteriler = JSON.parse(localStorage.getItem('inomer_musteri')) || [];
         let copKutusu = JSON.parse(localStorage.getItem('inomer_cop')) || [];
 
-        function saveData() {
+        function saveAll() {
             localStorage.setItem('inomer_stok', JSON.stringify(stoklar));
             localStorage.setItem('inomer_arazi', JSON.stringify(araziProjeler));
             localStorage.setItem('inomer_cati', JSON.stringify(catiProjeler));
@@ -514,129 +488,106 @@
             updateStats();
         }
 
-        function initAppData() {
+        function initApp() {
             updateStats();
-            renderStokTable();
-            renderAraziTable();
-            renderCatiTable();
-            renderSahaTable();
-            renderPersonelTable();
-            renderMusteriTable();
-            renderTrashTable();
+            renderStok();
+            renderArazi();
+            renderCati();
+            renderSaha();
+            renderPersonel();
+            renderMusteri();
+            renderTrash();
         }
 
         function updateStats() {
             document.getElementById('statUrunCesit').innerText = stoklar.length;
-            let totalAdet = stoklar.reduce((sum, item) => sum + Number(item.miktar || 0), 0);
-            document.getElementById('statStokAdet').innerText = totalAdet;
-            let kritikCount = stoklar.filter(i => Number(i.miktar) < 5).length;
-            document.getElementById('statKritik').innerText = kritikCount;
+            let total = stoklar.reduce((acc, cur) => acc + Number(cur.miktar || 0), 0);
+            document.getElementById('statStokAdet').innerText = total;
+            document.getElementById('statKritik').innerText = stoklar.filter(i => Number(i.miktar) < 5).length;
             document.getElementById('statPersonel').innerText = personeller.length;
         }
 
-        // Stok İşlemleri
-        function openStokModal(type) {
+        // Stok Fonksiyonları
+        function addStok() {
             let ad = prompt("Ürün Adı:");
             if(!ad) return;
             let miktar = prompt("Miktar:", "10");
-            stoklar.push({ id: Date.now(), barkod: 'SKU-' + Math.floor(Math.random()*1000), ad, kategori: 'Genel', miktar: Number(miktar), birim: 'Adet' });
-            saveData();
-            renderStokTable();
+            stoklar.push({ id: Date.now(), kod: 'SKU-' + Math.floor(Math.random()*1000), ad, kategori: 'Genel', miktar: Number(miktar), birim: 'Adet' });
+            saveAll();
+            renderStok();
         }
+        window.addStokModal = addStok;
 
-        function renderStokTable() {
-            let tbody = document.getElementById('stokTableBody');
-            tbody.innerHTML = '';
+        function renderStok() {
+            let tb = document.getElementById('stokTableBody');
+            tb.innerHTML = '';
             stoklar.forEach(s => {
-                tbody.innerHTML += `
-                    <tr>
-                        <td>${s.barkod}</td>
-                        <td>${s.ad}</td>
-                        <td>${s.kategori}</td>
-                        <td>${s.miktar}</td>
-                        <td>${s.birim}</td>
-                        <td><button class="btn btn-danger" style="padding:4px 8px; font-size:0.75rem;" onclick="deleteStok(${s.id})">Sil</button></td>
-                    </tr>
-                `;
+                tb.innerHTML += `<tr><td>${s.kod}</td><td>${s.ad}</td><td>${s.kategori}</td><td>${s.miktar}</td><td>${s.birim}</td><td><button class="btn btn-danger" style="padding:4px 8px; font-size:0.75rem;" onclick="deleteItem('stok', ${s.id})">Sil</button></td></tr>`;
             });
         }
-
-        function deleteStok(id) {
-            let idx = stoklar.findIndex(i => i.id === id);
-            if(idx !== -1) {
-                copKutusu.push({ tur: 'Stok Ürün', detay: JSON.stringify(stoklar[idx]), zaman: new Date().toLocaleString('tr-TR') });
-                stoklar.splice(idx, 1);
-                saveData();
-                renderStokTable();
-                renderTrashTable();
-            }
-        }
-
         function filterStok() {
-            let query = document.getElementById('stokSearch').value.toLowerCase();
-            let rows = document.querySelectorAll('#stokTableBody tr');
-            rows.forEach(r => {
-                let text = r.innerText.toLowerCase();
-                r.style.display = text.includes(query) ? '' : 'none';
+            let q = document.getElementById('stokSearch').value.toLowerCase();
+            document.querySelectorAll('#stokTableBody tr').forEach(r => {
+                r.style.display = r.innerText.toLowerCase().includes(q) ? '' : 'none';
             });
         }
 
-        // Arazi GES İşlemleri
-        function addAraziProje() {
-            let ad = document.getElementById('araziProjeAd').value;
+        // Arazi GES
+        function addArazi() {
+            let ad = document.getElementById('araziAd').value;
             let guc = document.getElementById('araziGuc').value;
-            if(!ad) return alert("Proje adı giriniz.");
-            araziProjeler.push({ id: Date.now(), ad, guc, durum: 'Planlanıyor' });
-            document.getElementById('araziProjeAd').value = '';
+            if(!ad) return;
+            araziProjeler.push({ id: Date.now(), ad, guc });
+            document.getElementById('araziAd').value = '';
             document.getElementById('araziGuc').value = '';
-            saveData();
-            renderAraziTable();
+            saveAll();
+            renderArazi();
         }
-        function renderAraziTable() {
+        function renderArazi() {
             let tb = document.getElementById('araziTableBody');
             tb.innerHTML = '';
             araziProjeler.forEach(p => {
-                tb.innerHTML += `<tr><td>${p.ad}</td><td>${p.guc}</td><td>${p.durum}</td><td><button class="btn btn-danger" style="padding:4px 8px; font-size:0.75rem;" onclick="araziProjeler = araziProjeler.filter(x=>x.id!==${p.id}); saveData(); renderAraziTable();">Sil</button></td></tr>`;
+                tb.innerHTML += `<tr><td>${p.ad}</td><td>${p.guc}</td><td><button class="btn btn-danger" style="padding:4px 8px; font-size:0.75rem;" onclick="deleteItem('arazi', ${p.id})">Sil</button></td></tr>`;
             });
         }
 
-        // Çatı GES İşlemleri
-        function addCatiProje() {
+        // Çatı GES
+        function addCati() {
             let tesis = document.getElementById('catiTesis').value;
             if(!tesis) return;
             catiProjeler.push({ id: Date.now(), tesis, tarih: new Date().toLocaleDateString('tr-TR') });
             document.getElementById('catiTesis').value = '';
-            saveData();
-            renderCatiTable();
+            saveAll();
+            renderCati();
         }
-        function renderCatiTable() {
+        function renderCati() {
             let tb = document.getElementById('catiTableBody');
             tb.innerHTML = '';
             catiProjeler.forEach(c => {
-                tb.innerHTML += `<tr><td>${c.tesis}</td><td>${c.tarih}</td><td><button class="btn btn-danger" style="padding:4px 8px; font-size:0.75rem;" onclick="catiProjeler = catiProjeler.filter(x=>x.id!==${c.id}); saveData(); renderCatiTable();">Sil</button></td></tr>`;
+                tb.innerHTML += `<tr><td>${c.tesis}</td><td>${c.tarih}</td><td><button class="btn btn-danger" style="padding:4px 8px; font-size:0.75rem;" onclick="deleteItem('cati', ${c.id})">Sil</button></td></tr>`;
             });
         }
 
-        // Saha Fişi İşlemleri
-        function saveSahaFisi() {
+        // Saha Fişi
+        function addSaha() {
             let musteri = document.getElementById('sahaMusteri').value;
             let aciklama = document.getElementById('sahaAciklama').value;
-            if(!musteri || !aciklama) return alert("Alanları doldurun.");
+            if(!musteri) return;
             sahaFisleri.push({ id: Date.now(), musteri, aciklama, tarih: new Date().toLocaleDateString('tr-TR') });
             document.getElementById('sahaMusteri').value = '';
             document.getElementById('sahaAciklama').value = '';
-            saveData();
-            renderSahaTable();
+            saveAll();
+            renderSaha();
         }
-        function renderSahaTable() {
+        function renderSaha() {
             let tb = document.getElementById('sahaTableBody');
             tb.innerHTML = '';
             sahaFisleri.forEach(s => {
-                tb.innerHTML += `<tr><td>${s.tarih}</td><td>${s.musteri}</td><td>${s.aciklama}</td><td><button class="btn btn-danger" style="padding:4px 8px; font-size:0.75rem;" onclick="sahaFisleri = sahaFisleri.filter(x=>x.id!==${s.id}); saveData(); renderSahaTable();">Sil</button></td></tr>`;
+                tb.innerHTML += `<tr><td>${s.tarih}</td><td>${s.musteri}</td><td>${s.aciklama}</td><td><button class="btn btn-danger" style="padding:4px 8px; font-size:0.75rem;" onclick="deleteItem('saha', ${s.id})">Sil</button></td></tr>`;
             });
         }
 
-        // Personel İşlemleri
+        // Personel
         function addPersonel() {
             let ad = document.getElementById('personelAd').value;
             let unvan = document.getElementById('personelUnvan').value;
@@ -644,36 +595,54 @@
             personeller.push({ id: Date.now(), ad, unvan });
             document.getElementById('personelAd').value = '';
             document.getElementById('personelUnvan').value = '';
-            saveData();
-            renderPersonelTable();
+            saveAll();
+            renderPersonel();
         }
-        function renderPersonelTable() {
+        function renderPersonel() {
             let tb = document.getElementById('personelTableBody');
             tb.innerHTML = '';
             personeller.forEach(p => {
-                tb.innerHTML += `<tr><td>${p.ad}</td><td>${p.unvan}</td><td><button class="btn btn-danger" style="padding:4px 8px; font-size:0.75rem;" onclick="personeller = personeller.filter(x=>x.id!==${p.id}); saveData(); renderPersonelTable();">Sil</button></td></tr>`;
+                tb.innerHTML += `<tr><td>${p.ad}</td><td>${p.unvan}</td><td><button class="btn btn-danger" style="padding:4px 8px; font-size:0.75rem;" onclick="deleteItem('personel', ${p.id})">Sil</button></td></tr>`;
             });
         }
 
-        // Müşteri İşlemleri
+        // Müşteri
         function addMusteri() {
             let unvan = document.getElementById('musteriUnvan').value;
             if(!unvan) return;
             musteriler.push({ id: Date.now(), unvan, tarih: new Date().toLocaleDateString('tr-TR') });
             document.getElementById('musteriUnvan').value = '';
-            saveData();
-            renderMusteriTable();
+            saveAll();
+            renderMusteri();
         }
-        function renderMusteriTable() {
+        function renderMusteri() {
             let tb = document.getElementById('musteriTableBody');
             tb.innerHTML = '';
             musteriler.forEach(m => {
-                tb.innerHTML += `<tr><td>${m.unvan}</td><td>${m.tarih}</td><td><button class="btn btn-danger" style="padding:4px 8px; font-size:0.75rem;" onclick="musteriler = musteriler.filter(x=>x.id!==${m.id}); saveData(); renderMusteriTable();">Sil</button></td></tr>`;
+                tb.innerHTML += `<tr><td>${m.unvan}</td><td>${m.tarih}</td><td><button class="btn btn-danger" style="padding:4px 8px; font-size:0.75rem;" onclick="deleteItem('musteri', ${m.id})">Sil</button></td></tr>`;
             });
         }
 
-        // Çöp Kutusu ve Geri Yükleme
-        function renderTrashTable() {
+        // Genel Silme ve Çöp Kutusu Yönetimi
+        function deleteItem(type, id) {
+            let arr, trashName;
+            if(type === 'stok') { arr = stoklar; trashName = 'Stok Ürün'; }
+            else if(type === 'arazi') { arr = araziProjeler; trashName = 'Arazi Proje'; }
+            else if(type === 'cati') { arr = catiProjeler; trashName = 'Çatı Proje'; }
+            else if(type === 'saha') { arr = sahaFisleri; trashName = 'Saha Fişi'; }
+            else if(type === 'personel') { arr = personeller; trashName = 'Personel'; }
+            else if(type === 'musteri') { arr = musteriler; trashName = 'Müşteri'; }
+
+            let idx = arr.findIndex(i => i.id === id);
+            if(idx !== -1) {
+                copKutusu.push({ tur: trashName, detay: JSON.stringify(arr[idx]), zaman: new Date().toLocaleString('tr-TR') });
+                arr.splice(idx, 1);
+                saveAll();
+                initApp();
+            }
+        }
+
+        function renderTrash() {
             let tb = document.getElementById('trashTableBody');
             tb.innerHTML = '';
             if(copKutusu.length === 0) {
@@ -681,24 +650,21 @@
                 return;
             }
             copKutusu.forEach((c, idx) => {
-                tb.innerHTML += `
-                    <tr>
-                        <td>${c.tur}</td>
-                        <td><small>${c.detay}</small></td>
-                        <td>${c.zaman}</td>
-                        <td><button class="btn btn-success" style="padding:4px 8px; font-size:0.75rem;" onclick="restoreTrash(${idx})">Geri Yükle</button></td>
-                    </tr>
-                `;
+                tb.innerHTML += `<tr><td>${c.tur}</td><td><small>${c.detay}</small></td><td>${c.zaman}</td><td><button class="btn btn-success" style="padding:4px 8px; font-size:0.75rem;" onclick="restoreTrash(${idx})">Geri Yükle</button></td></tr>`;
             });
         }
 
         function restoreTrash(idx) {
             let item = copKutusu.splice(idx, 1)[0];
-            let parsed = JSON.parse(item.detay);
-            if(item.tur.includes('Stok')) stoklar.push(parsed);
-            saveData();
-            renderTrashTable();
-            renderStokTable();
+            let p = JSON.parse(item.detay);
+            if(item.tur.includes('Stok')) stoklar.push(p);
+            else if(item.tur.includes('Arazi')) araziProjeler.push(p);
+            else if(item.tur.includes('Çatı')) catiProjeler.push(p);
+            else if(item.tur.includes('Saha')) sahaFisleri.push(p);
+            else if(item.tur.includes('Personel')) personeller.push(p);
+            else if(item.tur.includes('Müşteri')) musteriler.push(p);
+            saveAll();
+            initApp();
         }
     </script>
 </body>
