@@ -128,6 +128,8 @@
         .btn-outline:hover { background: var(--slate-200); }
         .btn-success { background: var(--success); width: auto; padding: 6px 12px; font-size: 0.78rem; }
         .btn-success:hover { background: #15803d; }
+        .btn-danger { background: var(--danger); width: auto; padding: 6px 12px; font-size: 0.78rem; }
+        .btn-danger:hover { background: #b91c1c; }
 
         /* Ana Düzen & Hamburger Menü Yapısı */
         .app-layout {
@@ -477,18 +479,18 @@
 </head>
 <body>
 
-    <!-- GİRİŞ EKRANI -->
+    <!-- GİRİŞ EKRANI (Boş ve Güvenli) -->
     <div id="loginOverlay">
         <div class="login-card">
             <h2 style="color:var(--primary);">İNOMER ENERJİ</h2>
             <p>Kurumsal ERP & Yönetim Paneli</p>
             <div class="form-group">
                 <label>E-posta Adresi</label>
-                <input type="email" id="loginEmail" value="admin@inomerenerji.com">
+                <input type="email" id="loginEmail" placeholder="ornek@inomerenerji.com">
             </div>
             <div class="form-group">
                 <label>Şifre</label>
-                <input type="password" id="loginPass" value="123456">
+                <input type="password" id="loginPass" placeholder="••••••••">
             </div>
             <button class="btn" onclick="handleLogin()">Sisteme Giriş Yap</button>
         </div>
@@ -619,9 +621,16 @@
                     <div class="card-header"><h3>Stok Listesi</h3></div>
                     <div class="table-container">
                         <table>
-                            <thead><tr><th>Barkod</th><th>Ürün Adı</th><th>Marka</th><th>Fiyat</th><th>Fotoğraflar</th></tr></thead>
+                            <thead><tr><th>Barkod</th><th>Ürün Adı</th><th>Marka</th><th>Fiyat</th><th>Fotoğraflar</th><th>İşlem</th></tr></thead>
                             <tbody id="stokTableBody">
-                                <tr><td><span class="barcode-badge">869001</span></td><td>Daxler 585W Panel</td><td>Daxler</td><td>₺4.200</td><td>-</td></tr>
+                                <tr>
+                                    <td><span class="barcode-badge">869001</span></td>
+                                    <td>Daxler 585W Panel</td>
+                                    <td>Daxler</td>
+                                    <td>₺4.200</td>
+                                    <td>-</td>
+                                    <td><button class="btn btn-danger" onclick="deleteRow(this)">Sil 🗑️</button></td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>
@@ -645,7 +654,7 @@
                     <div class="card-header"><h3>Arazi GES Projeleri</h3></div>
                     <div class="table-container">
                         <table>
-                            <thead><tr><th>Barkod</th><th>Proje Adı</th><th>Lokasyon</th><th>Güç</th><th>Fotoğraflar</th></tr></thead>
+                            <thead><tr><th>Barkod</th><th>Proje Adı</th><th>Lokasyon</th><th>Güç</th><th>Fotoğraflar</th><th>İşlem</th></tr></thead>
                             <tbody id="araziTableBody"></tbody>
                         </table>
                     </div>
@@ -667,7 +676,7 @@
                 <div class="card">
                     <div class="table-container">
                         <table>
-                            <thead><tr><th>Barkod</th><th>Tesis</th><th>Güç</th><th>Fotoğraflar</th></tr></thead>
+                            <thead><tr><th>Barkod</th><th>Tesis</th><th>Güç</th><th>Fotoğraflar</th><th>İşlem</th></tr></thead>
                             <tbody id="catiTableBody"></tbody>
                         </table>
                     </div>
@@ -689,7 +698,7 @@
                 <div class="card">
                     <div class="table-container">
                         <table>
-                            <thead><tr><th>Barkod</th><th>Sorumlu</th><th>Açıklama</th><th>Fotoğraflar</th></tr></thead>
+                            <thead><tr><th>Barkod</th><th>Sorumlu</th><th>Açıklama</th><th>Fotoğraflar</th><th>İşlem</th></tr></thead>
                             <tbody id="sahaTableBody"></tbody>
                         </table>
                     </div>
@@ -711,7 +720,7 @@
                 <div class="card">
                     <div class="table-container">
                         <table>
-                            <thead><tr><th>Barkod</th><th>Plaka</th><th>Model</th><th>Fotoğraflar</th></tr></thead>
+                            <thead><tr><th>Barkod</th><th>Plaka</th><th>Model</th><th>Fotoğraflar</th><th>İşlem</th></tr></thead>
                             <tbody id="aracTableBody"></tbody>
                         </table>
                     </div>
@@ -732,7 +741,7 @@
                 <div class="card">
                     <div class="table-container">
                         <table>
-                            <thead><tr><th>Barkod</th><th>Ekipman Adı</th><th>Fotoğraflar</th></tr></thead>
+                            <thead><tr><th>Barkod</th><th>Ekipman Adı</th><th>Fotoğraflar</th><th>İşlem</th></tr></thead>
                             <tbody id="ekipmanTableBody"></tbody>
                         </table>
                     </div>
@@ -754,7 +763,7 @@
                 <div class="card">
                     <div class="table-container">
                         <table>
-                            <thead><tr><th>Sicil</th><th>Ad Soyad</th><th>Pozisyon</th><th>Fotoğraflar</th></tr></thead>
+                            <thead><tr><th>Sicil</th><th>Ad Soyad</th><th>Pozisyon</th><th>Fotoğraflar</th><th>İşlem</th></tr></thead>
                             <tbody id="personelTableBody"></tbody>
                         </table>
                     </div>
@@ -776,7 +785,7 @@
                 <div class="card">
                     <div class="table-container">
                         <table>
-                            <thead><tr><th>Barkod</th><th>Personel</th><th>Gün</th><th>Fotoğraflar</th></tr></thead>
+                            <thead><tr><th>Barkod</th><th>Personel</th><th>Gün</th><th>Fotoğraflar</th><th>İşlem</th></tr></thead>
                             <tbody id="izinTableBody"></tbody>
                         </table>
                     </div>
@@ -798,7 +807,7 @@
                 <div class="card">
                     <div class="table-container">
                         <table>
-                            <thead><tr><th>Barkod</th><th>Personel</th><th>Tutar</th><th>Fotoğraflar</th></tr></thead>
+                            <thead><tr><th>Barkod</th><th>Personel</th><th>Tutar</th><th>Fotoğraflar</th><th>İşlem</th></tr></thead>
                             <tbody id="avansTableBody"></tbody>
                         </table>
                     </div>
@@ -823,7 +832,7 @@
                     <div class="card-header"><h3>KolayBi Aktarılan Faturalar</h3></div>
                     <div class="table-container">
                         <table>
-                            <thead><tr><th>Barkod / Fatura No</th><th>Tutar</th><th>Fotoğraflar</th><th>KolayBi Durum</th></tr></thead>
+                            <thead><tr><th>Barkod / Fatura No</th><th>Tutar</th><th>Fotoğraflar</th><th>KolayBi Durum</th><th>İşlem</th></tr></thead>
                             <tbody id="kolayBiTableBody"></tbody>
                         </table>
                     </div>
@@ -846,7 +855,7 @@
                     <div class="card-header"><h3>Cari Listesi ve KolayBi Senkronizasyonu</h3></div>
                     <div class="table-container">
                         <table>
-                            <thead><tr><th>Barkod</th><th>Firma Adı</th><th>Telefon</th><th>Fotoğraflar</th><th>KolayBi Cari İşlemi</th></tr></thead>
+                            <thead><tr><th>Barkod</th><th>Firma Adı</th><th>Telefon</th><th>Fotoğraflar</th><th>KolayBi Cari İşlemi</th><th>İşlem</th></tr></thead>
                             <tbody id="musteriTableBody"></tbody>
                         </table>
                     </div>
@@ -868,7 +877,7 @@
                 <div class="card">
                     <div class="table-container">
                         <table>
-                            <thead><tr><th>Barkod</th><th>Konu</th><th>Tutar</th><th>Fotoğraflar</th></tr></thead>
+                            <thead><tr><th>Barkod</th><th>Konu</th><th>Tutar</th><th>Fotoğraflar</th><th>İşlem</th></tr></thead>
                             <tbody id="teklifTableBody"></tbody>
                         </table>
                     </div>
@@ -890,7 +899,7 @@
                 <div class="card">
                     <div class="table-container">
                         <table>
-                            <thead><tr><th>Barkod</th><th>Tanım</th><th>Tedarikçi</th><th>Fotoğraflar</th></tr></thead>
+                            <thead><tr><th>Barkod</th><th>Tanım</th><th>Tedarikçi</th><th>Fotoğraflar</th><th>İşlem</th></tr></thead>
                             <tbody id="siparisTableBody"></tbody>
                         </table>
                     </div>
@@ -911,7 +920,7 @@
                 <div class="card">
                     <div class="table-container">
                         <table>
-                            <thead><tr><th>Barkod</th><th>Rapor Adı</th><th>Fotoğraflar</th></tr></thead>
+                            <thead><tr><th>Barkod</th><th>Rapor Adı</th><th>Fotoğraflar</th><th>İşlem</th></tr></thead>
                             <tbody id="raporTableBody"></tbody>
                         </table>
                     </div>
@@ -947,7 +956,7 @@
                 <div class="card">
                     <div class="table-container">
                         <table>
-                            <thead><tr><th>Barkod</th><th>Belge Adı</th><th>Fotoğraflar</th></tr></thead>
+                            <thead><tr><th>Barkod</th><th>Belge Adı</th><th>Fotoğraflar</th><th>İşlem</th></tr></thead>
                             <tbody id="belgeTableBody"></tbody>
                         </table>
                     </div>
@@ -980,11 +989,26 @@
 
     <script>
         function handleLogin() {
-            document.getElementById('loginOverlay').style.display = 'none';
-            document.getElementById('appContainer').style.display = 'flex';
+            let email = document.getElementById('loginEmail').value.trim();
+            let pass = document.getElementById('loginPass').value.trim();
+
+            if (!email || !pass) {
+                alert('Lütfen e-posta ve şifrenizi giriniz!');
+                return;
+            }
+
+            // Güvenlik kontrolü (Örnek yetkili bilgileri)
+            if (email === 'admin@inomerenerji.com' && pass === '123456') {
+                document.getElementById('loginOverlay').style.display = 'none';
+                document.getElementById('appContainer').style.display = 'flex';
+            } else {
+                alert('Hatalı e-posta veya şifre! Lütfen tekrar deneyin.');
+            }
         }
 
         function handleLogout() {
+            document.getElementById('loginEmail').value = '';
+            document.getElementById('loginPass').value = '';
             document.getElementById('appContainer').style.display = 'none';
             document.getElementById('loginOverlay').style.display = 'flex';
         }
@@ -1019,6 +1043,12 @@
             alert(targetName + ' verileri KolayBi bulut sistemine başarıyla senkronize edildi!');
         }
 
+        function deleteRow(btn) {
+            let row = btn.closest('tr');
+            row.remove();
+            alert('Kayıt başarıyla silindi!');
+        }
+
         function addItem(type) {
             let fileInput = document.getElementById(type + 'Dosya');
             let files = fileInput ? fileInput.files : [];
@@ -1039,65 +1069,66 @@
             let row = document.createElement('tr');
             let barkod = document.getElementById(type + 'Barkod') ? document.getElementById(type + 'Barkod').value || 'N/A' : 'N/A';
             let bHtml = `<span class="barcode-badge">${barkod}</span>`;
+            let delBtnHtml = `<td><button class="btn btn-danger" onclick="deleteRow(this)">Sil 🗑️</button></td>`;
 
             if (type === 'stok') {
                 let a = document.getElementById('stokAd').value || 'Ürün';
                 let m = document.getElementById('stokMarkaModel').value || '-';
                 let f = document.getElementById('stokSatis').value || '0';
-                row.innerHTML = `<td>${bHtml}</td><td>${a}</td><td>${m}</td><td>₺${f}</td><td><div class="file-preview-box">${thumbsHtml}</div></td>`;
+                row.innerHTML = `<td>${bHtml}</td><td>${a}</td><td>${m}</td><td>₺${f}</td><td><div class="file-preview-box">${thumbsHtml}</div></td>${delBtnHtml}`;
             } else if (type === 'arazi') {
                 let ad = document.getElementById('araziAd').value || 'Proje';
                 let lok = document.getElementById('araziLokasyon').value || '-';
                 let guc = document.getElementById('araziGuc').value || '-';
-                row.innerHTML = `<td>${bHtml}</td><td>${ad}</td><td>${lok}</td><td>${guc}</td><td><div class="file-preview-box">${thumbsHtml}</div></td>`;
+                row.innerHTML = `<td>${bHtml}</td><td>${ad}</td><td>${lok}</td><td>${guc}</td><td><div class="file-preview-box">${thumbsHtml}</div></td>${delBtnHtml}`;
             } else if (type === 'cati') {
                 let t = document.getElementById('catiTesis').value || 'Tesis';
                 let g = document.getElementById('catiGuc').value || '-';
-                row.innerHTML = `<td>${bHtml}</td><td>${t}</td><td>${g}</td><td><div class="file-preview-box">${thumbsHtml}</div></td>`;
+                row.innerHTML = `<td>${bHtml}</td><td>${t}</td><td>${g}</td><td><div class="file-preview-box">${thumbsHtml}</div></td>${delBtnHtml}`;
             } else if (type === 'saha') {
                 let per = document.getElementById('sahaPersonel').value || '-';
                 let acik = document.getElementById('sahaAciklama').value || '-';
-                row.innerHTML = `<td>${bHtml}</td><td>${per}</td><td>${acik}</td><td><div class="file-preview-box">${thumbsHtml}</div></td>`;
+                row.innerHTML = `<td>${bHtml}</td><td>${per}</td><td>${acik}</td><td><div class="file-preview-box">${thumbsHtml}</div></td>${delBtnHtml}`;
             } else if (type === 'arac') {
                 let plaka = document.getElementById('aracPlaka').value || '35 ABC';
                 let model = document.getElementById('aracModel').value || '-';
-                row.innerHTML = `<td>${bHtml}</td><td>${plaka}</td><td>${model}</td><td><div class="file-preview-box">${thumbsHtml}</div></td>`;
+                row.innerHTML = `<td>${bHtml}</td><td>${plaka}</td><td>${model}</td><td><div class="file-preview-box">${thumbsHtml}</div></td>${delBtnHtml}`;
             } else if (type === 'ekipman') {
                 let ad = document.getElementById('ekipmanAd').value || 'Ekipman';
-                row.innerHTML = `<td>${bHtml}</td><td>${ad}</td><td><div class="file-preview-box">${thumbsHtml}</div></td>`;
+                row.innerHTML = `<td>${bHtml}</td><td>${ad}</td><td><div class="file-preview-box">${thumbsHtml}</div></td>${delBtnHtml}`;
             } else if (type === 'personel') {
                 let ad = document.getElementById('personelAd').value || 'Personel';
                 let poz = document.getElementById('personelPoz').value || '-';
-                row.innerHTML = `<td>${bHtml}</td><td>${ad}</td><td>${poz}</td><td><div class="file-preview-box">${thumbsHtml}</div></td>`;
+                row.innerHTML = `<td>${bHtml}</td><td>${ad}</td><td>${poz}</td><td><div class="file-preview-box">${thumbsHtml}</div></td>${delBtnHtml}`;
             } else if (type === 'izin') {
                 let ad = document.getElementById('izinAd').value || 'Personel';
                 let gun = document.getElementById('izinGun').value || '1';
-                row.innerHTML = `<td>${bHtml}</td><td>${ad}</td><td>${gun} Gün</td><td><div class="file-preview-box">${thumbsHtml}</div></td>`;
+                row.innerHTML = `<td>${bHtml}</td><td>${ad}</td><td>${gun} Gün</td><td><div class="file-preview-box">${thumbsHtml}</div></td>${delBtnHtml}`;
             } else if (type === 'avans') {
                 let ad = document.getElementById('avansAd').value || 'Personel';
                 let tutar = document.getElementById('avansTutar').value || '0';
-                row.innerHTML = `<td>${bHtml}</td><td>${ad}</td><td>₺${tutar}</td><td><div class="file-preview-box">${thumbsHtml}</div></td>`;
+                row.innerHTML = `<td>${bHtml}</td><td>${ad}</td><td>₺${tutar}</td><td><div class="file-preview-box">${thumbsHtml}</div></td>${delBtnHtml}`;
             } else if (type === 'kolayBi') {
                 let tutar = document.getElementById('faturaTutar').value || '0';
-                row.innerHTML = `<td>${bHtml}</td><td>₺${tutar}</td><td><div class="file-preview-box">${thumbsHtml}</div></td><td><button class="btn btn-success" onclick="syncKolayBi('Fatura #${bHtml}')">KolayBi'ye Gönderildi ✅</button></td>`;
+                row.innerHTML = `<td>${bHtml}</td><td>₺${tutar}</td><td><div class="file-preview-box">${thumbsHtml}</div></td><td><button class="btn btn-success" onclick="syncKolayBi('Fatura #${bHtml}')">KolayBi'ye Gönderildi ✅</button></td>${delBtnHtml}`;
             } else if (type === 'musteri') {
                 let ad = document.getElementById('cariAd').value || 'Firma';
                 let tel = document.getElementById('cariTel').value || '-';
-                row.innerHTML = `<td>${bHtml}</td><td>${ad}</td><td>${tel}</td><td><div class="file-preview-box">${thumbsHtml}</div></td><td><button class="btn btn-success" onclick="syncKolayBi('Cari ${ad}')">KolayBi'ye Aktar</button></td>`;
+                row.innerHTML = `<td>${bHtml}</td><td>${ad}</td><td>${tel}</td><td><div class="file-preview-box">${thumbsHtml}</div></td><td><button class="btn btn-success" onclick="syncKolayBi('Cari ${ad}')">KolayBi'ye Aktar</button></td>${delBtnHtml}`;
             } else if (type === 'teklif') {
                 let konu = document.getElementById('teklifKonu').value || 'Teklif';
                 let tutar = document.getElementById('teklifTutar').value || '0';
-                row.innerHTML = `<td>${bHtml}</td><td>${konu}</td><td>₺${tutar}</td><td><div class="file-preview-box">${thumbsHtml}</div></td>`;
+                row.innerHTML = `<td>${bHtml}</td><td>${konu}</td><td>₺${tutar}</td><td><div class="file-preview-box">${thumbsHtml}</div></td>${delBtnHtml}`;
             } else if (type === 'siparis') {
                 let ad = document.getElementById('siparisAd').value || 'Sipariş';
                 let ted = document.getElementById('siparisTed').value || '-';
-                row.innerHTML = `<td>${bHtml}</td><td>${ad}</td><td>${sted}</td><td><div class="file-preview-box">${thumbsHtml}</div></td>`;
+                row.innerHTML = `<td>${bHtml}</td><td>${ad}</td><td>${ted}</td><td><div class="file-preview-box">${thumbsHtml}</div></td>${delBtnHtml}`;
             } else if (type === 'rapor') {
                 let ad = document.getElementById('raporAd').value || 'Rapor';
-                row.innerHTML = `<td>${bHtml}</td><td>${ad}</td><td><div class="file-preview-box">${thumbsHtml}</div></td>`;
+                row.innerHTML = `<td>${bHtml}</td><td>${ad}</td><td><div class="file-preview-box">${thumbsHtml}</div></td>${delBtnHtml}`;
             } else if (type === 'belge') {
                 let ad = document.getElementById('belgeAd').value || 'Belge';
-                row.innerHTML = `<td>${bHtml}</td><td>${ad}</td><td><div class="file-preview-box">${thumbsHtml}</div></td>`;
+                row.innerHTML = `<td>${bHtml}</td><td>${ad}</td><td><div class="file-preview-box">${thumbsHtml}</div></td>${delBtnHtml}`;
             }
 
             tbody.appendChild(row);
