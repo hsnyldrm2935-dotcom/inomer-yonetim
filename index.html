@@ -4,13 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>İNOMER ENERJİ | Kurumsal ERP & Yönetim Paneli</title>
-    <!-- Html5-Qrcode Kütüphanesi (Barkod Okuma için) -->
     <script src="https://unpkg.com/html5-qrcode"></script>
     <style>
         :root {
             --primary: #dc2626;       /* Kırmızı */
             --primary-dark: #b91c1c;  /* Koyu Kırmızı */
-            --primary-light: #fef2f2; /* Çok açık kırmızı / zemin */
+            --primary-light: #fef2f2; /* Çok açık kırmızı zemin */
             --slate-900: #18181b;
             --slate-800: #27272a;
             --slate-700: #3f3f46;
@@ -22,7 +21,6 @@
             --text-main: #18181b;
             --text-muted: #71717a;
             --success: #16a34a;
-            --warning: #d97706;
             --danger: #dc2626;
             --radius: 10px;
             --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
@@ -128,21 +126,27 @@
         .btn:hover { background: var(--primary-dark); }
         .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--slate-700); width: auto; }
         .btn-outline:hover { background: var(--slate-200); }
-        .btn-success { background: var(--success); width: auto; color: white; }
 
-        /* Ana Düzen */
+        /* Ana Düzen & Hamburger Menü Yapısı */
         .app-layout {
             display: flex;
             min-height: 100vh;
+            position: relative;
         }
 
         .sidebar {
             width: 280px;
-            background: var(--white);
+            background: var(--white); /* Beyaz Menü */
             color: var(--slate-900);
             display: flex;
             flex-direction: column;
             border-right: 1px solid var(--border);
+            transition: transform 0.3s ease, margin-left 0.3s ease;
+            z-index: 100;
+        }
+
+        .sidebar.collapsed {
+            margin-left: -280px;
         }
 
         .sidebar-brand {
@@ -150,8 +154,8 @@
             border-bottom: 1px solid var(--border);
             display: flex;
             align-items: center;
-            gap: 12px;
-            background: var(--slate-100);
+            justify-content: space-between;
+            background: var(--white);
         }
 
         .sidebar-menu {
@@ -196,7 +200,7 @@
         }
 
         .nav-btn.active {
-            background: var(--primary);
+            background: var(--primary); /* Kırmızı Aktif Menü */
             color: #fff;
             font-weight: 600;
         }
@@ -206,7 +210,8 @@
             padding: 28px 36px;
             overflow-y: auto;
             background: var(--slate-100);
-            max-width: calc(100vw - 280px);
+            transition: all 0.3s ease;
+            width: 100%;
         }
 
         .top-navbar {
@@ -219,11 +224,27 @@
             border-radius: var(--radius);
             border: 1px solid var(--border);
             box-shadow: var(--shadow);
+            gap: 12px;
         }
+
+        .hamburger-btn {
+            background: transparent;
+            border: 1px solid var(--border);
+            padding: 8px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--slate-700);
+            font-weight: 600;
+        }
+        .hamburger-btn:hover { background: var(--slate-100); }
 
         .search-box {
             position: relative;
-            width: 320px;
+            width: 280px;
         }
 
         .search-box input {
@@ -292,7 +313,7 @@
 
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 16px;
             margin-bottom: 28px;
         }
@@ -326,7 +347,7 @@
         }
 
         .stat-card .value {
-            font-size: 1.5rem;
+            font-size: 1.4rem;
             font-weight: 700;
             color: var(--slate-900);
         }
@@ -435,6 +456,21 @@
             z-index: 1000;
             padding: 16px;
         }
+
+        @media(max-width: 768px) {
+            .sidebar {
+                position: fixed;
+                height: 100%;
+                left: 0;
+                top: 0;
+            }
+            .sidebar.collapsed {
+                margin-left: -280px;
+            }
+            .main-content {
+                padding: 16px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -459,10 +495,11 @@
     <!-- ANA UYGULAMA LAYOUT -->
     <div class="app-layout" id="appContainer" style="display: none;">
         
-        <!-- YAN MENÜ (BEYAZ & KIRMIZI) -->
-        <aside class="sidebar">
+        <!-- YAN MENÜ -->
+        <aside class="sidebar" id="sidebar">
             <div class="sidebar-brand">
                 <span style="font-weight: 700; letter-spacing: 0.5px; font-size: 1rem; color:var(--slate-900);">İNOMER <span style="color:var(--primary)">ENERJİ</span></span>
+                <button onclick="toggleSidebar()" class="btn btn-outline" style="padding: 4px 8px; font-size: 0.8rem;">✕</button>
             </div>
             <ul class="sidebar-menu">
                 <div class="menu-section-title">🏠 Genel</div>
@@ -503,9 +540,12 @@
             
             <!-- ÜST BAR -->
             <div class="top-navbar">
-                <div class="search-box">
-                    <span>🔍</span>
-                    <input type="text" id="globalSearch" placeholder="Genel arama yap...">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <button class="hamburger-btn" onclick="toggleSidebar()">☰ Menü</button>
+                    <div class="search-box">
+                        <span>🔍</span>
+                        <input type="text" id="globalSearch" placeholder="Genel arama yap...">
+                    </div>
                 </div>
                 <div class="top-actions">
                     <div class="notification-bell" onclick="toggleNotifications()">
@@ -542,7 +582,7 @@
                         <div class="value">14</div>
                     </div>
                     <div class="stat-card">
-                        <h4>Kritik Stoktaki Ürünler</h4>
+                        <h4>Kritik Stok</h4>
                         <div class="value" style="color:var(--danger)">2</div>
                     </div>
                     <div class="stat-card">
@@ -550,13 +590,13 @@
                         <div class="value">4</div>
                     </div>
                     <div class="stat-card">
-                        <h4>Bekleyen İzinler</h4>
+                        <h4>Bekleyen İzin</h4>
                         <div class="value">1</div>
                     </div>
                 </div>
                 <div class="card">
                     <div class="card-header"><h3>İnomer Enerji Yönetim Paneline Hoş Geldiniz</h3></div>
-                    <p style="color:var(--text-muted); font-size: 0.9rem;">Tüm menülerde sağ üst köşeden barkod/seri numarası girebilir ve alt kısımdan fotoğraflar/belgeler yükleyebilirsiniz.</p>
+                    <p style="color:var(--text-muted); font-size: 0.9rem;">Sol üstteki **☰ Menü** butonuna basarak menüyü daraltıp açabilirsiniz. Tüm modüller eksiksiz olarak yer almaktadır.</p>
                 </div>
             </div>
 
@@ -565,7 +605,7 @@
                 <div class="card">
                     <div class="card-header"><h3>Yeni Ürün / Malzeme Ekle</h3></div>
                     <div class="form-grid">
-                        <div class="form-group"><label>Barkod / Seri No</label><input type="text" id="stokBarkod" placeholder="Barkod giriniz veya okutunuz"></div>
+                        <div class="form-group"><label>Barkod / Seri No</label><input type="text" id="stokBarkod" placeholder="Barkod giriniz"></div>
                         <div class="form-group"><label>Ürün Adı</label><input type="text" id="stokAd" placeholder="Örn: Daxler 585W Panel"></div>
                         <div class="form-group"><label>Marka & Model</label><input type="text" id="stokMarkaModel" placeholder="Marka bilgisi"></div>
                         <div class="form-group"><label>Satış Fiyatı (₺)</label><input type="number" id="stokSatis" placeholder="0.00"></div>
@@ -613,20 +653,19 @@
             <!-- 4. 🏭 ÇATI GES & TRAFO -->
             <div id="catiGes" class="tab-pane">
                 <div class="card">
-                    <div class="card-header"><h3>Çatı GES & Trafo Tesisi Ekle</h3></div>
+                    <div class="card-header"><h3>Çatı GES & Trafo Projeleri</h3></div>
                     <div class="form-grid">
-                        <div class="form-group"><label>Tesis Barkodu</label><input type="text" id="catiBarkod" placeholder="TRF-BARKOD-01"></div>
-                        <div class="form-group"><label>Tesis Adı</label><input type="text" id="catiTesis" placeholder="Fabrika Çatı GES"></div>
-                        <div class="form-group"><label>Güç (kW)</label><input type="text" id="catiGuc" placeholder="250 kW"></div>
-                        <div class="form-group full"><label>📸 Tesis Fotoğrafları</label><input type="file" id="catiDosya" multiple accept="image/*"></div>
+                        <div class="form-group"><label>Barkod</label><input type="text" id="catiBarkod"></div>
+                        <div class="form-group"><label>Tesis Adı</label><input type="text" id="catiTesis"></div>
+                        <div class="form-group"><label>Güç</label><input type="text" id="catiGuc"></div>
+                        <div class="form-group full"><label>📸 Fotoğraflar</label><input type="file" id="catiDosya" multiple accept="image/*"></div>
                     </div>
-                    <button class="btn" style="width:auto;" onclick="addItem('cati')">Tesisi Kaydet</button>
+                    <button class="btn" style="width:auto;" onclick="addItem('cati')">Kaydet</button>
                 </div>
                 <div class="card">
-                    <div class="card-header"><h3>Kayıtlı Çatı Tesisleri</h3></div>
                     <div class="table-container">
                         <table>
-                            <thead><tr><th>Barkod</th><th>Tesis Adı</th><th>Güç</th><th>Fotoğraflar</th></tr></thead>
+                            <thead><tr><th>Barkod</th><th>Tesis</th><th>Güç</th><th>Fotoğraflar</th></tr></thead>
                             <tbody id="catiTableBody"></tbody>
                         </table>
                     </div>
@@ -636,20 +675,19 @@
             <!-- 5. 📝 SAHA FİŞLERİ -->
             <div id="sahaFisi" class="tab-pane">
                 <div class="card">
-                    <div class="card-header"><h3>Yeni Saha Fişi / Tutanak</h3></div>
+                    <div class="card-header"><h3>Saha Fişleri</h3></div>
                     <div class="form-grid">
-                        <div class="form-group"><label>Fiş / Barkod No</label><input type="text" id="sahaBarkod" placeholder="SF-2026-001"></div>
-                        <div class="form-group"><label>Sorumlu</label><input type="text" id="sahaPersonel" placeholder="Ad Soyad"></div>
-                        <div class="form-group full"><label>Açıklama</label><textarea id="sahaAciklama" rows="2" placeholder="Detaylar..."></textarea></div>
-                        <div class="form-group full"><label>📸 Saha Tutanak Fotoğrafları</label><input type="file" id="sahaDosya" multiple accept="image/*"></div>
+                        <div class="form-group"><label>Fiş Barkod</label><input type="text" id="sahaBarkod"></div>
+                        <div class="form-group"><label>Sorumlu</label><input type="text" id="sahaPersonel"></div>
+                        <div class="form-group full"><label>Açıklama</label><textarea id="sahaAciklama"></textarea></div>
+                        <div class="form-group full"><label>📸 Fotoğraflar</label><input type="file" id="sahaDosya" multiple accept="image/*"></div>
                     </div>
-                    <button class="btn" style="width:auto;" onclick="addItem('saha')">Fişi Kaydet</button>
+                    <button class="btn" style="width:auto;" onclick="addItem('saha')">Kaydet</button>
                 </div>
                 <div class="card">
-                    <div class="card-header"><h3>Saha Fişleri Arşivi</h3></div>
                     <div class="table-container">
                         <table>
-                            <thead><tr><th>Barkod / Fiş No</th><th>Sorumlu</th><th>Açıklama</th><th>Fotoğraflar</th></tr></thead>
+                            <thead><tr><th>Barkod</th><th>Sorumlu</th><th>Açıklama</th><th>Fotoğraflar</th></tr></thead>
                             <tbody id="sahaTableBody"></tbody>
                         </table>
                     </div>
@@ -659,17 +697,16 @@
             <!-- 6. 🚚 ARAÇLAR -->
             <div id="araclar" class="tab-pane">
                 <div class="card">
-                    <div class="card-header"><h3>Şirket Aracı Ekle</h3></div>
+                    <div class="card-header"><h3>Araçlar</h3></div>
                     <div class="form-grid">
-                        <div class="form-group"><label>Araç Barkod / Seri No</label><input type="text" id="aracBarkod" placeholder="ARC-BARKOD"></div>
-                        <div class="form-group"><label>Plaka</label><input type="text" id="aracPlaka" placeholder="35 ENR 35"></div>
-                        <div class="form-group"><label>Model</label><input type="text" id="aracModel" placeholder="Ford Transit"></div>
-                        <div class="form-group full"><label>📸 Araç Fotoğrafları / Ruhsat</label><input type="file" id="aracDosya" multiple accept="image/*"></div>
+                        <div class="form-group"><label>Barkod</label><input type="text" id="aracBarkod"></div>
+                        <div class="form-group"><label>Plaka</label><input type="text" id="aracPlaka"></div>
+                        <div class="form-group"><label>Model</label><input type="text" id="aracModel"></div>
+                        <div class="form-group full"><label>📸 Fotoğraflar</label><input type="file" id="aracDosya" multiple accept="image/*"></div>
                     </div>
-                    <button class="btn" style="width:auto;" onclick="addItem('arac')">Aracı Kaydet</button>
+                    <button class="btn" style="width:auto;" onclick="addItem('arac')">Kaydet</button>
                 </div>
                 <div class="card">
-                    <div class="card-header"><h3>Araç Filosu Listesi</h3></div>
                     <div class="table-container">
                         <table>
                             <thead><tr><th>Barkod</th><th>Plaka</th><th>Model</th><th>Fotoğraflar</th></tr></thead>
@@ -682,19 +719,18 @@
             <!-- 7. 🔧 EKİPMANLAR -->
             <div id="ekipmanlar" class="tab-pane">
                 <div class="card">
-                    <div class="card-header"><h3>Şantiye Ekipmanı Ekle</h3></div>
+                    <div class="card-header"><h3>Ekipmanlar</h3></div>
                     <div class="form-grid">
-                        <div class="form-group"><label>Ekipman Barkod / Seri No</label><input type="text" id="ekipmanBarkod" placeholder="SN-9988"></div>
-                        <div class="form-group"><label>Ekipman Adı</label><input type="text" id="ekipmanAd" placeholder="Fluke Multimetre"></div>
-                        <div class="form-group full"><label>📸 Ekipman Fotoğrafları</label><input type="file" id="ekipmanDosya" multiple accept="image/*"></div>
+                        <div class="form-group"><label>Barkod</label><input type="text" id="ekipmanBarkod"></div>
+                        <div class="form-group"><label>Ekipman Adı</label><input type="text" id="ekipmanAd"></div>
+                        <div class="form-group full"><label>📸 Fotoğraflar</label><input type="file" id="ekipmanDosya" multiple accept="image/*"></div>
                     </div>
-                    <button class="btn" style="width:auto;" onclick="addItem('ekipman')">Ekipman Kaydet</button>
+                    <button class="btn" style="width:auto;" onclick="addItem('ekipman')">Kaydet</button>
                 </div>
                 <div class="card">
-                    <div class="card-header"><h3>Ekipman Listesi</h3></div>
                     <div class="table-container">
                         <table>
-                            <thead><tr><th>Barkod / Seri No</th><th>Ekipman Adı</th><th>Fotoğraflar</th></tr></thead>
+                            <thead><tr><th>Barkod</th><th>Ekipman Adı</th><th>Fotoğraflar</th></tr></thead>
                             <tbody id="ekipmanTableBody"></tbody>
                         </table>
                     </div>
@@ -704,20 +740,19 @@
             <!-- 8. 👥 PERSONEL -->
             <div id="personel" class="tab-pane">
                 <div class="card">
-                    <div class="card-header"><h3>Personel Kaydı Ekle</h3></div>
+                    <div class="card-header"><h3>Personel</h3></div>
                     <div class="form-grid">
-                        <div class="form-group"><label>Sicil / Barkod No</label><input type="text" id="personelBarkod" placeholder="SICIL-01"></div>
-                        <div class="form-group"><label>Ad Soyad</label><input type="text" id="personelAd" placeholder="Ahmet Yılmaz"></div>
-                        <div class="form-group"><label>Pozisyon</label><input type="text" id="personelPoz" placeholder="Elektrik Mühendisi"></div>
-                        <div class="form-group full"><label>📸 Personel Fotoğrafı / Belgeler</label><input type="file" id="personelDosya" multiple accept="image/*"></div>
+                        <div class="form-group"><label>Sicil Barkod</label><input type="text" id="personelBarkod"></div>
+                        <div class="form-group"><label>Ad Soyad</label><input type="text" id="personelAd"></div>
+                        <div class="form-group"><label>Pozisyon</label><input type="text" id="personelPoz"></div>
+                        <div class="form-group full"><label>📸 Fotoğraflar</label><input type="file" id="personelDosya" multiple accept="image/*"></div>
                     </div>
-                    <button class="btn" style="width:auto;" onclick="addItem('personel')">Personel Kaydet</button>
+                    <button class="btn" style="width:auto;" onclick="addItem('personel')">Kaydet</button>
                 </div>
                 <div class="card">
-                    <div class="card-header"><h3>Personel Listesi</h3></div>
                     <div class="table-container">
                         <table>
-                            <thead><tr><th>Sicil No</th><th>Ad Soyad</th><th>Pozisyon</th><th>Fotoğraflar</th></tr></thead>
+                            <thead><tr><th>Sicil</th><th>Ad Soyad</th><th>Pozisyon</th><th>Fotoğraflar</th></tr></thead>
                             <tbody id="personelTableBody"></tbody>
                         </table>
                     </div>
@@ -727,17 +762,16 @@
             <!-- 9. 🌴 İZİN TALEPLERİ -->
             <div id="izinTalebi" class="tab-pane">
                 <div class="card">
-                    <div class="card-header"><h3>Yeni İzin Talebi</h3></div>
+                    <div class="card-header"><h3>İzin Talepleri</h3></div>
                     <div class="form-grid">
-                        <div class="form-group"><label>Talep Barkod No</label><input type="text" id="izinBarkod" placeholder="IZIN-01"></div>
-                        <div class="form-group"><label>Personel Adı</label><input type="text" id="izinAd" placeholder="Ad Soyad"></div>
-                        <div class="form-group"><label>Gün Sayısı</label><input type="number" id="izinGun" placeholder="3"></div>
-                        <div class="form-group full"><label>📸 İzin Belgesi / Dilekçe Fotoğrafı</label><input type="file" id="izinDosya" multiple accept="image/*"></div>
+                        <div class="form-group"><label>Barkod</label><input type="text" id="izinBarkod"></div>
+                        <div class="form-group"><label>Personel</label><input type="text" id="izinAd"></div>
+                        <div class="form-group"><label>Gün</label><input type="number" id="izinGun"></div>
+                        <div class="form-group full"><label>📸 Fotoğraflar</label><input type="file" id="izinDosya" multiple accept="image/*"></div>
                     </div>
-                    <button class="btn" style="width:auto;" onclick="addItem('izin')">Talep Oluştur</button>
+                    <button class="btn" style="width:auto;" onclick="addItem('izin')">Kaydet</button>
                 </div>
                 <div class="card">
-                    <div class="card-header"><h3>İzin Talepleri Listesi</h3></div>
                     <div class="table-container">
                         <table>
                             <thead><tr><th>Barkod</th><th>Personel</th><th>Gün</th><th>Fotoğraflar</th></tr></thead>
@@ -750,17 +784,16 @@
             <!-- 10. 💰 AVANS TALEPLERİ -->
             <div id="avansTalebi" class="tab-pane">
                 <div class="card">
-                    <div class="card-header"><h3>Yeni Avans Talebi</h3></div>
+                    <div class="card-header"><h3>Avans Talepleri</h3></div>
                     <div class="form-grid">
-                        <div class="form-group"><label>Avans Barkod No</label><input type="text" id="avansBarkod" placeholder="AVN-01"></div>
-                        <div class="form-group"><label>Personel Adı</label><input type="text" id="avansAd" placeholder="Ad Soyad"></div>
-                        <div class="form-group"><label>Tutar (₺)</label><input type="number" id="avansTutar" placeholder="5000"></div>
-                        <div class="form-group full"><label>📸 Talep Formu / Fotoğraf</label><input type="file" id="avansDosya" multiple accept="image/*"></div>
+                        <div class="form-group"><label>Barkod</label><input type="text" id="avansBarkod"></div>
+                        <div class="form-group"><label>Personel</label><input type="text" id="avansAd"></div>
+                        <div class="form-group"><label>Tutar</label><input type="number" id="avansTutar"></div>
+                        <div class="form-group full"><label>📸 Fotoğraflar</label><input type="file" id="avansDosya" multiple accept="image/*"></div>
                     </div>
-                    <button class="btn" style="width:auto;" onclick="addItem('avans')">Avans Talep Et</button>
+                    <button class="btn" style="width:auto;" onclick="addItem('avans')">Kaydet</button>
                 </div>
                 <div class="card">
-                    <div class="card-header"><h3>Avans Talepleri Listesi</h3></div>
                     <div class="table-container">
                         <table>
                             <thead><tr><th>Barkod</th><th>Personel</th><th>Tutar</th><th>Fotoğraflar</th></tr></thead>
@@ -773,19 +806,18 @@
             <!-- 11. 📊 KOLAYBİ & FATURA -->
             <div id="kolayBi" class="tab-pane">
                 <div class="card">
-                    <div class="card-header"><h3>KolayBİ & Fatura Entegrasyonu</h3></div>
+                    <div class="card-header"><h3>KolayBİ & Fatura</h3></div>
                     <div class="form-grid">
-                        <div class="form-group"><label>Fatura / Barkod No</label><input type="text" id="kolayBiBarkod" placeholder="FTR-2026-001"></div>
-                        <div class="form-group"><label>Tutar (₺)</label><input type="number" id="faturaTutar" placeholder="15000"></div>
-                        <div class="form-group full"><label>📸 Fatura Görseli / Belge</label><input type="file" id="kolayBiDosya" multiple accept="image/*"></div>
+                        <div class="form-group"><label>Barkod</label><input type="text" id="kolayBiBarkod"></div>
+                        <div class="form-group"><label>Tutar</label><input type="number" id="faturaTutar"></div>
+                        <div class="form-group full"><label>📸 Fotoğraflar</label><input type="file" id="kolayBiDosya" multiple accept="image/*"></div>
                     </div>
-                    <button class="btn" style="width:auto;" onclick="addItem('kolayBi')">Fatura Ekle</button>
+                    <button class="btn" style="width:auto;" onclick="addItem('kolayBi')">Kaydet</button>
                 </div>
                 <div class="card">
-                    <div class="card-header"><h3>Faturalar</h3></div>
                     <div class="table-container">
                         <table>
-                            <thead><tr><th>Fatura / Barkod No</th><th>Tutar</th><th>Fotoğraflar</th></tr></thead>
+                            <thead><tr><th>Barkod</th><th>Tutar</th><th>Fotoğraflar</th></tr></thead>
                             <tbody id="kolayBiTableBody"></tbody>
                         </table>
                     </div>
@@ -795,20 +827,19 @@
             <!-- 12. 🤝 MÜŞTERİLER & CARİ -->
             <div id="musteri" class="tab-pane">
                 <div class="card">
-                    <div class="card-header"><h3>Yeni Müşteri / Cari Ekle</h3></div>
+                    <div class="card-header"><h3>Müşteriler & Cari</h3></div>
                     <div class="form-grid">
-                        <div class="form-group"><label>Cari Barkod / Kod</label><input type="text" id="musteriBarkod" placeholder="CARİ-01"></div>
-                        <div class="form-group"><label>Firma / Müşteri Adı</label><input type="text" id="cariAd" placeholder="Firma Adı"></div>
-                        <div class="form-group"><label>Telefon / İletişim</label><input type="text" id="cariTel" placeholder="0532..."></div>
-                        <div class="form-group full"><label>📸 Sözleşmeler / Evrak Fotoğrafları</label><input type="file" id="musteriDosya" multiple accept="image/*"></div>
+                        <div class="form-group"><label>Barkod</label><input type="text" id="musteriBarkod"></div>
+                        <div class="form-group"><label>Firma Adı</label><input type="text" id="cariAd"></div>
+                        <div class="form-group"><label>Telefon</label><input type="text" id="cariTel"></div>
+                        <div class="form-group full"><label>📸 Fotoğraflar</label><input type="file" id="musteriDosya" multiple accept="image/*"></div>
                     </div>
-                    <button class="btn" style="width:auto;" onclick="addItem('musteri')">Cari Kaydet</button>
+                    <button class="btn" style="width:auto;" onclick="addItem('musteri')">Kaydet</button>
                 </div>
                 <div class="card">
-                    <div class="card-header"><h3>Cari Listesi</h3></div>
                     <div class="table-container">
                         <table>
-                            <thead><tr><th>Barkod / Kod</th><th>Firma Adı</th><th>İletişim</th><th>Fotoğraflar</th></tr></thead>
+                            <thead><tr><th>Barkod</th><th>Firma Adı</th><th>Telefon</th><th>Fotoğraflar</th></tr></thead>
                             <tbody id="musteriTableBody"></tbody>
                         </table>
                     </div>
@@ -818,17 +849,16 @@
             <!-- 13. 📄 TEKLİFLER -->
             <div id="teklifler" class="tab-pane">
                 <div class="card">
-                    <div class="card-header"><h3>Yeni Teklif Hazırla</h3></div>
+                    <div class="card-header"><h3>Teklifler</h3></div>
                     <div class="form-grid">
-                        <div class="form-group"><label>Teklif Barkod No</label><input type="text" id="teklifBarkod" placeholder="TKL-01"></div>
-                        <div class="form-group"><label>Teklif Konusu</label><input type="text" id="teklifKonu" placeholder="GES Kurulum Teklifi"></div>
-                        <div class="form-group"><label>Toplam Tutar (₺)</label><input type="number" id="teklifTutar" placeholder="250000"></div>
-                        <div class="form-group full"><label>📸 Teklif Dosyası / Çizim Görseli</label><input type="file" id="teklifDosya" multiple accept="image/*"></div>
+                        <div class="form-group"><label>Barkod</label><input type="text" id="teklifBarkod"></div>
+                        <div class="form-group"><label>Konu</label><input type="text" id="teklifKonu"></div>
+                        <div class="form-group"><label>Tutar</label><input type="number" id="teklifTutar"></div>
+                        <div class="form-group full"><label>📸 Fotoğraflar</label><input type="file" id="teklifDosya" multiple accept="image/*"></div>
                     </div>
-                    <button class="btn" style="width:auto;" onclick="addItem('teklif')">Teklif Kaydet</button>
+                    <button class="btn" style="width:auto;" onclick="addItem('teklif')">Kaydet</button>
                 </div>
                 <div class="card">
-                    <div class="card-header"><h3>Teklifler Arşivi</h3></div>
                     <div class="table-container">
                         <table>
                             <thead><tr><th>Barkod</th><th>Konu</th><th>Tutar</th><th>Fotoğraflar</th></tr></thead>
@@ -841,20 +871,19 @@
             <!-- 14. 🧾 SİPARİŞLER -->
             <div id="siparisler" class="tab-pane">
                 <div class="card">
-                    <div class="card-header"><h3>Yeni Sipariş Ekle</h3></div>
+                    <div class="card-header"><h3>Siparişler</h3></div>
                     <div class="form-grid">
-                        <div class="form-group"><label>Sipariş Barkod No</label><input type="text" id="siparisBarkod" placeholder="SPR-01"></div>
-                        <div class="form-group"><label>Sipariş Tanımı</label><input type="text" id="siparisAd" placeholder="İnverter Siparişi"></div>
-                        <div class="form-group"><label>Tedarikçi</label><input type="text" id="siparisTed" placeholder="Lexron A.Ş."></div>
-                        <div class="form-group full"><label>📸 Sipariş Fişi / Fotoğraf</label><input type="file" id="siparisDosya" multiple accept="image/*"></div>
+                        <div class="form-group"><label>Barkod</label><input type="text" id="siparisBarkod"></div>
+                        <div class="form-group"><label>Tanım</label><input type="text" id="siparisAd"></div>
+                        <div class="form-group"><label>Tedarikçi</label><input type="text" id="siparisTed"></div>
+                        <div class="form-group full"><label>📸 Fotoğraflar</label><input type="file" id="siparisDosya" multiple accept="image/*"></div>
                     </div>
-                    <button class="btn" style="width:auto;" onclick="addItem('siparis')">Sipariş Kaydet</button>
+                    <button class="btn" style="width:auto;" onclick="addItem('siparis')">Kaydet</button>
                 </div>
                 <div class="card">
-                    <div class="card-header"><h3>Sipariş Listesi</h3></div>
                     <div class="table-container">
                         <table>
-                            <thead><tr><th>Barkod</th><th>Sipariş Tanımı</th><th>Tedarikçi</th><th>Fotoğraflar</th></tr></thead>
+                            <thead><tr><th>Barkod</th><th>Tanım</th><th>Tedarikçi</th><th>Fotoğraflar</th></tr></thead>
                             <tbody id="siparisTableBody"></tbody>
                         </table>
                     </div>
@@ -864,16 +893,15 @@
             <!-- 15. 📈 RAPORLAR -->
             <div id="raporlar" class="tab-pane">
                 <div class="card">
-                    <div class="card-header"><h3>Raporlar ve İstatistikler</h3></div>
+                    <div class="card-header"><h3>Raporlar</h3></div>
                     <div class="form-grid">
-                        <div class="form-group"><label>Rapor Barkod No</label><input type="text" id="raporBarkod" placeholder="RPR-01"></div>
-                        <div class="form-group"><label>Rapor Adı</label><input type="text" id="raporAd" placeholder="Aylık Performans"></div>
-                        <div class="form-group full"><label>📸 Rapor Belgesi / Fotoğraf</label><input type="file" id="raporDosya" multiple accept="image/*"></div>
+                        <div class="form-group"><label>Barkod</label><input type="text" id="raporBarkod"></div>
+                        <div class="form-group"><label>Rapor Adı</label><input type="text" id="raporAd"></div>
+                        <div class="form-group full"><label>📸 Fotoğraflar</label><input type="file" id="raporDosya" multiple accept="image/*"></div>
                     </div>
-                    <button class="btn" style="width:auto;" onclick="addItem('rapor')">Raporu Kaydet</button>
+                    <button class="btn" style="width:auto;" onclick="addItem('rapor')">Kaydet</button>
                 </div>
                 <div class="card">
-                    <div class="card-header"><h3>Kayıtlı Raporlar</h3></div>
                     <div class="table-container">
                         <table>
                             <thead><tr><th>Barkod</th><th>Rapor Adı</th><th>Fotoğraflar</th></tr></thead>
@@ -886,12 +914,12 @@
             <!-- 16. 📋 HAREKETLER -->
             <div id="hareketler" class="tab-pane">
                 <div class="card">
-                    <div class="card-header"><h3>Sistem Hareket Günlüğü</h3></div>
+                    <div class="card-header"><h3>Hareketler</h3></div>
                     <div class="table-container">
                         <table>
-                            <thead><tr><th>İşlem Tarihi</th><th>Kullanıcı</th><th>İşlem Detayı</th></tr></thead>
+                            <thead><tr><th>Tarih</th><th>Kullanıcı</th><th>İşlem</th></tr></thead>
                             <tbody>
-                                <tr><td>25.08.2026 14:32</td><td>Hasan Buğra Yıldırım</td><td>Sisteme giriş yapıldı.</td></tr>
+                                <tr><td>25.08.2026</td><td>Hasan Buğra Yıldırım</td><td>Sisteme giriş yapıldı.</td></tr>
                             </tbody>
                         </table>
                     </div>
@@ -901,16 +929,15 @@
             <!-- 17. 📁 BELGELER ARŞİVİ -->
             <div id="belgeler" class="tab-pane">
                 <div class="card">
-                    <div class="card-header"><h3>Kurumsal Belge Arşivi</h3></div>
+                    <div class="card-header"><h3>Belgeler Arşivi</h3></div>
                     <div class="form-grid">
-                        <div class="form-group"><label>Belge Barkod No</label><input type="text" id="belgeBarkod" placeholder="BLG-01"></div>
-                        <div class="form-group"><label>Belge Adı</label><input type="text" id="belgeAd" placeholder="ISO Sertifikası"></div>
-                        <div class="form-group full"><label>📸 Arşiv Belge / Fotoğrafı</label><input type="file" id="belgeDosya" multiple accept="image/*"></div>
+                        <div class="form-group"><label>Barkod</label><input type="text" id="belgeBarkod"></div>
+                        <div class="form-group"><label>Belge Adı</label><input type="text" id="belgeAd"></div>
+                        <div class="form-group full"><label>📸 Fotoğraflar</label><input type="file" id="belgeDosya" multiple accept="image/*"></div>
                     </div>
-                    <button class="btn" style="width:auto;" onclick="addItem('belge')">Arşive Ekle</button>
+                    <button class="btn" style="width:auto;" onclick="addItem('belge')">Kaydet</button>
                 </div>
                 <div class="card">
-                    <div class="card-header"><h3>Arşiv Listesi</h3></div>
                     <div class="table-container">
                         <table>
                             <thead><tr><th>Barkod</th><th>Belge Adı</th><th>Fotoğraflar</th></tr></thead>
@@ -923,20 +950,20 @@
             <!-- 18. ⚙️ AYARLAR -->
             <div id="ayarlar" class="tab-pane">
                 <div class="card">
-                    <div class="card-header"><h3>Sistem Ayarları</h3></div>
+                    <div class="card-header"><h3>Ayarlar</h3></div>
                     <div class="form-grid">
                         <div class="form-group"><label>Şirket Ünvanı</label><input type="text" value="İNOMER ENERJİ"></div>
-                        <div class="form-group"><label>Yetkili E-posta</label><input type="text" value="admin@inomerenerji.com"></div>
+                        <div class="form-group"><label>Yetkili E-posta</label><input type="text" value="info@inomerenerji.com"></div>
                     </div>
-                    <button class="btn" style="width:auto;" onclick="alert('Ayarlar kaydedildi.')">Kaydet</button>
+                    <button class="btn" style="width:auto;" onclick="alert('Ayarlar kaydedildi.')">Değişiklikleri Kaydet</button>
                 </div>
             </div>
 
             <!-- 19. 🗑️ ÇÖP KUTUSU -->
             <div id="copKutusu" class="tab-pane">
                 <div class="card">
-                    <div class="card-header"><h3>Silinen Öğeler (Çöp Kutusu)</h3></div>
-                    <p style="color:var(--text-muted); font-size:0.9rem;">Silinen kayıtlar burada saklanır.</p>
+                    <div class="card-header"><h3>Çöp Kutusu</h3></div>
+                    <p style="color:var(--text-muted); font-size:0.9rem;">Silinen öğeler bu alanda saklanır.</p>
                 </div>
             </div>
 
@@ -961,12 +988,16 @@
             if(btn) btn.classList.add('active');
         }
 
+        function toggleSidebar() {
+            let sb = document.getElementById('sidebar');
+            sb.classList.toggle('collapsed');
+        }
+
         function toggleNotifications() {
             let drop = document.getElementById('notificationDropdown');
             drop.style.display = drop.style.display === 'block' ? 'none' : 'block';
         }
 
-        // Tüm sekme formlarına dinamik barkod ve fotoğraf ekleme desteği
         function addItem(type) {
             let fileInput = document.getElementById(type + 'Dosya');
             let files = fileInput ? fileInput.files : [];
