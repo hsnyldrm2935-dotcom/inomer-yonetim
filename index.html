@@ -479,18 +479,18 @@
 </head>
 <body>
 
-    <!-- GİRİŞ EKRANI (Tarayıcı hafızasını engellemek için autocomplete ve dinamik temizleme eklendi) -->
+    <!-- GİRİŞ EKRANI -->
     <div id="loginOverlay">
         <div class="login-card">
             <h2 style="color:var(--primary);">İNOMER ENERJİ</h2>
             <p>Kurumsal ERP & Yönetim Paneli</p>
             <div class="form-group">
                 <label>E-posta Adresi</label>
-                <input type="email" id="loginEmail" autocomplete="new-email" value="" placeholder="ornek@inomerenerji.com" onfocus="if(this.value==='admin@inomerenerji.com')this.value='';">
+                <input type="email" id="loginEmail" autocomplete="off" value="" placeholder="ornek@inomerenerji.com">
             </div>
             <div class="form-group">
                 <label>Şifre</label>
-                <input type="password" id="loginPass" autocomplete="new-password" value="" placeholder="••••••••" onfocus="if(this.value==='123456')this.value='';">
+                <input type="password" id="loginPass" autocomplete="new-password" value="" placeholder="••••••••">
             </div>
             <button class="btn" onclick="handleLogin()">Sisteme Giriş Yap</button>
         </div>
@@ -558,7 +558,7 @@
                     </div>
                     <div class="user-profile-area">
                         <div class="user-info">
-                            <div class="name">Hasan Buğra Yıldırım</div>
+                            <div class="name" id="userNameDisplay">Hasan Buğra Yıldırım</div>
                             <div class="role">Yönetici (Admin)</div>
                         </div>
                         <button onclick="handleLogout()" class="btn btn-outline" style="padding: 6px 12px; font-size: 0.78rem;">Çıkış</button>
@@ -935,7 +935,7 @@
                         <table>
                             <thead><tr><th>Tarih</th><th>Kullanıcı</th><th>İşlem</th></tr></thead>
                             <tbody>
-                                <tr><td>25.08.2026</td><td>Hasan Buğra Yıldırım</td><td>KolayBi API entegrasyonu doğrulandı.</td></tr>
+                                <tr><td>25.08.2026</td><td>Sistem Kullanıcısı</td><td>KolayBi API entegrasyonu doğrulandı.</td></tr>
                             </tbody>
                         </table>
                     </div>
@@ -999,7 +999,7 @@
     </div>
 
     <script>
-        // Sayfa açıldığında giriş alanlarını garanti olsun diye sıfırla
+        // Sayfa açıldığında giriş kutularını tamamen temiz tut
         window.onload = function() {
             let emailInput = document.getElementById('loginEmail');
             let passInput = document.getElementById('loginPass');
@@ -1016,9 +1016,18 @@
                 return;
             }
 
-            if (email === 'admin@inomerenerji.com' && pass === '123456') {
+            // Yetkili kullanıcılar ve şifreleri
+            const validUsers = [
+                { email: 'bugrayildiriiim@inomerenerji', pass: 'Bugra134679++', name: 'Hasan Buğra Yıldırım' },
+                { email: 'halilfatih.tulek@inomerenerji.com', pass: '260513', name: 'Halil Fatih Tülek' }
+            ];
+
+            let matchedUser = validUsers.find(u => u.email === email && u.pass === pass);
+
+            if (matchedUser) {
                 document.getElementById('loginOverlay').style.display = 'none';
                 document.getElementById('appContainer').style.display = 'flex';
+                document.getElementById('userNameDisplay').innerText = matchedUser.name;
             } else {
                 alert('Hatalı e-posta veya şifre! Lütfen tekrar deneyin.');
             }
@@ -1067,7 +1076,6 @@
             let row = btn.closest('tr');
             let rowText = row.innerText.substring(0, 30) + '...';
             
-            // Çöp kutusuna ekle
             let trashBody = document.getElementById('trashTableBody');
             if(trashBody.innerHTML.includes('boş.')) {
                 trashBody.innerHTML = '';
