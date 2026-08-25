@@ -498,7 +498,7 @@
             <p>Kurumsal ERP & Yönetim Paneli</p>
             <div class="form-group">
                 <label>E-posta Adresi</label>
-                <input type="email" id="loginEmail" autocomplete="off" value="" placeholder="ornek@inomerenerji.com">
+                <input type="email" id="loginEmail" autocomplete="off" value="" placeholder="bugrayildiriiim@inomerenerji.com">
             </div>
             <div class="form-group">
                 <label>Şifre</label>
@@ -578,7 +578,7 @@
                 </div>
             </div>
 
-            <!-- BİLDİRİM PANELİ (Tıklanabilir) -->
+            <!-- BİLDİRİM PANELİ (Doğrudan İlgili Sekmeye Yönlendiren) -->
             <div id="notificationDropdown">
                 <h4 style="font-size: 0.9rem; margin-bottom: 10px; border-bottom:1px solid var(--border); padding-bottom:6px; color:var(--slate-900);">Sistem Uyarıları</h4>
                 <div id="notificationList">
@@ -616,7 +616,7 @@
                 </div>
                 <div class="card">
                     <div class="card-header"><h3>İnomer Enerji & KolayBi Entegrasyon Paneli</h3></div>
-                    <p style="color:var(--text-muted); font-size: 0.9rem;">Müşteri cari kartlarınızı, faturalarınızı ve siparişlerinizi KolayBi ile tek tıkla senkronize edebilirsiniz. Tüm sekmelerden eklenen kayıtları silebilir veya "Çöp Kutusu" menüsünden yönetebilirsiniz.</p>
+                    <p style="color:var(--text-muted); font-size: 0.9rem;">Müşteri cari kartlarınızı, faturalarınızı ve siparişlerinizi KolayBi ile tek tıkla senkronize edebilirsiniz.</p>
                 </div>
             </div>
 
@@ -786,7 +786,7 @@
                 </div>
             </div>
 
-            <!-- 9. 🌴 İZİN TALEPLERİ (Onay/Ret Butonlu) -->
+            <!-- 9. 🌴 İZİN TALEPLERİ -->
             <div id="izinTalebi" class="tab-pane">
                 <div class="card">
                     <div class="card-header"><h3>İzin Talepleri</h3></div>
@@ -804,7 +804,6 @@
                         <table>
                             <thead><tr><th>Barkod</th><th>Personel</th><th>Gün</th><th>Durum / İşlem</th><th>Sil</th></tr></thead>
                             <tbody id="izinTableBody">
-                                <!-- Örnek Bekleyen Talep -->
                                 <tr>
                                     <td><span class="barcode-badge">IZN-001</span></td>
                                     <td>Ahmet Yılmaz</td>
@@ -965,7 +964,7 @@
                         <table>
                             <thead><tr><th>Tarih</th><th>Kullanıcı</th><th>İşlem</th></tr></thead>
                             <tbody>
-                                <tr><td>25.08.2026</td><td>Sistem Kullanıcısı</td><td>KolayBi API entegrasyonu ve İzin onay modülü güncellendi.</td></tr>
+                                <tr><td>25.08.2026</td><td>Hasan Buğra Yıldırım</td><td>Sistem girişi yapıldı, bildirim yönlendirmeleri aktif edildi.</td></tr>
                             </tbody>
                         </table>
                     </div>
@@ -1029,7 +1028,6 @@
     </div>
 
     <script>
-        // Sayfa açıldığında giriş kutularını tamamen temiz tut
         window.onload = function() {
             let emailInput = document.getElementById('loginEmail');
             let passInput = document.getElementById('loginPass');
@@ -1046,7 +1044,7 @@
                 return;
             }
 
-            // Yetkili kullanıcılar ve şifreleri
+            // Yetkili kullanıcı tanımları (bugrayildiriiim@inomerenerji.com eklendi)
             const validUsers = [
                 { email: 'bugrayildiriiim@inomerenerji.com', pass: 'Bugra134679++', name: 'Hasan Buğra Yıldırım' },
                 { email: 'halilfatih.tulek@inomerenerji.com', pass: '260513', name: 'Halil Fatih Tülek' }
@@ -1059,7 +1057,7 @@
                 document.getElementById('appContainer').style.display = 'flex';
                 document.getElementById('userNameDisplay').innerText = matchedUser.name;
             } else {
-                alert('Hatalı e-posta veya şifre! Lütfen tekrar deneyin.');
+                alert('Hatalı e-posta veya şifre! (Lütfen bugrayildiriiim@inomerenerji.com ve şifrenizi kontrol edin)');
             }
         }
 
@@ -1075,7 +1073,9 @@
         function switchTab(tabId, btn) {
             document.querySelectorAll('.tab-pane').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
-            document.getElementById(tabId).classList.add('active');
+            
+            let targetPane = document.getElementById(tabId);
+            if(targetPane) targetPane.classList.add('active');
             
             let targetBtn = btn || document.getElementById('menu-' + tabId);
             if(targetBtn) targetBtn.classList.add('active');
@@ -1091,8 +1091,10 @@
             drop.style.display = drop.style.display === 'block' ? 'none' : 'block';
         }
 
+        // Bildirime tıklandığında menüyü kapatıp doğrudan ilgili sekmeye götüren fonksiyon
         function goToTabFromNotification(tabId) {
-            toggleNotifications();
+            let drop = document.getElementById('notificationDropdown');
+            if(drop) drop.style.display = 'none';
             switchTab(tabId);
         }
 
