@@ -328,7 +328,7 @@
             </div>
         </div>
 
-        <!-- 1. STOK & ÜRÜNLER (Kamera Barkod Okuyucu ve Detaylı Alanlar) -->
+        <!-- 1. STOK & ÜRÜNLER -->
         <div id="stokDepo" class="tab-pane active">
             <div class="card">
                 <h3>📦 Yeni Ürün / Malzeme Ekle</h3>
@@ -376,7 +376,6 @@
                 <button class="btn btn-success" onclick="addStok()">Ürünü Kataloğa Ekle</button>
             </div>
 
-            <!-- Klasör Alanı -->
             <div class="folder-container" id="stokKlasorListesi"></div>
 
             <div class="card">
@@ -464,7 +463,7 @@
             </div>
         </div>
 
-        <!-- 4. SAHA FİŞLERİ & FOTOĞRAF YÜKLEME -->
+        <!-- 4. SAHA FİŞLERİ -->
         <div id="sahaFisi" class="tab-pane">
             <div class="folder-container" id="sahaKlasorListesi"></div>
             <div class="card">
@@ -565,12 +564,16 @@
                         <label>Bitiş Tarihi</label>
                         <input type="date" id="izinBitis">
                     </div>
+                    <div class="form-group">
+                        <label>Klasör Seç</label>
+                        <select id="izinKlasorSec"></select>
+                    </div>
                 </div>
                 <button class="btn" onclick="addIzin()">İzin Talebi Kaydet</button>
             </div>
             <div class="card">
                 <table>
-                    <thead><tr><th>Personel</th><th>İzin Türü</th><th>Tarih Aralığı</th><th>Durum</th><th>İşlem</th></tr></thead>
+                    <thead><tr><th>Personel</th><th>İzin Türü</th><th>Tarih Aralığı</th><th>Klasör</th><th>Durum</th><th>İşlem</th></tr></thead>
                     <tbody id="izinTableBody"></tbody>
                 </table>
             </div>
@@ -597,24 +600,28 @@
                         <label>Açıklama</label>
                         <input type="text" id="avansAciklama" placeholder="Avans sebebi...">
                     </div>
+                    <div class="form-group">
+                        <label>Klasör Seç</label>
+                        <select id="avansKlasorSec"></select>
+                    </div>
                 </div>
                 <button class="btn" onclick="addAvans()">Avans Talebi Kaydet</button>
             </div>
             <div class="card">
                 <table>
-                    <thead><tr><th>Personel</th><th>Tutar</th><th>Açıklama</th><th>Durum</th><th>İşlem</th></tr></thead>
+                    <thead><tr><th>Personel</th><th>Tutar</th><th>Açıklama</th><th>Klasör</th><th>Durum</th><th>İşlem</th></tr></thead>
                     <tbody id="avansTableBody"></tbody>
                 </table>
             </div>
         </div>
 
-        <!-- 8. KOLAYBİ & FATURALAR (Arşiv Klasörleri) -->
+        <!-- 8. KOLAYBİ & FATURALAR -->
         <div id="kolayBi" class="tab-pane">
             <div class="folder-container" id="faturaKlasorListesi"></div>
             <div class="card">
                 <div style="display: flex; justify-content: space-between; align-items: center;">
                     <h3>KolayBİ & Fatura Arşivi (Ay / Yıl Klasörleme)</h3>
-                    <button class="btn" onclick="createFolder('fatura')">📁 Yeni Klasör Oluştur (Örn: 2026 Ağustos)</button>
+                    <button class="btn" onclick="createFolder('fatura')">📁 Yeni Klasör Oluştur</button>
                 </div>
                 <div class="form-grid" style="margin-top: 15px;">
                     <div class="form-group">
@@ -669,7 +676,7 @@
                         <label>Ödeme / Tahsilat Durumu</label>
                         <select id="musteriDurum">
                             <option value="Ödendi">Ödendi</option>
-                            <option value="Ödenmedi (Nedenini Yazın)">Ödenmedi (Nedenini Açıklamaya Yazın)</option>
+                            <option value="Ödenmedi">Ödenmedi (Nedenini Aşağıya Yazın)</option>
                         </select>
                     </div>
                     <div class="form-group" style="grid-column: span 2;">
@@ -708,7 +715,8 @@
 
     <!-- JavaScript Kodları -->
     <script>
-        function handleLogin() {
+        // Global fonksiyon tanımlamaları (Scope hatası almamak için window nesnesine atanıyor)
+        window.handleLogin = function() {
             const email = document.getElementById('loginEmail').value.trim();
             const pass = document.getElementById('loginPassword').value.trim();
             const errEl = document.getElementById('loginError');
@@ -721,12 +729,12 @@
             } else {
                 errEl.innerText = "Hatalı e-posta veya şifre! (Şifre: 260513)";
             }
-        }
+        };
 
-        function handleLogout() {
+        window.handleLogout = function() {
             localStorage.removeItem("inomer_logged");
             location.reload();
-        }
+        };
 
         window.onload = function() {
             if(localStorage.getItem("inomer_logged") === "true") {
@@ -736,12 +744,12 @@
             }
         };
 
-        function switchTab(tabId, btn) {
+        window.switchTab = function(tabId, btn) {
             document.querySelectorAll('.tab-pane').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
             document.getElementById(tabId).classList.add('active');
             if(btn) btn.classList.add('active');
-        }
+        };
 
         // State & Klasörler
         let klasorler = JSON.parse(localStorage.getItem('inomer_klasorler')) || {
@@ -774,7 +782,7 @@
         let sahaFisleri = JSON.parse(localStorage.getItem('inomer_saha')) || [];
         let personeller = JSON.parse(localStorage.getItem('inomer_personel')) || [];
         let izinler = JSON.parse(localStorage.getItem('inomer_izin')) || [];
-        Let avanslar = JSON.parse(localStorage.getItem('inomer_avans')) || [];
+        let avanslar = JSON.parse(localStorage.getItem('inomer_avans')) || [];
         let faturalar = JSON.parse(localStorage.getItem('inomer_fatura')) || [];
         let musteriler = JSON.parse(localStorage.getItem('inomer_musteri')) || [];
         let copKutusu = JSON.parse(localStorage.getItem('inomer_cop')) || [];
@@ -818,7 +826,7 @@
         }
 
         // Klasör Yönetimi
-        function createFolder(type) {
+        window.createFolder = function(type) {
             let ad = prompt("Yeni Klasör Adı (Örn: Eylül 2026 veya Şantiye B):");
             if(!ad) return;
             if(!klasorler[type].includes(ad)) {
@@ -826,7 +834,7 @@
                 saveAll();
                 renderAllFolders();
             }
-        }
+        };
 
         function renderFoldersForType(type) {
             let container = document.getElementById(type + 'KlasorListesi');
@@ -843,10 +851,10 @@
             });
         }
 
-        function setAktifKlasor(type, kls) {
+        window.setAktifKlasor = function(type, kls) {
             aktifKlasorler[type] = kls;
             renderAllFolders();
-        }
+        };
 
         function renderAllFolders() {
             ['stok', 'arazi', 'cati', 'saha', 'personel', 'izin', 'avans', 'fatura', 'musteri'].forEach(t => {
@@ -856,7 +864,7 @@
         }
 
         // Kamera Barkod Okuyucu
-        function startBarcodeScanner() {
+        window.startBarcodeScanner = function() {
             const scannerContainer = document.getElementById('reader');
             scannerContainer.style.display = 'block';
             const html5QrCode = new Html5Qrcode("reader");
@@ -871,10 +879,10 @@
                 },
                 (errorMessage) => { }
             ).catch(err => { alert("Kamera açılamadı: " + err); });
-        }
+        };
 
         // 1. STOK EYLEMLERİ
-        function addStok() {
+        window.addStok = function() {
             let barkod = document.getElementById('stokBarkod').value.trim();
             let ad = document.getElementById('stokAd').value.trim();
             let markaModel = document.getElementById('stokMarkaModel').value.trim();
@@ -902,7 +910,7 @@
             document.getElementById('stokTedarikci').value = '';
             saveAll();
             renderStok();
-        }
+        };
 
         function renderStok() {
             let tb = document.getElementById('stokTableBody');
@@ -918,15 +926,15 @@
             });
         }
 
-        function filterStok() {
+        window.filterStok = function() {
             let q = document.getElementById('stokSearch').value.toLowerCase();
             document.querySelectorAll('#stokTableBody tr').forEach(r => {
                 r.style.display = r.innerText.toLowerCase().includes(q) ? '' : 'none';
             });
-        }
+        };
 
         // 2. ARAZİ GES
-        function addArazi() {
+        window.addArazi = function() {
             let ad = document.getElementById('araziAd').value.trim();
             let guc = document.getElementById('araziGuc').value.trim();
             let klasor = document.getElementById('araziKlasorSec').value;
@@ -935,7 +943,7 @@
             document.getElementById('araziAd').value = '';
             document.getElementById('araziGuc').value = '';
             saveAll(); renderArazi();
-        }
+        };
         function renderArazi() {
             let tb = document.getElementById('araziTableBody');
             if(!tb) return;
@@ -946,14 +954,14 @@
         }
 
         // 3. ÇATI GES
-        function addCati() {
+        window.addCati = function() {
             let tesis = document.getElementById('catiTesis').value.trim();
             let klasor = document.getElementById('catiKlasorSec').value;
             if(!tesis) return alert('Tesis adı giriniz.');
             catiProjeler.push({ id: Date.now(), tesis, klasor, tarih: new Date().toLocaleDateString('tr-TR') });
             document.getElementById('catiTesis').value = '';
             saveAll(); renderCati();
-        }
+        };
         function renderCati() {
             let tb = document.getElementById('catiTableBody');
             if(!tb) return;
@@ -964,7 +972,7 @@
         }
 
         // 4. SAHA FİŞLERİ & FOTOĞRAF
-        function addSaha() {
+        window.addSaha = function() {
             let musteri = document.getElementById('sahaMusteri').value.trim();
             let aciklama = document.getElementById('sahaAciklama').value.trim();
             let klasor = document.getElementById('sahaKlasorSec').value;
@@ -977,7 +985,7 @@
             document.getElementById('sahaAciklama').value = '';
             fileInput.value = '';
             saveAll(); renderSaha();
-        }
+        };
         function renderSaha() {
             let tb = document.getElementById('sahaTableBody');
             if(!tb) return;
@@ -988,7 +996,7 @@
         }
 
         // 5. PERSONEL
-        function addPersonel() {
+        window.addPersonel = function() {
             let ad = document.getElementById('personelAd').value.trim();
             let tel = document.getElementById('personelTel').value.trim();
             let unvan = document.getElementById('personelUnvan').value.trim();
@@ -999,7 +1007,7 @@
             document.getElementById('personelTel').value = '';
             document.getElementById('personelUnvan').value = '';
             saveAll(); renderPersonel(); updateStats();
-        }
+        };
         function renderPersonel() {
             let tb = document.getElementById('personelTableBody');
             if(!tb) return;
@@ -1010,7 +1018,7 @@
         }
 
         // 6. İZİN TALEPLERİ
-        function addIzin() {
+        window.addIzin = function() {
             let personel = document.getElementById('izinPersonel').value.trim();
             let tur = document.getElementById('izinTuru').value;
             let bas = document.getElementById('izinBaslangic').value;
@@ -1019,18 +1027,18 @@
             if(!personel || !bas || !bit) return alert('Tüm alanları doldurun.');
             izinler.push({ id: Date.now(), personel, tur, tarih: `${bas} / ${bit}`, klasor, durum: 'Bekliyor' });
             saveAll(); renderIzin();
-        }
+        };
         function renderIzin() {
             let tb = document.getElementById('izinTableBody');
             if(!tb) return;
             tb.innerHTML = '';
             izinler.filter(i => i.klasor === aktifKlasorler.izin).forEach(i => {
-                tb.innerHTML += `<tr><td>${i.personel}</td><td>${i.tur}</td><td>${i.tarih}</td><td><span style="color:var(--accent-color); font-weight:bold;">${i.durum}</span></td><td><button class="btn btn-danger" style="padding:4px 8px; font-size:0.75rem;" onclick="deleteItem('izin', ${i.id})">Sil</button></td></tr>`;
+                tb.innerHTML += `<tr><td>${i.personel}</td><td>${i.tur}</td><td>${i.tarih}</td><td>${i.klasor}</td><td><span style="color:var(--accent-color); font-weight:bold;">${i.durum}</span></td><td><button class="btn btn-danger" style="padding:4px 8px; font-size:0.75rem;" onclick="deleteItem('izin', ${i.id})">Sil</button></td></tr>`;
             });
         }
 
         // 7. AVANS TALEPLERİ
-        function addAvans() {
+        window.addAvans = function() {
             let personel = document.getElementById('avansPersonel').value.trim();
             let tutar = document.getElementById('avansTutar').value.trim();
             let aciklama = document.getElementById('avansAciklama').value.trim();
@@ -1038,18 +1046,18 @@
             if(!personel || !tutar) return alert('Personel ve tutar giriniz.');
             avanslar.push({ id: Date.now(), personel, tutar, aciklama, klasor, durum: 'Onay Bekliyor' });
             saveAll(); renderAvans();
-        }
+        };
         function renderAvans() {
             let tb = document.getElementById('avansTableBody');
             if(!tb) return;
             tb.innerHTML = '';
             avanslar.filter(a => a.klasor === aktifKlasorler.avans).forEach(a => {
-                tb.innerHTML += `<tr><td>${a.personel}</td><td><b>${a.tutar} ₺</b></td><td>${a.aciklama}</td><td><span style="color:var(--accent-color); font-weight:bold;">${a.durum}</span></td><td><button class="btn btn-danger" style="padding:4px 8px; font-size:0.75rem;" onclick="deleteItem('avans', ${a.id})">Sil</button></td></tr>`;
+                tb.innerHTML += `<tr><td>${a.personel}</td><td><b>${a.tutar} ₺</b></td><td>${a.aciklama}</td><td>${a.klasor}</td><td><span style="color:var(--accent-color); font-weight:bold;">${a.durum}</span></td><td><button class="btn btn-danger" style="padding:4px 8px; font-size:0.75rem;" onclick="deleteItem('avans', ${a.id})">Sil</button></td></tr>`;
             });
         }
 
         // 8. KOLAYBİ & FATURALAR
-        function addFatura() {
+        window.addFatura = function() {
             let unvan = document.getElementById('faturaUnvan').value.trim();
             let tutar = document.getElementById('faturaTutar').value.trim();
             let klasor = document.getElementById('faturaKlasorSec').value;
@@ -1058,7 +1066,7 @@
             if(!unvan || !tutar) return alert('Unvan ve tutar giriniz.');
             faturalar.push({ id: Date.now(), unvan, tutar, klasor, dosyaAdi });
             saveAll(); renderFatura();
-        }
+        };
         function renderFatura() {
             let tb = document.getElementById('faturaTableBody');
             if(!tb) return;
@@ -1069,7 +1077,7 @@
         }
 
         // 9. DETAYLI MÜŞTERİLER & CARİ
-        function addMusteri() {
+        window.addMusteri = function() {
             let unvan = document.getElementById('musteriUnvan').value.trim();
             let isKalemi = document.getElementById('musteriIs').value.trim();
             let tutar = document.getElementById('musteriTutar').value.trim();
@@ -1079,7 +1087,7 @@
             if(!unvan) return alert('Müşteri unvanı giriniz.');
             musteriler.push({ id: Date.now(), unvan, isKalemi, tutar: tutar || 0, durum, notlar, klasor });
             saveAll(); renderMusteri();
-        }
+        };
         function renderMusteri() {
             let tb = document.getElementById('musteriTableBody');
             if(!tb) return;
@@ -1091,7 +1099,7 @@
         }
 
         // Silme ve Çöp Kutusu
-        function deleteItem(type, id) {
+        window.deleteItem = function(type, id) {
             let arr, name;
             if(type === 'stok') { arr = stoklar; name = 'Stok Ürün'; }
             else if(type === 'arazi') { arr = araziProjeler; name = 'Arazi Proje'; }
@@ -1109,7 +1117,7 @@
                 arr.splice(idx, 1);
                 saveAll(); initApp();
             }
-        }
+        };
 
         function renderTrash() {
             let tb = document.getElementById('trashTableBody');
@@ -1124,7 +1132,7 @@
             });
         }
 
-        function restoreTrash(idx) {
+        window.restoreTrash = function(idx) {
             let item = copKutusu.splice(idx, 1)[0];
             let p = JSON.parse(item.detay);
             if(item.tur.includes('Ürün')) stoklar.push(p);
@@ -1137,7 +1145,7 @@
             else if(item.tur.includes('Fatura')) faturalar.push(p);
             else if(item.tur.includes('Müşteri')) musteriler.push(p);
             saveAll(); initApp();
-        }
+        };
     </script>
 </body>
 </html>
