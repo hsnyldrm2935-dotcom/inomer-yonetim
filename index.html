@@ -35,7 +35,7 @@
             min-height: 100vh;
         }
 
-        /* Giriş Ekranı (Kırmızı - Siyah Kurumsal) */
+        /* Giriş Ekranı */
         #loginOverlay {
             position: fixed;
             inset: 0;
@@ -77,7 +77,6 @@
             min-height: 100vh;
         }
 
-        /* Sidebar (Siyah - Kırmızı Temalı Sol Menü) */
         .sidebar {
             width: 260px;
             background: var(--slate-900);
@@ -150,7 +149,6 @@
             background: #000;
         }
 
-        /* Ana İçerik Alanı */
         .main-content {
             flex-grow: 1;
             padding: 30px;
@@ -182,7 +180,6 @@
             margin-top: 2px;
         }
 
-        /* Kart ve Form Yapıları */
         .card {
             background: #fff;
             border: 1px solid var(--border);
@@ -249,7 +246,6 @@
             box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
         }
 
-        /* Butonlar */
         .btn {
             background: var(--primary);
             color: white;
@@ -272,7 +268,6 @@
         .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--slate-900); }
         .btn-outline:hover { background: var(--slate-100); }
 
-        /* Tablolar */
         .table-container {
             overflow-x: auto;
         }
@@ -295,7 +290,6 @@
             color: #52525b;
         }
 
-        /* Klasör Paneli */
         .folder-bar {
             display: flex;
             gap: 8px;
@@ -331,6 +325,16 @@
 
         .tab-pane { display: none; }
         .tab-pane.active { display: block; }
+        
+        .file-link {
+            color: var(--primary);
+            text-decoration: underline;
+            cursor: pointer;
+            font-weight: 500;
+        }
+        .file-link:hover {
+            color: var(--primary-dark);
+        }
     </style>
 </head>
 <body>
@@ -341,22 +345,20 @@
             <h2>İNOMER ENERJİ</h2>
             <p>Kurumsal Yönetim Paneli</p>
             <div class="form-group">
-                <label>E-Posta Adresi</label>
-                <input type="email" id="loginEmail" value="bugrayildiriiim@inomerenerji.com">
-            </div>
-            <div class="form-group">
-                <label>Şifre</label>
-                <input type="password" id="loginPassword" value="Bugra134679++">
+                <label>Kullanıcı Seçin</label>
+                <select id="loginUserSelect">
+                    <option value="Hasan Buğra Yıldırım">Hasan Buğra Yıldırım</option>
+                    <option value="Fatih Tülek">Fatih Tülek</option>
+                </select>
             </div>
             <button class="btn" style="width: 100%; justify-content: center; margin-top: 8px;" onclick="handleLogin()">Sisteme Giriş Yap</button>
-            <p id="loginError" style="color: var(--danger); font-size: 0.8rem; margin-top: 12px; text-align: center;"></p>
         </div>
     </div>
 
     <!-- ANA UYGULAMA LAYOUT -->
     <div class="app-layout" id="appContainer" style="display: none;">
         
-        <!-- YAN MENÜ (SIDEBAR) -->
+        <!-- YAN MENÜ -->
         <aside class="sidebar">
             <div class="sidebar-brand">
                 ⚡ İNOMER <span>ENERJİ</span>
@@ -375,7 +377,7 @@
                 <li><button class="nav-btn" onclick="switchTab('copKutusu', this)">🗑️ Çöp Kutusu</button></li>
             </ul>
             <div class="sidebar-footer">
-                <span style="font-size: 0.8rem; color: #a1a1aa;">Hasan Buğra Y.</span>
+                <span id="currentLoggedInUser" style="font-size: 0.8rem; color: #a1a1aa; font-weight: 600;"></span>
                 <button onclick="handleLogout()" class="btn btn-outline" style="padding: 4px 8px; font-size: 0.75rem; color: #f87171; border-color: rgba(255,255,255,0.2);">Çıkış</button>
             </div>
         </aside>
@@ -436,8 +438,8 @@
                             <input type="text" id="stokTedarikci" placeholder="Tedarikçi firma">
                         </div>
                         <div class="form-group full">
-                            <label>Bilgisayardan Dosya Ekle</label>
-                            <input type="file" id="stokDosya" multiple>
+                            <label>Masaüstünden Dosya Ekle</label>
+                            <input type="file" id="stokDosya" multiple onchange="handleFileSelection('stokDosya', event)">
                         </div>
                     </div>
                     <button class="btn btn-success" onclick="addStok()">Kataloğa Ekle</button>
@@ -498,7 +500,7 @@
                         </div>
                         <div class="form-group full">
                             <label>Masaüstünden Dosya Ekle (Proje Belgeleri)</label>
-                            <input type="file" id="araziDosya" multiple>
+                            <input type="file" id="araziDosya" multiple onchange="handleFileSelection('araziDosya', event)">
                         </div>
                     </div>
                     <button class="btn" onclick="addArazi()">Proje / Katalog Ekle</button>
@@ -537,7 +539,7 @@
                         </div>
                         <div class="form-group full">
                             <label>Masaüstünden Dosya Ekle</label>
-                            <input type="file" id="catiDosya" multiple>
+                            <input type="file" id="catiDosya" multiple onchange="handleFileSelection('catiDosya', event)">
                         </div>
                     </div>
                     <button class="btn" onclick="addCati()">Proje Kaydet</button>
@@ -587,7 +589,7 @@
                         </div>
                         <div class="form-group full">
                             <label>Masaüstünden Fotoğraf / Dosya Ekle</label>
-                            <input type="file" id="sahaDosya" multiple accept="image/*,.pdf">
+                            <input type="file" id="sahaDosya" multiple accept="image/*,.pdf" onchange="handleFileSelection('sahaDosya', event)">
                         </div>
                     </div>
                     <button class="btn" onclick="addSaha()">Fişi Kaydet</button>
@@ -763,7 +765,7 @@
                         </div>
                         <div class="form-group full">
                             <label>Masaüstünden Fatura PDF/Dosyası Ekle</label>
-                            <input type="file" id="faturaDosya">
+                            <input type="file" id="faturaDosya" onchange="handleFileSelection('faturaDosya', event)">
                         </div>
                     </div>
                     <button class="btn" onclick="addFatura()">Faturayı İşle</button>
@@ -874,32 +876,51 @@
 
     <!-- JavaScript Kodları -->
     <script>
-        window.handleLogin = function() {
-            const email = document.getElementById('loginEmail').value.trim();
-            const pass = document.getElementById('loginPassword').value.trim();
-            const errEl = document.getElementById('loginError');
+        let currentFilesCache = {};
 
-            if (email === "bugrayildiriiim@inomerenerji.com" && pass === "Bugra134679++") {
-                localStorage.setItem("inomer_logged", "true");
-                document.getElementById('loginOverlay').style.display = 'none';
-                document.getElementById('appContainer').style.display = 'flex';
-                logHareket("Hasan Buğra Yıldırım", "Sisteme giriş yaptı.");
-                initApp();
-            } else {
-                errEl.innerText = "Hatalı e-posta veya şifre!";
+        window.handleFileSelection = function(inputId, event) {
+            const files = event.target.files;
+            currentFilesCache[inputId] = [];
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    currentFilesCache[inputId].push({
+                        name: file.name,
+                        data: e.target.result
+                    });
+                };
+                reader.readAsDataURL(file);
             }
         };
 
+        window.handleLogin = function() {
+            const selectedUser = document.getElementById('loginUserSelect').value;
+            localStorage.setItem("inomer_logged", "true");
+            localStorage.setItem("inomer_user", selectedUser);
+            
+            document.getElementById('loginOverlay').style.display = 'none';
+            document.getElementById('appContainer').style.display = 'flex';
+            document.getElementById('currentLoggedInUser').innerText = selectedUser;
+            
+            logHareket(selectedUser, "Sisteme giriş yaptı.");
+            initApp();
+        };
+
         window.handleLogout = function() {
-            logHareket("Hasan Buğra Yıldırım", "Sistemden çıkış yaptı.");
+            let user = localStorage.getItem("inomer_user") || "Kullanıcı";
+            logHareket(user, "Sistemden çıkış yaptı.");
             localStorage.removeItem("inomer_logged");
+            localStorage.removeItem("inomer_user");
             location.reload();
         };
 
         window.onload = function() {
             if(localStorage.getItem("inomer_logged") === "true") {
+                const loggedUser = localStorage.getItem("inomer_user") || "Hasan Buğra Yıldırım";
                 document.getElementById('loginOverlay').style.display = 'none';
                 document.getElementById('appContainer').style.display = 'flex';
+                document.getElementById('currentLoggedInUser').innerText = loggedUser;
                 initApp();
             }
             setInterval(() => {
@@ -983,7 +1004,8 @@
                 klasorler[type].push(ad);
                 saveAll();
                 renderAllFolders();
-                logHareket("Hasan Buğra Yıldırım", `${type.toUpperCase()} kategorisinde "${ad}" klasörü oluşturdu.`);
+                let user = localStorage.getItem("inomer_user") || "Hasan Buğra Yıldırım";
+                logHareket(user, `${type.toUpperCase()} kategorisinde "${ad}" klasörü oluşturdu.`);
             }
         };
 
@@ -997,7 +1019,8 @@
                 aktifKlasorler[type] = klasorler[type][0];
                 saveAll();
                 renderAllFolders();
-                logHareket("Hasan Buğra Yıldırım", `${type.toUpperCase()} kategorisindeki "${kls}" klasörünü sildi.`);
+                let user = localStorage.getItem("inomer_user") || "Hasan Buğra Yıldırım";
+                logHareket(user, `${type.toUpperCase()} kategorisindeki "${kls}" klasörünü sildi.`);
             }
         };
 
@@ -1049,14 +1072,9 @@
             ).catch(err => { alert("Kamera açılamadı: " + err); });
         };
 
-        function getFileNames(inputID) {
-            let fi = document.getElementById(inputID);
-            if(!fi || fi.files.length === 0) return 'Dosya Yok';
-            let names = [];
-            for(let i=0; i<fi.files.length; i++) {
-                names.push(fi.files[i].name);
-            }
-            return names.join(', ');
+        function renderFileLinks(filesArray) {
+            if(!filesArray || filesArray.length === 0) return 'Dosya Yok';
+            return filesArray.map(f => `<a class="file-link" href="${f.data}" target="_blank" download="${f.name}">📎 ${f.name}</a>`).join('<br>');
         }
 
         window.addStok = function() {
@@ -1069,7 +1087,7 @@
             let birim = document.getElementById('stokBirim').value.trim() || 'Adet';
             let tedarikci = document.getElementById('stokTedarikci').value.trim();
             let klasor = document.getElementById('stokKlasorSec').value;
-            let dosyalar = getFileNames('stokDosya');
+            let dosyalar = currentFilesCache['stokDosya'] || [];
 
             if(!ad || !miktar) return alert('Ürün adı ve miktarını doldurun.');
 
@@ -1087,8 +1105,10 @@
             document.getElementById('stokMiktar').value = '';
             document.getElementById('stokTedarikci').value = '';
             document.getElementById('stokDosya').value = '';
+            currentFilesCache['stokDosya'] = [];
             saveAll(); renderStok();
-            logHareket("Hasan Buğra Yıldırım", `"${ad}" adlı ürünü stoğa ekledi.`);
+            let user = localStorage.getItem("inomer_user") || "Hasan Buğra Yıldırım";
+            logHareket(user, `"${ad}" adlı ürünü stoğa ekledi.`);
         };
 
         function renderStok() {
@@ -1101,7 +1121,7 @@
                 return;
             }
             filtered.forEach(s => {
-                tb.innerHTML += `<tr><td>${s.barkod}</td><td><b>${s.ad}</b></td><td>${s.markaModel}</td><td>${s.alis} ₺ / ${s.satis} ₺</td><td>${s.miktar} ${s.birim}</td><td>📎 ${s.dosyalar}</td><td><button class="btn btn-danger" style="padding:4px 8px; font-size:0.75rem;" onclick="deleteItem('stok', ${s.id})">Sil</button></td></tr>`;
+                tb.innerHTML += `<tr><td>${s.barkod}</td><td><b>${s.ad}</b></td><td>${s.markaModel}</td><td>${s.alis} ₺ / ${s.satis} ₺</td><td>${s.miktar} ${s.birim}</td><td>${renderFileLinks(s.dosyalar)}</td><td><button class="btn btn-danger" style="padding:4px 8px; font-size:0.75rem;" onclick="deleteItem('stok', ${s.id})">Sil</button></td></tr>`;
             });
         }
 
@@ -1116,41 +1136,45 @@
             let ad = document.getElementById('araziAd').value.trim();
             let guc = document.getElementById('araziGuc').value.trim();
             let klasor = document.getElementById('araziKlasorSec').value;
-            let dosyalar = getFileNames('araziDosya');
+            let dosyalar = currentFilesCache['araziDosya'] || [];
             if(!ad) return alert('Proje adı giriniz.');
             araziProjeler.push({ id: Date.now(), ad, guc: guc || '-', klasor, dosyalar });
             document.getElementById('araziAd').value = '';
             document.getElementById('araziGuc').value = '';
             document.getElementById('araziDosya').value = '';
+            currentFilesCache['araziDosya'] = [];
             saveAll(); renderArazi();
-            logHareket("Hasan Buğra Yıldırım", `Arazi GES projesi ekledi: "${ad}".`);
+            let user = localStorage.getItem("inomer_user") || "Hasan Buğra Yıldırım";
+            logHareket(user, `Arazi GES projesi ekledi: "${ad}".`);
         };
         function renderArazi() {
             let tb = document.getElementById('araziTableBody');
             if(!tb) return;
             tb.innerHTML = '';
             araziProjeler.filter(p => p.klasor === aktifKlasorler.arazi).forEach(p => {
-                tb.innerHTML += `<tr><td>${p.ad}</td><td>${p.guc}</td><td>${p.klasor}</td><td>📎 ${p.dosyalar}</td><td><button class="btn btn-danger" style="padding:4px 8px; font-size:0.75rem;" onclick="deleteItem('arazi', ${p.id})">Sil</button></td></tr>`;
+                tb.innerHTML += `<tr><td>${p.ad}</td><td>${p.guc}</td><td>${p.klasor}</td><td>${renderFileLinks(p.dosyalar)}</td><td><button class="btn btn-danger" style="padding:4px 8px; font-size:0.75rem;" onclick="deleteItem('arazi', ${p.id})">Sil</button></td></tr>`;
             });
         }
 
         window.addCati = function() {
             let tesis = document.getElementById('catiTesis').value.trim();
             let klasor = document.getElementById('catiKlasorSec').value;
-            let dosyalar = getFileNames('catiDosya');
+            let dosyalar = currentFilesCache['catiDosya'] || [];
             if(!tesis) return alert('Tesis adı giriniz.');
             catiProjeler.push({ id: Date.now(), tesis, klasor, dosyalar, tarih: new Date().toLocaleDateString('tr-TR') });
             document.getElementById('catiTesis').value = '';
             document.getElementById('catiDosya').value = '';
+            currentFilesCache['catiDosya'] = [];
             saveAll(); renderCati();
-            logHareket("Hasan Buğra Yıldırım", `Çatı GES tesisi ekledi: "${tesis}".`);
+            let user = localStorage.getItem("inomer_user") || "Hasan Buğra Yıldırım";
+            logHareket(user, `Çatı GES tesisi ekledi: "${tesis}".`);
         };
         function renderCati() {
             let tb = document.getElementById('catiTableBody');
             if(!tb) return;
             tb.innerHTML = '';
             catiProjeler.filter(c => c.klasor === aktifKlasorler.cati).forEach(c => {
-                tb.innerHTML += `<tr><td>${c.tesis}</td><td>${c.klasor}</td><td>${c.tarih}</td><td>📎 ${c.dosyalar}</td><td><button class="btn btn-danger" style="padding:4px 8px; font-size:0.75rem;" onclick="deleteItem('cati', ${c.id})">Sil</button></td></tr>`;
+                tb.innerHTML += `<tr><td>${c.tesis}</td><td>${c.klasor}</td><td>${c.tarih}</td><td>${renderFileLinks(c.dosyalar)}</td><td><button class="btn btn-danger" style="padding:4px 8px; font-size:0.75rem;" onclick="deleteItem('cati', ${c.id})">Sil</button></td></tr>`;
             });
         }
 
@@ -1160,7 +1184,7 @@
             let musteri = document.getElementById('sahaMusteri').value.trim();
             let aciklama = document.getElementById('sahaAciklama').value.trim();
             let klasor = document.getElementById('sahaKlasorSec').value;
-            let dosyalar = getFileNames('sahaDosya');
+            let dosyalar = currentFilesCache['sahaDosya'] || [];
 
             if(!fisNo || !musteri || !aciklama) return alert('Fiş No, Müşteri ve Açıklama zorunludur.');
             sahaFisleri.push({ id: Date.now(), fisNo, personel: personel || 'Belirtilmedi', musteri, aciklama, klasor, dosyalar, tarih: new Date().toLocaleDateString('tr-TR') });
@@ -1170,15 +1194,17 @@
             document.getElementById('sahaMusteri').value = '';
             document.getElementById('sahaAciklama').value = '';
             document.getElementById('sahaDosya').value = '';
+            currentFilesCache['sahaDosya'] = [];
             saveAll(); renderSaha();
-            logHareket(personel || "Hasan Buğra Yıldırım", `${fisNo} nolu saha fişini güncelledi/ekledi.`);
+            let user = localStorage.getItem("inomer_user") || personel || "Hasan Buğra Yıldırım";
+            logHareket(user, `${fisNo} nolu saha fişini güncelledi/ekledi.`);
         };
         function renderSaha() {
             let tb = document.getElementById('sahaTableBody');
             if(!tb) return;
             tb.innerHTML = '';
             sahaFisleri.filter(s => s.klasor === aktifKlasorler.saha).forEach(s => {
-                tb.innerHTML += `<tr><td><b>${s.fisNo}</b></td><td>${s.tarih}</td><td>${s.personel}</td><td>${s.musteri}</td><td>${s.aciklama}</td><td>📎 ${s.dosyalar}</td><td><button class="btn btn-danger" style="padding:4px 8px; font-size:0.75rem;" onclick="deleteItem('saha', ${s.id})">Sil</button></td></tr>`;
+                tb.innerHTML += `<tr><td><b>${s.fisNo}</b></td><td>${s.tarih}</td><td>${s.personel}</td><td>${s.musteri}</td><td>${s.aciklama}</td><td>${renderFileLinks(s.dosyalar)}</td><td><button class="btn btn-danger" style="padding:4px 8px; font-size:0.75rem;" onclick="deleteItem('saha', ${s.id})">Sil</button></td></tr>`;
             });
         }
 
@@ -1193,7 +1219,8 @@
             document.getElementById('personelTel').value = '';
             document.getElementById('personelUnvan').value = '';
             saveAll(); renderPersonel();
-            logHareket("Hasan Buğra Yıldırım", `Personel kaydetti: "${ad}".`);
+            let user = localStorage.getItem("inomer_user") || "Hasan Buğra Yıldırım";
+            logHareket(user, `Personel kaydetti: "${ad}".`);
         };
         function renderPersonel() {
             let tb = document.getElementById('personelTableBody');
@@ -1247,18 +1274,21 @@
             let unvan = document.getElementById('faturaUnvan').value.trim();
             let tutar = document.getElementById('faturaTutar').value.trim();
             let klasor = document.getElementById('faturaKlasorSec').value;
-            let dosyalar = getFileNames('faturaDosya');
+            let dosyalar = currentFilesCache['faturaDosya'] || [];
             if(!unvan || !tutar) return alert('Unvan ve tutar giriniz.');
             faturalar.push({ id: Date.now(), unvan, tutar, klasor, dosyalar });
+            document.getElementById('faturaDosya').value = '';
+            currentFilesCache['faturaDosya'] = [];
             saveAll(); renderFatura();
-            logHareket("Hasan Buğra Yıldırım", `"${unvan}" firmasına ait ${tutar} ₺ faturayı işledi.`);
+            let user = localStorage.getItem("inomer_user") || "Hasan Buğra Yıldırım";
+            logHareket(user, `"${unvan}" firmasına ait ${tutar} ₺ faturayı işledi.`);
         };
         function renderFatura() {
             let tb = document.getElementById('faturaTableBody');
             if(!tb) return;
             tb.innerHTML = '';
             faturalar.filter(f => f.klasor === aktifKlasorler.fatura).forEach(f => {
-                tb.innerHTML += `<tr><td>${f.unvan}</td><td>${f.klasor}</td><td><b>${f.tutar} ₺</b></td><td>📄 ${f.dosyalar}</td><td><button class="btn btn-danger" style="padding:4px 8px; font-size:0.75rem;" onclick="deleteItem('fatura', ${f.id})">Sil</button></td></tr>`;
+                tb.innerHTML += `<tr><td>${f.unvan}</td><td>${f.klasor}</td><td><b>${f.tutar} ₺</b></td><td>${renderFileLinks(f.dosyalar)}</td><td><button class="btn btn-danger" style="padding:4px 8px; font-size:0.75rem;" onclick="deleteItem('fatura', ${f.id})">Sil</button></td></tr>`;
             });
         }
 
@@ -1272,7 +1302,8 @@
             if(!unvan) return alert('Müşteri unvanı giriniz.');
             musteriler.push({ id: Date.now(), unvan, isKalemi, tutar: tutar || 0, durum, notlar, klasor });
             saveAll(); renderMusteri();
-            logHareket("Hasan Buğra Yıldırım", `Müşteri cari ekledi: "${unvan}".`);
+            let user = localStorage.getItem("inomer_user") || "Hasan Buğra Yıldırım";
+            logHareket(user, `Müşteri cari ekledi: "${unvan}".`);
         };
         function renderMusteri() {
             let tb = document.getElementById('musteriTableBody');
@@ -1315,7 +1346,8 @@
                 copKutusu.push({ tur: name, data: item, zaman: new Date().toLocaleString('tr-TR') });
                 arr.splice(idx, 1);
                 saveAll(); initApp();
-                logHareket("Hasan Buğra Yıldırım", `${name} kaydını silerek çöp kutusuna attı.`);
+                let user = localStorage.getItem("inomer_user") || "Hasan Buğra Yıldırım";
+                logHareket(user, `${name} kaydını silerek çöp kutusuna attı.`);
             }
         };
 
@@ -1328,8 +1360,7 @@
                 return;
             }
             copKutusu.forEach((c, idx) => {
-                let detayStr = JSON.stringify(c.data);
-                tb.innerHTML += `<tr><td>${c.tur}</td><td><small>${detayStr}</small></td><td>${c.zaman}</td><td><button class="btn btn-success" style="padding:4px 8px; font-size:0.75rem;" onclick="restoreTrash(${idx})">Geri Yükle</button></td></tr>`;
+                tb.innerHTML += `<tr><td>${c.tur}</td><td><small>${c.tur} kaydı</small></td><td>${c.zaman}</td><td><button class="btn btn-success" style="padding:4px 8px; font-size:0.75rem;" onclick="restoreTrash(${idx})">Geri Yükle</button></td></tr>`;
             });
         }
 
@@ -1346,7 +1377,8 @@
             else if(item.tur.includes('Fatura')) faturalar.push(p);
             else if(item.tur.includes('Müşteri')) musteriler.push(p);
             saveAll(); initApp();
-            logHareket("Hasan Buğra Yıldırım", `Çöp kutusundan ${item.tur} öğesini geri yükledi.`);
+            let user = localStorage.getItem("inomer_user") || "Hasan Buğra Yıldırım";
+            logHareket(user, `Çöp kutusundan ${item.tur} öğesini geri yükledi.`);
         };
     </script>
 </body>
