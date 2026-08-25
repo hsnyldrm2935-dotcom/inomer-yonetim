@@ -3,681 +3,665 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>İNOMER ENERJİ | Profesyonel Yönetim ve Mühendislik Paneli</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <title>İNOMER ENERJİ - Profesyonel Yönetim ve Saha Otomasyonu</title>
     <style>
         :root {
-            --bg-main: #0b0f19;
-            --bg-card: rgba(30, 41, 59, 0.75);
-            --border-card: rgba(255, 255, 255, 0.08);
-            --primary: #ef4444;
-            --primary-hover: #dc2626;
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-            --accent-blue: #3b82f6;
-            --accent-green: #10b981;
-            --accent-amber: #f59e0b;
+            --primary-color: #0284c7;
+            --primary-dark: #0369a1;
+            --secondary-color: #0f172a;
+            --accent-color: #f59e0b;
+            --danger-color: #ef4444;
+            --success-color: #22c55e;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #334155;
+            --border-color: #e2e8f0;
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Inter', sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
         body {
-            background-color: var(--bg-main);
+            background-color: var(--bg-color);
             color: var(--text-main);
-            min-height: 100vh;
-            overflow-x: hidden;
-            background-image: 
-                radial-gradient(circle at 10% 20%, rgba(239, 68, 68, 0.07) 0%, transparent 40%),
-                radial-gradient(circle at 90% 80%, rgba(59, 130, 246, 0.05) 0%, transparent 40%);
-        }
-
-        /* ÜST BANNER & HEADER */
-        .hero-banner {
-            position: relative;
-            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
-            border-bottom: 1px solid var(--border-card);
-            padding: 24px 40px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        }
-
-        .header-content {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 20px;
+            height: 100vh;
+            overflow: hidden;
         }
 
-        .brand-area h1 {
-            font-size: 28px;
-            font-weight: 700;
-            letter-spacing: 1px;
-            color: #ef4444;
-            text-shadow: 0 0 20px rgba(239, 68, 68, 0.4);
-        }
-
-        .brand-area p {
-            font-size: 11px;
-            color: var(--text-muted);
-            letter-spacing: 1.5px;
-            margin-top: 4px;
-            text-transform: uppercase;
-        }
-
-        .user-panel-info {
+        /* Sidebar */
+        aside {
+            width: 280px;
+            background-color: var(--secondary-color);
+            color: white;
             display: flex;
-            align-items: center;
-            gap: 15px;
-            background: rgba(15, 23, 42, 0.6);
-            padding: 8px 18px;
-            border-radius: 30px;
-            border: 1px solid var(--border-card);
+            flex-direction: column;
+            box-shadow: 4px 0 10px rgba(0,0,0,0.1);
+            z-index: 10;
         }
 
-        .user-panel-info span { font-size: 14px; font-weight: 500; }
-        
-        .badge-admin {
-            background: linear-gradient(135deg, #f59e0b, #d97706);
-            color: #fff; 
-            font-size: 11px; 
-            padding: 3px 10px; 
-            border-radius: 12px; 
-            font-weight: 600;
-        }
-
-        .btn-logout {
-            background: #334155; 
-            color: #fff; 
-            border: none; 
-            padding: 6px 14px; 
-            border-radius: 8px; 
-            cursor: pointer; 
-            font-size: 13px;
-            transition: background 0.2s;
-        }
-        .btn-logout:hover { background: #475569; }
-
-        /* NAVİGASYON SEKMELERİ */
-        .nav-tabs {
-            display: flex;
-            gap: 6px;
-            padding: 25px 40px 0 40px;
-            overflow-x: auto;
-            border-bottom: 1px solid var(--border-card);
-        }
-
-        .tab-btn {
-            background: rgba(30, 41, 59, 0.4);
-            border: 1px solid var(--border-card);
-            border-bottom: none;
-            color: var(--text-muted);
-            padding: 12px 20px;
-            border-radius: 12px 12px 0 0;
-            cursor: pointer;
-            font-weight: 500;
-            font-size: 13px;
-            transition: all 0.3s;
-            white-space: nowrap;
-        }
-
-        .tab-btn:hover { color: var(--text-main); background: rgba(30, 41, 59, 0.8); }
-        .tab-btn.active {
-            background: var(--primary);
-            color: #fff;
-            border-color: var(--primary);
-            box-shadow: 0 -4px 15px rgba(239, 68, 68, 0.3);
-        }
-
-        /* ANA KAPSAYICI */
-        .main-container {
-            padding: 30px 40px;
-            max-width: 1600px;
-            margin: 0 auto;
-        }
-
-        /* DÖNEM / PROJE KLASÖR SİSTEMİ */
-        .folder-bar {
+        .brand-box {
+            padding: 24px;
+            font-size: 1.25rem;
+            font-weight: bold;
+            background: rgba(255,255,255,0.05);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
             display: flex;
             align-items: center;
             gap: 12px;
-            margin-bottom: 25px;
-            flex-wrap: wrap;
-            background: rgba(15, 23, 42, 0.5);
-            padding: 15px 22px;
-            border-radius: 14px;
-            border: 1px solid var(--border-card);
         }
 
-        .folder-chip {
-            background: rgba(30, 41, 59, 0.8);
-            border: 1px solid var(--border-card);
-            color: var(--text-muted);
-            padding: 8px 16px;
-            border-radius: 10px;
+        .brand-box span {
+            color: var(--accent-color);
+        }
+
+        .nav-menu {
+            list-style: none;
+            padding: 20px 0;
+            flex-grow: 1;
+            overflow-y: auto;
+        }
+
+        .nav-item {
+            padding: 14px 24px;
             cursor: pointer;
-            font-size: 13px;
             display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            border-left: 4px solid transparent;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            background: rgba(255,255,255,0.08);
+            border-left-color: var(--accent-color);
+            color: #fff;
+        }
+
+        /* Main Workspace */
+        main {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        header {
+            height: 70px;
+            background: var(--card-bg);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 32px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .header-title h1 {
+            font-size: 1.4rem;
+            color: var(--secondary-color);
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 600;
+        }
+
+        .content-body {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 32px;
+            background: var(--bg-color);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.4s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Card System & UI Elements */
+        .card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            padding: 24px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02);
+            margin-bottom: 24px;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+
+        /* Form Controls */
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: var(--secondary-color);
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 0.95rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.1);
+        }
+
+        /* Buttons */
+        .btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            display: inline-flex;
             align-items: center;
             gap: 8px;
-            transition: all 0.2s;
+            transition: background 0.2s;
         }
 
-        .folder-chip:hover { color: #fff; border-color: #475569; }
-        .folder-chip.active { background: var(--accent-blue); color: #fff; border-color: #60a5fa; }
-        
-        .btn-add-folder {
-            background: transparent; 
-            border: 1px dashed var(--text-muted); 
-            color: var(--text-muted);
-            padding: 8px 14px; 
-            border-radius: 10px; 
-            cursor: pointer; 
-            font-size: 13px;
-            transition: all 0.2s;
-        }
-        .btn-add-folder:hover { border-color: #fff; color: #fff; background: rgba(255,255,255,0.05); }
-
-        /* İSTATİSTİK KARTLARI */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
+        .btn:hover {
+            background: var(--primary-dark);
         }
 
-        .modern-card {
-            background: var(--bg-card);
-            backdrop-filter: blur(12px);
-            border: 1px solid var(--border-card);
-            border-radius: 16px;
-            padding: 22px;
-            position: relative;
-            overflow: hidden;
-            transition: transform 0.3s, border-color 0.3s;
+        .btn-danger { background: var(--danger-color); }
+        .btn-danger:hover { background: #dc2626; }
+        .btn-success { background: var(--success-color); }
+        .btn-success:hover { background: #16a34a; }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 12px;
+            text-align: left;
         }
 
-        .modern-card:hover { transform: translateY(-3px); border-color: rgba(239, 68, 68, 0.4); }
-        .modern-card::after {
-            content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: var(--primary);
-        }
-        
-        .card-title { font-size: 11px; font-weight: 600; color: var(--text-muted); letter-spacing: 0.5px; margin-bottom: 8px; }
-        .card-value { font-size: 30px; font-weight: 700; color: #fff; }
-        .card-value.red { color: #f87171; }
-        .card-value.green { color: #34d399; }
-        .card-value.blue { color: #60a5fa; }
-
-        /* İŞLEM PANELLERİ VE İÇERİK YAPILARI */
-        .action-panel {
-            background: var(--bg-card);
-            backdrop-filter: blur(12px);
-            border: 1px solid var(--border-card);
-            border-radius: 16px;
-            padding: 30px;
-            margin-bottom: 30px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.37);
+        th, td {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 0.9rem;
         }
 
-        .panel-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 25px;
-            flex-wrap: wrap;
-            gap: 15px;
+        th {
+            background: #f1f5f9;
+            font-weight: 600;
+            color: var(--secondary-color);
         }
 
-        .panel-header h3 { font-size: 18px; font-weight: 600; display: flex; align-items: center; gap: 10px; color: #fff; }
-
-        .btn-group { display: flex; gap: 10px; flex-wrap: wrap; }
-        
-        .btn {
-            padding: 10px 18px; 
-            border-radius: 10px; 
-            border: none; 
-            cursor: pointer; 
-            font-weight: 600; 
-            font-size: 13px;
-            display: flex; 
-            align-items: center; 
-            gap: 8px; 
-            transition: all 0.2s;
+        /* Trash / Archive section styling (As requested: Çöp kutusu korunuyor) */
+        .trash-bin-section {
+            border: 2px dashed var(--danger-color);
+            background: #fef2f2;
+            padding: 16px;
+            border-radius: 8px;
+            margin-top: 20px;
         }
-        .btn-primary { background: var(--primary); color: #fff; }
-        .btn-primary:hover { background: var(--primary-hover); }
-        .btn-secondary { background: #334155; color: #fff; }
-        .btn-secondary:hover { background: #475569; }
-        .btn-success { background: var(--accent-green); color: #fff; }
-        .btn-success:hover { background: #059669; }
-        .btn-warning { background: var(--accent-amber); color: #1e293b; }
-        .btn-warning:hover { background: #d97706; }
-
-        /* ARAMA VE TABLOLAR */
-        .search-input {
-            width: 100%; 
-            background: rgba(15, 23, 42, 0.6); 
-            border: 1px solid var(--border-card);
-            padding: 14px 18px; 
-            border-radius: 12px; 
-            color: #fff; 
-            font-size: 14px; 
-            outline: none; 
-            margin-bottom: 20px;
-            transition: border-color 0.2s;
-        }
-        .search-input:focus { border-color: var(--primary); }
-
-        .data-table { width: 100%; border-collapse: collapse; text-align: left; font-size: 14px; }
-        .data-table th { color: var(--text-muted); font-weight: 600; padding: 14px 16px; border-bottom: 1px solid var(--border-card); background: rgba(15, 23, 42, 0.4); }
-        .data-table td { padding: 16px; border-bottom: 1px solid rgba(255,255,255,0.04); color: #e2e8f0; }
-        .data-table tr:hover td { background: rgba(255, 255, 255, 0.02); }
-
-        .hidden-tab-content { display: none; }
-        .hidden-tab-content.active { display: block; }
-
-        /* MODAL PENCERE TASARIMI */
-        .modal-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(8px);
-            display: none; justify-content: center; align-items: center; z-index: 1000;
-        }
-        .modal-card {
-            background: #1e293b; border: 1px solid var(--border-card); width: 90%; max-width: 650px;
-            border-radius: 20px; padding: 35px; box-shadow: 0 25px 60px rgba(0,0,0,0.7);
-        }
-        
-        .form-group { margin-bottom: 20px; }
-        .form-group label { display: block; font-size: 13px; color: var(--text-muted); margin-bottom: 8px; font-weight: 500; }
-        .form-control {
-            width: 100%; background: #0f172a; border: 1px solid var(--border-card);
-            padding: 14px 16px; border-radius: 12px; color: #fff; font-size: 14px; outline: none;
-            transition: border-color 0.2s;
-        }
-        .form-control:focus { border-color: var(--accent-blue); }
-
-        /* GRID YAPILARI */
-        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
-        @media(max-width: 1024px) { .grid-2, .grid-3 { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
 
-    <!-- ÜST BANNER -->
-    <header class="hero-banner">
-        <div class="header-content">
-            <div class="brand-area">
-                <h1>İNOMER ENERJİ</h1>
-                <p>GÜNEŞ ENERJİSİ SİSTEMLERİ, TRAFO & ELEKTRİK MÜHENDİSLİK YÖNETİMİ</p>
+    <!-- Sidebar Menü -->
+    <aside>
+        <div class="brand-box">
+            ⚡ İNOMER <span>ENERJİ</span>
+        </div>
+        <ul class="nav-menu">
+            <li class="nav-item active" onclick="switchTab('dashboard')">📊 Kontrol Paneli</li>
+            <li class="nav-item" onclick="switchTab('sahaFisi')">📝 Saha Fişleri & İş Takip</li>
+            <li class="nav-item" onclick="switchTab('personel')">👥 Personel Yönetimi</li>
+            <li class="nav-item" onclick="switchTab('solarCalc')">☀️ Solar & Mühendislik Hesap</li>
+            <li class="nav-item" onclick="switchTab('stokDepo')">📦 Depo & Stok Yönetimi</li>
+            <li class="nav-item" onclick="switchTab('copKutusu')">🗑️ Çöp Kutusu & Arşiv</li>
+        </ul>
+    </aside>
+
+    <!-- Ana Çalışma Alanı -->
+    <main>
+        <header>
+            <div class="header-title">
+                <h1 id="activeTabTitle">Kontrol Paneli</h1>
             </div>
-            <div class="user-panel-info">
+            <div class="user-profile">
                 <span>Hasan Buğra Yıldırım</span>
-                <span class="badge-admin">Super Admin</span>
-                <button class="btn-logout" onclick="alert('Güvenli çıkış yapıldı.')">Çıkış</button>
             </div>
-        </div>
-    </header>
+        </header>
 
-    <!-- SEKMELER (TÜM MODÜLLER) -->
-    <nav class="nav-tabs">
-        <button class="tab-btn active" onclick="switchTab('stok', this)">📦 Stok & Ürünler</button>
-        <button class="tab-btn" onclick="switchTab('fatura', this)">📄 Fatura & KolayBi</button>
-        <button class="tab-btn" onclick="switchTab('arazi', this)">☀️ Arazi Tipi GES</button>
-        <button class="tab-btn" onclick="switchTab('cati', this)">⚡ Çatı GES & Trafo</button>
-        <button class="tab-btn" onclick="switchTab('saha', this)">📋 Saha & Fiş Arşivi</button>
-        <button class="tab-btn" onclick="switchTab('personel', this)">👷 Personel & Şantiye</button>
-        <button class="tab-btn" onclick="switchTab('hesap', this)">🧮 Mühendislik Hesap</button>
-    </nav>
-
-    <!-- ANA KAPSAYICI -->
-    <main class="main-container">
-
-        <!-- DÖNEM VE PROJE KLASÖR ÇUĞUĞU -->
-        <div class="folder-bar">
-            <span style="font-size: 13px; color: var(--text-muted); font-weight: 600;">📁 Dönem / Proje Klasörleri:</span>
-            <div id="folderContainer" style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
-                <div class="folder-chip active" onclick="filterFolder('Genel', this)">📁 Genel / Aktif Depo</div>
-                <div class="folder-chip" onclick="filterFolder('Ekim 2026', this)">📁 2026 Ekim</div>
-                <div class="folder-chip" onclick="filterFolder('Eylül 2026', this)">📁 2026 Eylül</div>
-                <div class="folder-chip" onclick="filterFolder('Aliağa Şantiye', this)">📁 Aliağa Proje</div>
-            </div>
-            <button class="btn-add-folder" onclick="createNewFolder()">+ Klasör Ekle</button>
-        </div>
-
-        <!-- 1. STOK & ÜRÜNLER -->
-        <div id="tab-stok" class="hidden-tab-content active">
-            <div class="stats-grid">
-                <div class="modern-card">
-                    <div class="card-title">TOPLAM ÜRÜN / ÇEŞİT</div>
-                    <div class="card-value blue" id="statCesit">3</div>
-                </div>
-                <div class="modern-card">
-                    <div class="card-title">DEPO TOPLAM MALZEME</div>
-                    <div class="card-value green" id="statAdet">420</div>
-                </div>
-                <div class="modern-card">
-                    <div class="card-title">KRİTİK STOK UYARISI</div>
-                    <div class="card-value red" id="statKritik">1</div>
-                </div>
-                <div class="modern-card">
-                    <div class="card-title">AKTİF SAHA EKİBİ</div>
-                    <div class="card-value">4</div>
-                </div>
-            </div>
-
-            <div class="action-panel">
-                <div class="panel-header">
-                    <h3>📦 Depo ve Malzeme Envanteri <span id="currentFolderBadge" style="font-size: 11px; background: #3b82f6; padding: 3px 10px; border-radius: 6px; color:#fff;">Genel</span></h3>
-                    <div class="btn-group">
-                        <button class="btn btn-success" onclick="openInvoiceModal()">📄 Fatura / İrsaliye İşle</button>
-                        <button class="btn btn-primary" onclick="openAddProductModal()">+ Yeni Ürün Ekle</button>
+        <div class="content-body">
+            
+            <!-- 1. Dashboard Tab -->
+            <div id="dashboard" class="tab-content active">
+                <div class="grid-3">
+                    <div class="card">
+                        <h3>Aktif Saha Fişleri</h3>
+                        <p style="font-size: 2rem; font-weight: bold; color: var(--primary-color); margin-top: 10px;" id="statSahaCount">0</p>
+                    </div>
+                    <div class="card">
+                        <h3>Kayıtlı Personel</h3>
+                        <p style="font-size: 2rem; font-weight: bold; color: var(--success-color); margin-top: 10px;" id="statPersonelCount">0</p>
+                    </div>
+                    <div class="card">
+                        <h3>Sistem Durumu</h3>
+                        <p style="font-size: 1.1rem; color: var(--success-color); margin-top: 15px;">● Çevrimiçi / KolayBi Sync Hazır</p>
                     </div>
                 </div>
-
-                <input type="text" class="search-input" placeholder="Malzeme adı, barkod, kategori veya klasöre göre filtrele..." onkeyup="filterTable(this, 'productTable')">
-
-                <div style="overflow-x: auto;">
-                    <table class="data-table" id="productTable">
-                        <thead>
-                            <tr>
-                                <th>Malzeme Adı</th>
-                                <th>Barkod / Kod</th>
-                                <th>Kategori</th>
-                                <th>Raf / Konum</th>
-                                <th>Dönem Klasörü</th>
-                                <th>Miktar / Durum</th>
-                                <th>Birim Fiyat</th>
-                            </tr>
-                        </thead>
-                        <tbody id="productTableBody">
-                            <tr>
-                                <td><strong>NYAF Bakır Kablo (35 mm²)</strong></td>
-                                <td>IN-0000/35/01</td>
-                                <td>KABLO</td>
-                                <td>Raf: A-01</td>
-                                <td><span style="background: #1e293b; padding: 3px 8px; border-radius: 4px; font-size:11px;">Genel</span></td>
-                                <td style="color: #34d399; font-weight: 600;">120 metre</td>
-                                <td>120 TL</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Lexron 11 kW Inverter</strong></td>
-                                <td>IN-INV-11KW</td>
-                                <td>İNVERTER</td>
-                                <td>Depo Raf B</td>
-                                <td><span style="background: #1e293b; padding: 3px 8px; border-radius: 4px; font-size:11px;">Aliağa Şantiye</span></td>
-                                <td style="color: #f87171; font-weight: 600;">1 Adet (Kritik)</td>
-                                <td>24.500 TL</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Daxler 585W TOPCon Panel</strong></td>
-                                <td>IN-PNL-585</td>
-                                <td>SOLAR PANEL</td>
-                                <td>Saha Depo</td>
-                                <td><span style="background: #1e293b; padding: 3px 8px; border-radius: 4px; font-size:11px;">2026 Ekim</span></td>
-                                <td style="color: #34d399; font-weight: 600;">14 Adet</td>
-                                <td>4.200 TL</td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <div class="card">
+                    <h3>İşletme Özeti & Hızlı Erişim</h3>
+                    <p style="margin-top: 10px; color: #64748b;">Aliağa / İzmir merkezli İNOMER ENERJİ operasyonel kontrol paneline hoş geldiniz. Sol menüden saha fişlerini yönetebilir, solar sistem hesaplamaları yapabilir ve detaylı mühendislik akışlarını sağlayabilirsiniz.</p>
                 </div>
             </div>
-        </div>
 
-        <!-- 2. FATURA & CARİ İŞLEMLER -->
-        <div id="tab-fatura" class="hidden-tab-content">
-            <div class="action-panel">
-                <div class="panel-header">
-                    <h3>📄 Gelen/Giden Fatura Arşivi ve KolayBi Senkronizasyonu</h3>
-                    <div class="btn-group">
-                        <button class="btn btn-primary" onclick="openInvoiceModal()">Yeni Fatura Gir</button>
-                        <button class="btn btn-warning" onclick="alert('KolayBi REST API anahtarı ile muhasebe senkronizasyonu başlatıldı.')">KolayBi API Senkronize Et</button>
+            <!-- 2. Saha Fişleri Tab -->
+            <div id="sahaFisi" class="tab-content">
+                <div class="card">
+                    <h3>Yeni Saha Fişi Oluştur</h3>
+                    <div class="grid-2" style="margin-top: 16px;">
+                        <div class="form-group">
+                            <label>Müşteri / Proje Adı</label>
+                            <input type="text" id="sahaMusteri" placeholder="Örn: Tüpraş / Aliağa Tesis">
+                        </div>
+                        <div class="form-group">
+                            <label>Sorumlu Personel</label>
+                            <select id="sahaPersonelSelect"></select>
+                        </div>
                     </div>
+                    <div class="form-group">
+                        <label>Yapılan İşlem / Açıklama</label>
+                        <textarea id="sahaAciklama" rows="3" placeholder="Saha operasyon detayları..."></textarea>
+                    </div>
+                    <button class="btn" onclick="saveSahaFisi()">Fişi Kaydet</button>
                 </div>
-                <input type="text" class="search-input" placeholder="Firma adı veya fatura numarası ara..." onkeyup="filterTable(this, 'invoiceTable')">
-                <div style="overflow-x: auto;">
-                    <table class="data-table" id="invoiceTable">
+
+                <div class="card">
+                    <h3>Kayıtlı Saha Fişleri</h3>
+                    <table>
                         <thead>
                             <tr>
+                                <th>ID</th>
+                                <th>Müşteri</th>
+                                <th>Personel</th>
+                                <th>Açıklama</th>
                                 <th>Tarih</th>
-                                <th>Firma / Tedarikçi</th>
-                                <th>Fatura No</th>
-                                <th>Klasör / Dönem</th>
-                                <th>Tutar</th>
-                                <th>Durum</th>
+                                <th>İşlemler</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr>
-                                <td>25.08.2026</td>
-                                <td><strong>Solar Enerji Ltd. Şti.</strong></td>
-                                <td>FTR-2026-089</td>
-                                <td>2026 Ekim</td>
-                                <td>58.800 TL</td>
-                                <td><span style="color: #34d399;">Ödendi / İşlendi</span></td>
-                            </tr>
-                            <tr>
-                                <td>14.08.2026</td>
-                                <td><strong>Elektro Market A.Ş.</strong></td>
-                                <td>FTR-2026-042</td>
-                                <td>Genel</td>
-                                <td>14.400 TL</td>
-                                <td><span style="color: #f59e0b;">Beklemede</span></td>
-                            </tr>
+                        <tbody id="sahaFisiTableBody">
+                            <!-- Dinamik Doldurulur -->
                         </tbody>
                     </table>
                 </div>
             </div>
-        </div>
 
-        <!-- 3. ARAZİ TİPİ GES -->
-        <div id="tab-arazi" class="hidden-tab-content">
-            <div class="action-panel">
-                <div class="panel-header">
-                    <h3>☀️ Arazi Tipi GES Projeleri & Konstrüksiyon Takibi</h3>
-                    <button class="btn btn-primary" onclick="alert('Yeni arazi projesi oluşturuldu.')">+ Proje Oluştur</button>
-                </div>
-                <div class="grid-2">
-                    <div style="background: rgba(15,23,42,0.5); padding: 22px; border-radius: 14px; border: 1px solid var(--border-card);">
-                        <h4 style="color: #60a5fa; margin-bottom: 12px; font-size: 16px;">Aliağa 200kW Arazi Sahası</h4>
-                        <p style="font-size: 13px; color: var(--text-muted); line-height: 1.6;">Durum: Panel dizilim ve konstrüksiyon aşamasında.<br>Ekipmanlar: Daxler 585W TOPCon (14 Adet off-grid dizilim), Lexron Inverter ve 51.2V LiFePO4 batarya grubu.</p>
+            <!-- 3. Personel Yönetimi Tab -->
+            <div id="personel" class="tab-content">
+                <div class="card">
+                    <h3>Personel Ekle</h3>
+                    <div class="grid-2" style="margin-top: 16px;">
+                        <div class="form-group">
+                            <label>Personel Adı Soyadı</label>
+                            <input type="text" id="personelAd" placeholder="Ad Soyad">
+                        </div>
+                        <div class="form-group">
+                            <label>Uzmanlık / Pozisyon</label>
+                            <input type="text" id="personelUnvan" placeholder="Örn: Elektrik Teknikeri">
+                        </div>
                     </div>
-                    <div style="background: rgba(15,23,42,0.5); padding: 22px; border-radius: 14px; border: 1px solid var(--border-card);">
-                        <h4 style="color: #34d399; margin-bottom: 12px; font-size: 16px;">RS485 & Batarya İletişim Notu</h4>
-                        <p style="font-size: 13px; color: var(--text-muted); line-height: 1.6;">İki akü arasında paralel COM bağlantısı kurulmuş olup, inverter ile haberleşme tek bir RS485 portu üzerinden sorunsuz sağlanmaktadır.</p>
-                    </div>
+                    <button class="btn" onclick="addPersonel()">Personeli Kaydet</button>
                 </div>
-            </div>
-        </div>
 
-        <!-- 4. ÇATI GES & TRAFO -->
-        <div id="tab-cati" class="hidden-tab-content">
-            <div class="action-panel">
-                <div class="panel-header">
-                    <h3>⚡ Endüstriyel Çatı GES & Trafo Panosu Planlaması</h3>
-                    <button class="btn btn-primary">+ Trafo / Şalt Kartı Ekle</button>
-                </div>
-                <p style="color: var(--text-muted); font-size: 14px; line-height: 1.6;">AG/OG trafo merkezleri, kompanzasyon panoları, 35 mm² NYAF bakır kablo hatları ve DSE 704/700 serisi otomatik jeneratör kontrol modülleri bu alandan izlenir.</p>
-            </div>
-        </div>
-
-        <!-- 5. SAHA & FİŞ ARŞİVİ -->
-        <div id="tab-saha" class="hidden-tab-content">
-            <div class="action-panel">
-                <div class="panel-header">
-                    <h3>📋 Saha Tutanakları, Kepenk Alıcı Kartları & Görsel Arşivi</h3>
-                    <button class="btn btn-success">+ Saha Fişi Yükle</button>
-                </div>
-                <p style="color: var(--text-muted); font-size: 14px; line-height: 1.6;">433 MHz roller shutter alıcı kart resetleme ve kumanda eşleştirme tutanakları, şantiye görsel raporları düzenli olarak saklanır.</p>
-            </div>
-        </div>
-
-        <!-- 6. PERSONEL & ŞANTİYE -->
-        <div id="tab-personel" class="hidden-tab-content">
-            <div class="action-panel">
-                <div class="panel-header">
-                    <h3>👷 Saha Personeli ve Görev Dağılımı</h3>
-                    <button class="btn btn-primary">+ Personel Ekle</button>
-                </div>
-                <div style="overflow-x: auto;">
-                    <table class="data-table">
+                <div class="card">
+                    <h3>Personel Listesi</h3>
+                    <table>
                         <thead>
                             <tr>
                                 <th>Ad Soyad</th>
-                                <th>Uzmanlık Alanı</th>
-                                <th>Görev Yeri</th>
-                                <th>Çalışma Durumu</th>
+                                <th>Uzmanlık</th>
+                                <th>İşlemler</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="personelTableBody">
+                            <!-- Dinamik Doldurulur -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 4. Solar & Mühendislik Hesaplama Tab -->
+            <div id="solarCalc" class="tab-content">
+                <div class="card">
+                    <h3>Solar Panel & Inverter Yapılandırma Asistanı</h3>
+                    <p style="margin-bottom: 16px; color: #64748b;">Sisteminizdeki Daxler TOPCon paneller ve Lexron inverter yapılandırması için string hesaplamaları.</p>
+                    <div class="grid-2">
+                        <div class="form-group">
+                            <label>Panel Gücü (Watt)</label>
+                            <input type="number" id="calcPanelW" value="585">
+                        </div>
+                        <div class="form-group">
+                            <label>Serideki Panel Sayısı</label>
+                            <input type="number" id="calcPanelCount" value="14">
+                        </div>
+                    </div>
+                    <button class="btn" onclick="calculateSolar()">Hesapla</button>
+                    <div id="solarResult" style="margin-top: 16px; font-weight: bold; color: var(--primary-dark);"></div>
+                </div>
+            </div>
+
+            <!-- 5. Depo & Stok Yönetimi Tab -->
+            <div id="stokDepo" class="tab-content">
+                <div class="card">
+                    <h3>Kablo & Ekipman Stok Takibi</h3>
+                    <p style="color: #64748b; margin-bottom: 16px;">NYAF Kablolar, Panolar ve Otomasyon malzemeleri stoğu.</p>
+                    <div class="form-group">
+                        <label>Malzeme Adı</label>
+                        <input type="text" id="stokMalzeme" placeholder="Örn: 35 mm² NYAF Bakır Kablo">
+                    </div>
+                    <div class="form-group">
+                        <label>Miktar / Metraj</label>
+                        <input type="number" id="stokMiktar" placeholder="Örn: 100">
+                    </div>
+                    <button class="btn" onclick="addStok()">Stok Ekle</button>
+                </div>
+                <div class="card">
+                    <h3>Stok Durumu</h3>
+                    <table>
+                        <thead>
                             <tr>
-                                <td>Ahmet Yılmaz</td>
-                                <td>Elektrik Teknisyeni</td>
-                                <td>Aliağa Şantiye</td>
-                                <td><span style="color: #34d399;">Aktif Saha</span></td>
+                                <th>Malzeme</th>
+                                <th>Miktar</th>
+                                <th>İşlemler</th>
                             </tr>
+                        </thead>
+                        <tbody id="stokTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 6. Çöp Kutusu & Arşiv Tab (Kullanıcı Talebi Üzerine Kesinlikle Korundu) -->
+            <div id="copKutusu" class="tab-content">
+                <div class="card trash-bin-section">
+                    <h3>🗑️ Çöp Kutusu ve Silinen Öğeler Arşivi</h3>
+                    <p style="margin-top: 8px; color: #b91c1c; font-size: 0.9rem;">Burada silinen saha fişleri, personel kayıtları ve depodaki eski veriler geçici olarak tutulur. İstediğiniz zaman geri yükleyebilir veya kalıcı olarak silebilirsiniz.</p>
+                    <table style="margin-top: 16px;">
+                        <thead>
                             <tr>
-                                <td>Mehmet Demir</td>
-                                <td>Solar Montaj Uzmanı</td>
-                                <td>Çatı Projeleri</td>
-                                <td><span style="color: #34d399;">Aktif Saha</span></td>
+                                <th>Tür</th>
+                                <th>İçerik Detayı</th>
+                                <th>Silinme Zamanı</th>
+                                <th>İşlemler</th>
+                            </tr>
+                        </thead>
+                        <tbody id="trashTableBody">
+                            <tr>
+                                <td colspan="4" style="text-align: center; color: #64748b;">Çöp kutusu boş.</td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
-        </div>
 
-        <!-- 7. MÜHENDİSLİK HESAPLAMA ARACI -->
-        <div id="tab-hesap" class="hidden-tab-content">
-            <div class="action-panel">
-                <div class="panel-header">
-                    <h3>🧮 Hızlı Elektrik & Kablo Kesit Hesaplama Modülü</h3>
-                </div>
-                <div class="grid-2">
-                    <div class="form-group">
-                        <label>Akım Değeri (Amper)</label>
-                        <input type="number" id="calcAmp" class="form-control" placeholder="Örn: 50">
-                    </div>
-                    <div class="form-group">
-                        <label>Kablo Boyu (Metre)</label>
-                        <input type="number" id="calcLen" class="form-control" placeholder="Örn: 30">
-                    </div>
-                </div>
-                <button class="btn btn-primary" onclick="calculateCable()">Kesit Tavsiyesi Hesapla</button>
-                <div id="calcResult" style="margin-top: 20px; font-weight: 600; color: #34d399; font-size: 15px;"></div>
-            </div>
         </div>
-
     </main>
 
-    <!-- FATURA / ÜRÜN EKLEME MODALI -->
-    <div class="modal-overlay" id="invoiceModal">
-        <div class="modal-card">
-            <div class="panel-header" style="margin-bottom: 20px;">
-                <h3>📄 Yeni Fatura ve Malzeme Girişi</h3>
-                <button class="btn btn-secondary" onclick="closeInvoiceModal()" style="padding: 6px 12px;">Kapat</button>
-            </div>
-            <div class="form-group">
-                <label>Firma / Tedarikçi Adı</label>
-                <input type="text" class="form-control" id="faturaFirma" placeholder="Örn: Lexron Enerji A.Ş.">
-            </div>
-            <div class="form-group">
-                <label>Hedef Dönem / Proje Klasörü</label>
-                <select class="form-control" id="faturaKlasor">
-                    <option value="Genel">Genel / Aktif Depo</option>
-                    <option value="2026 Ekim">2026 Ekim</option>
-                    <option value="2026 Eylül">2026 Eylül</option>
-                    <option value="Aliağa Şantiye">Aliağa Proje</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label>Malzeme Detayı ve Miktar</label>
-                <input type="text" class="form-control" id="faturaDetay" placeholder="Örn: 10 Adet Panjur Alıcı Kartı / 35mm NYAF">
-            </div>
-            <button class="btn btn-success" style="width: 100%; justify-content: center; margin-top: 10px; padding: 14px;" onclick="saveInvoiceData()">Stoğa ve Arşive Kaydet</button>
-        </div>
-    </div>
-
-    <!-- JAVASCRIPT KONTROLLERİ -->
     <script>
-        function switchTab(tabId, btnElement) {
-            document.querySelectorAll('.hidden-tab-content').forEach(el => el.classList.remove('active'));
-            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
-            document.getElementById('tab-' + tabId).classList.add('active');
-            btnElement.classList.add('active');
+        // Sekme Değiştirme Fonksiyonu
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+            
+            document.getElementById(tabId).classList.add('active');
+            event.currentTarget.classList.add('active');
+
+            const titles = {
+                'dashboard': 'Kontrol Paneli',
+                'sahaFisi': 'Saha Fişleri & İş Takip',
+                'personel': 'Personel Yönetimi',
+                'solarCalc': 'Solar & Mühendislik Hesaplama',
+                'stokDepo': 'Depo & Stok Yönetimi',
+                'copKutusu': 'Çöp Kutusu & Arşiv'
+            };
+            document.getElementById('activeTabTitleinnerText = titles[tabId] || 'İNOMER ENERJİ';
+            if(titles[tabId]) document.getElementById('activeTabTitle').innerText = titles[tabId];
         }
 
-        function filterFolder(folderName, element) {
-            document.querySelectorAll('.folder-chip').forEach(el => el.classList.remove('active'));
-            element.classList.add('active');
-            document.getElementById('currentFolderBadge').innerText = folderName;
+        // Veri Yönetim Alanı & State (LocalStorage Entegrasyonlu)
+        let sahaFisleri = JSON.parse(localStorage.getItem('inomer_saha')) || [];
+        let personeller = JSON.parse(localStorage.getItem('inomer_personel')) || [
+            { id: 1, ad: 'Hasan Buğra Yıldırım', unvan: 'Elektrik Mühendisi' }
+        ];
+        let stoklar = JSON.parse(localStorage.getItem('inomer_stok')) || [];
+        let copKutusu = JSON.parse(localStorage.getItem('inomer_cop')) || [];
+
+        function saveData() {
+            localStorage.setItem('inomer_saha', JSON.stringify(sahaFisleri));
+            localStorage.setItem('inomer_personel', JSON.stringify(personeller));
+            localStorage.setItem('inomer_stok', JSON.stringify(stoklar));
+            localStorage.setItem('inomer_cop', JSON.stringify(copKutusu));
+            updateStats();
         }
 
-        function createNewFolder() {
-            let name = prompt("Yeni klasör / dönem adı girin (Örn: Kasım 2026, Saha-2):");
-            if(name) {
-                let container = document.getElementById('folderContainer');
-                let chip = document.createElement('div');
-                chip.className = 'folder-chip';
-                chip.innerHTML = `📁 ${name}`;
-                chip.onclick = function() { filterFolder(name, this); };
-                container.appendChild(chip);
-                alert(`"${name}" klasörü başarıyla eklendi!`);
+        function updateStats() {
+            document.getElementById('statSahaCount').innerText = sahaFisleri.length;
+            document.getElementById('statPersonelCount').innerText = personeller.length;
+            renderPersonelSelect();
+            renderSahaTable();
+            renderPersonelTable();
+            renderStokTable();
+            renderTrashTable();
+        }
+
+        // Saha Fişi Fonksiyonları
+        function saveSahaFisi() {
+            const musteri = document.getElementById('sahaMusteri').value;
+            const personel = document.getElementById('sahaPersonelSelect').value;
+            const aciklama = document.getElementById('sahaAciklama').value;
+
+            if(!musteri || !aciklama) {
+                alert('Lütfen müşteri ve açıklama alanlarını doldurun.');
+                return;
             }
+
+            const yeniFiş = {
+                id: Date.now(),
+                musteri,
+                personel,
+                aciklama,
+                tarih: new Date().toLocaleDateString('tr-TR')
+            };
+
+            sahaFisleri.push(yeniFiş);
+            document.getElementById('sahaMusteri').value = '';
+            document.getElementById('sahaAciklama').value = '';
+            saveData();
+            alert('Saha fişi başarıyla kaydedildi.');
         }
 
-        function openInvoiceModal() { document.getElementById('invoiceModal').style.display = 'flex'; }
-        function closeInvoiceModal() { document.getElementById('invoiceModal').style.display = 'none'; }
-        function openAddProductModal() { openInvoiceModal(); }
-
-        function saveInvoiceData() {
-            let firma = document.getElementById('faturaFirma').value;
-            let klasor = document.getElementById('faturaKlasor').value;
-            let detay = document.getElementById('faturaDetay').value;
-
-            if(!firma || !detay) { alert("Lütfen gerekli alanları doldurun."); return; }
-
-            let tbody = document.getElementById('productTableBody');
-            let row = document.createElement('tr');
-            row.innerHTML = `
-                <td><strong>${firma}</strong></td>
-                <td>IN-NEW-01</td>
-                <td>MALZEME</td>
-                <td>Depo</td>
-                <td><span style="background: #1e293b; padding: 3px 8px; border-radius: 4px; font-size:11px;">${klasor}</span></td>
-                <td style="color: #34d399; font-weight: 600;">${detay}</td>
-                <td>İşlendi</td>
-            `;
-            tbody.insertBefore(row, tbody.firstChild);
-
-            let cesit = document.getElementById('statCesit');
-            cesit.innerText = parseInt(cesit.innerText) + 1;
-
-            alert("Kayıt başarıyla depoya eklendi!");
-            closeInvoiceModal();
-        }
-
-        function filterTable(input, tableId) {
-            let filter = input.value.toLowerCase();
-            let rows = document.querySelectorAll(`#${tableId} tbody tr`);
-            rows.forEach(row => {
-                row.style.display = row.innerText.toLowerCase().includes(filter) ? '' : 'none';
+        function renderSahaTable() {
+            const tbody = document.getElementById('sahaFisiTableBody');
+            tbody.innerHTML = '';
+            if(sahaFisleri.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:#64748b;">Kayıtlı saha fişi bulunmuyor.</td></tr>`;
+                return;
+            }
+            sahaFisleri.forEach(f => {
+                tbody.innerHTML += `
+                    <tr>
+                        <td>#${f.id.toString().slice(-4)}</td>
+                        <td>${f.musteri}</td>
+                        <td>${f.personel}</td>
+                        <td>${f.aciklama}</td>
+                        <td>${f.tarih}</td>
+                        <td><button class="btn btn-danger" style="padding:4px 8px; font-size:0.8rem;" onclick="deleteSahaFisi(${f.id})">Sil</button></td>
+                    </tr>
+                `;
             });
         }
 
-        function calculateCable() {
-            let amp = document.getElementById('calcAmp').value;
-            let len = document.getElementById('calcLen').value;
-            let res = document.getElementById('calcResult');
-            if(!amp || !len) { res.innerText = "Lütfen akım ve boy değerlerini eksiksiz girin."; return; }
-            let rec = amp > 40 ? "En az 10 mm² NYAF veya 16 mm² Bakır Kablo önerilir." : "6 mm² - 10 mm² NYAF kablo kesiti yeterlidir.";
-            res.innerText = `Hesaplama Sonucu: ${rec} (Gerilim düşümü tolerans sınırları içerisindedir)`;
+        function deleteSahaFisi(id) {
+            const index = sahaFisleri.findIndex(f => f.id === id);
+            if(index !== -1) {
+                copKutusu.push({ tur: 'Saha Fişi', detay: JSON.stringify(sahaFisleri[index]), zaman: new Date().toLocaleString('tr-TR') });
+                sahaFisleri.splice(index, 1);
+                saveData();
+            }
         }
+
+        // Personel Fonksiyonları
+        function addPersonel() {
+            const ad = document.getElementById('personelAd').value;
+            const unvan = document.getElementById('personelUnvan').value;
+            if(!ad) return alert('Personel adı giriniz.');
+            personeller.push({ id: Date.now(), ad, unvan });
+            document.getElementById('personelAd').value = '';
+            document.getElementById('personelUnvan').value = '';
+            saveData();
+        }
+
+        function renderPersonelSelect() {
+            const select = document.getElementById('sahaPersonelSelect');
+            select.innerHTML = '';
+            personeller.forEach(p => {
+                select.innerHTML += `<option value="${p.ad}">${p.ad} (${p.unvan})</option>`;
+            });
+        }
+
+        function renderPersonelTable() {
+            const tbody = document.getElementById('personelTableBody');
+            tbody.innerHTML = '';
+            personeller.forEach(p => {
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${p.ad}</td>
+                        <td>${p.unvan}</td>
+                        <td><button class="btn btn-danger" style="padding:4px 8px; font-size:0.8rem;" onclick="deletePersonel(${p.id})">Sil</button></td>
+                    </tr>
+                `;
+            });
+        }
+
+        function deletePersonel(id) {
+            const index = personeller.findIndex(p => p.id === id);
+            if(index !== -1) {
+                copKutusu.push({ tur: 'Personel', detay: JSON.stringify(personeller[index]), zaman: new Date().toLocaleString('tr-TR') });
+                personeller.splice(index, 1);
+                saveData();
+            }
+        }
+
+        // Solar Hesaplama
+        function calculateSolar() {
+            const w = parseFloat(document.getElementById('calcPanelW').value) || 0;
+            const count = parseInt(document.getElementById('calcPanelCount').value) || 0;
+            const toplamGucKW = (w * count) / 1000;
+            document.getElementById('solarResult').innerText = `Toplam Dizi Gücü: ${toplamGucKW.toFixed(2)} kW (${count} adet ${w}W panel)`;
+        }
+
+        // Stok Yönetimi
+        function addStok() {
+            const malzeme = document.getElementById('stokMalzeme').value;
+            const miktar = document.getElementById('stokMiktar').value;
+            if(!malzeme) return;
+            stoklar.push({ id: Date.now(), malzeme, miktar });
+            document.getElementById('stokMalzeme').value = '';
+            document.getElementById('stokMiktar').value = '';
+            saveData();
+        }
+
+        function renderStokTable() {
+            const tbody = document.getElementById('stokTableBody');
+            tbody.innerHTML = '';
+            stoklar.forEach(s => {
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${s.malzeme}</td>
+                        <td>${s.miktar}</td>
+                        <td><button class="btn btn-danger" style="padding:4px 8px; font-size:0.8rem;" onclick="deleteStok(${s.id})">Sil</button></td>
+                    </tr>
+                `;
+            });
+        }
+
+        function deleteStok(id) {
+            const index = stoklar.findIndex(s => s.id === id);
+            if(index !== -1) {
+                copKutusu.push({ tur: 'Stok', detay: JSON.stringify(stoklar[index]), zaman: new Date().toLocaleString('tr-TR') });
+                stoklar.splice(index, 1);
+                saveData();
+            }
+        }
+
+        // Çöp Kutusu Görselleştirme
+        function renderTrashTable() {
+            const tbody = document.getElementById('trashTableBody');
+            tbody.innerHTML = '';
+            if(copKutusu.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:#64748b;">Çöp kutusu boş.</td></tr>`;
+                return;
+            }
+            copKutusu.forEach((c, idx) => {
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${c.tur}</td>
+                        <td><small>${c.detay}</small></td>
+                        <td>${c.zaman}</td>
+                        <td><button class="btn btn-success" style="padding:4px 8px; font-size:0.8rem;" onclick="restoreTrash(${idx})">Geri Yükle</button></td>
+                    </tr>
+                `;
+            });
+        }
+
+        function restoreTrash(idx) {
+            const item = copKutusu.splice(idx, 1)[0];
+            const parsed = JSON.parse(item.detay);
+            if(item.tur === 'Saha Fişi') sahaFisleri.push(parsed);
+            else if(item.tur === 'Personel') personeller.push(parsed);
+            else if(item.tur === 'Stok') stoklar.push(parsed);
+            saveData();
+        }
+
+        // Sayfa açılışında verileri yükle
+        window.onload = function() {
+            updateStats();
+        };
     </script>
 </body>
 </html>
