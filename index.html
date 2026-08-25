@@ -1262,9 +1262,12 @@
                 row.innerHTML = `<td>${bHtml}</td><td>${ad}</td><td><div class="file-preview-box">${thumbsHtml}</div></td>${delBtnHtml}`;
             }
 
-            tbody.appendChild(row);
-            alert('Başarıyla kaydedildi ve listeye eklendi!');
-            // --- KOLAYBİ ENTEGRASYON FONKSİYONU ---
+           tbody.appendChild(row);
+        alert('Başarıyla kaydedildi ve listeye eklendi!');
+    }
+}
+
+// --- KOLAYBİ ENTEGRASYON FONKSİYONU ---
 async function fetchKolayBiInvoices() {
     // API anahtarını localStorage'dan alıyoruz
     const apiKey = localStorage.getItem('kolayBiApiKey') || '40e1006b-d590-4d3b-bde3-513ececdf435';
