@@ -1266,13 +1266,16 @@
             alert('Başarıyla kaydedildi ve listeye eklendi!');
             // --- KOLAYBİ ENTEGRASYON FONKSİYONU ---
 async function fetchKolayBiInvoices() {
+    // API anahtarını localStorage'dan alıyoruz
     const apiKey = localStorage.getItem('kolayBiApiKey') || 'BURAYA_KOLAYBI_API_KEY_GIRIN';
-    const endpoint = 'https://api.kolaybi.com/v1/invoices'; // KolayBi API endpoint adresi
+    
+    // KolayBi'nin resmi API fatura listeleme adresi
+    const endpoint = 'https://api.kolaybi.com/v1/invoices'; 
 
-    const tableBody = document.querySelector('#kolayBiInvoicesTable tbody');
+    const tableBody = document.querySelector('#kolayBiInvoicesTable');
     if (!tableBody) return;
 
-    tableBody.innerHTML = `<tr><td colspan="5" style="text-align: center; padding: 8px;">Faturalar KolayBi'den yükleniyor...</td></tr>`;
+    tableBody.innerHTML = `<tr><td colspan="5" style="text-align: center; padding: 12px;">KolayBi'den faturalar yükleniyor...</td></tr>`;
 
     try {
         const response = await fetch(endpoint, {
@@ -1284,27 +1287,38 @@ async function fetchKolayBiInvoices() {
         });
 
         if (!response.ok) {
-            throw new Error('KolayBi API bağlantısı başarısız.');
+            throw new Error('KolayBi API bağlantısı başarısız oldu.');
         }
 
         const data = await response.json();
-        tableBody.innerHTML = '';
-
+        
         if (data && data.length > 0) {
+            tableBody.innerHTML = '';
             data.forEach(invoice => {
-                const row = `<tr>
-                    <td style="border: 1px solid #ddd; padding: 8px;">${invoice.invoice_number || '-'}</td>
-                    <td style="border: 1px solid #ddd; padding: 8px;">${invoice.client_name || '-'}</td>
-                    <td style="border: 1px solid #ddd; padding: 8px;">${invoice.date || '-'}</td>
-                    <td style="border: 1px solid #ddd; padding: 8px;">${invoice.total_amount || 0} ₺</td>
-                    <td style="border: 1px solid #ddd; padding: 8px;">${invoice.status || 'Kesildi'}</td>
-                </tr>`;
-                tableBody.innerHTML += row;
+                tableBody.innerHTML += `
+                    <tr>
+                        <td>${invoice.invoiceNumber || 'N/A'}</td>
+                        <td>${invoice.customerName || 'N/A'}</td>
+                        <td>${invoice.date || 'N/A'}</td>
+                        <td>${invoice.totalAmount || 0} ₺</td>
+                        <td><span class="badge ${invoice.status === 'Paid' ? 'success' : 'warning'}">${invoice.status || 'Bekliyor'}</span></td>
+                    </tr>
+                `;
             });
         } else {
-            tableBody.innerHTML = `<tr><td colspan="5" style="text-align: center; padding: 8px;">Kayıtlı fatura bulunamadı.</td></tr>`;
+            tableBody.innerHTML = `<tr><td colspan="5" style="text-align: center; padding: 12px;">KolayBi'de kayıtlı fatura bulunamadı.</td></tr>`;
         }
 
+    } catch (error) {
+        console.error('KolayBi entegrasyon hatası:', error);
+        tableBody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: red; padding: 12px;">CORS veya API Anahtarı hatası. Lütfen API anahtarınızı kontrol edin.</td></tr>`;
+    }
+}
+    } catch (error) {
+        console.error('KolayBi Entegrasyon Hatası:', error);
+        tableBody.innerHTML = `<tr><td colspan="5" style="text-align: center; padding: 12px; color: red;">Bağlantı Hatası: API Anahtarınızı kontrol edin.</td></tr>`;
+    }
+}
     } catch (error) {
         console.error('KolayBi entegrasyon hatası:', error);
         tableBody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: red; padding: 8px;">CORS veya API Anahtarı hatası. Lütfen Vercel Serverless proxy kullanın.</td></tr>`;
