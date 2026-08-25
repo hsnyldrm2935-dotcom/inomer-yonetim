@@ -4,8 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>İNOMER ENERJİ | Kurumsal Yönetim Paneli</title>
-    <!-- Supabase CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <!-- Html5-Qrcode -->
     <script src="https://unpkg.com/html5-qrcode"></script>
     <style>
@@ -159,11 +157,6 @@
             gap: 12px;
         }
 
-        .sidebar-brand img {
-            max-height: 32px;
-            object-fit: contain;
-        }
-
         .sidebar-menu {
             list-style: none;
             padding: 16px 12px;
@@ -210,7 +203,6 @@
             max-width: calc(100vw - 260px);
         }
 
-        /* Üst Bar (Görseldeki gibi Arama ve Profil) */
         .top-navbar {
             display: flex;
             justify-content: space-between;
@@ -263,7 +255,6 @@
             color: var(--text-muted);
         }
 
-        /* İstatistik Kartları (Görseldeki alt widgetlar) */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -417,13 +408,12 @@
     <!-- GİRİŞ EKRANI -->
     <div id="loginOverlay">
         <div class="login-card">
-            <!-- LOGO: Dosyanın yanındaki logo dosya adını buraya yazın (Örn: logo.png) -->
             <img src="logo.png" alt="İnomer Enerji Logo" class="login-logo" onerror="this.style.display='none'">
             <h2>İNOMER ENERJİ</h2>
             <p>Kurumsal Yönetim Paneli</p>
             <div class="form-group">
                 <label>E-posta Adresi</label>
-                <input type="email5" id="loginEmail" placeholder="ornek@inomerenerji.com">
+                <input type="email" id="loginEmail" placeholder="ornek@inomerenerji.com">
             </div>
             <div class="form-group">
                 <label>Şifre</label>
@@ -475,23 +465,23 @@
                 </div>
             </div>
 
-            <!-- ÖZET İSTATİSTİK KARTLARI -->
+            <!-- DİNAMİK ÖZET İSTATİSTİK KARTLARI -->
             <div class="stats-grid">
                 <div class="stat-card">
                     <h4>Aktif Projeler</h4>
-                    <div class="value" id="statProje">14</div>
+                    <div class="value" id="statProje">0</div>
                 </div>
                 <div class="stat-card">
                     <h4>Bekleyen Onaylar</h4>
-                    <div class="value" id="statOnay">5</div>
+                    <div class="value" id="statOnay">0</div>
                 </div>
                 <div class="stat-card">
-                    <h4>Toplam Kapasite</h4>
-                    <div class="value">145 MW</div>
+                    <h4>Toplam Güç / MW</h4>
+                    <div class="value" id="statKapasite">0 MW</div>
                 </div>
                 <div class="stat-card">
                     <h4>Personel Sayısı</h4>
-                    <div class="value" id="statPersonelSayisi">48</div>
+                    <div class="value" id="statPersonelSayisi">0</div>
                 </div>
             </div>
 
@@ -507,7 +497,7 @@
                         <div class="form-group"><label>Barkod No</label><input type="text" id="stokBarkod" placeholder="Otomatik veya manuel"></div>
                         <div class="form-group"><label>Ürün Adı</label><input type="text" id="stokAd" placeholder="Örn: Daxler 585W Panel"></div>
                         <div class="form-group"><label>Marka & Model</label><input type="text" id="stokMarkaModel" placeholder="Marka bilgisi"></div>
-                        <div class="form-group"><label>Klasor / Kategori</label><select id="stokKlasorSec"></select></div>
+                        <div class="form-group"><label>Klasör / Kategori</label><select id="stokKlasorSec"></select></div>
                         <div class="form-group"><label>Alış Fiyatı (₺)</label><input type="number" id="stokAlis" placeholder="0.00"></div>
                         <div class="form-group"><label>Satış Fiyatı (₺)</label><input type="number" id="stokSatis" placeholder="0.00"></div>
                         <div class="form-group"><label>Miktar & Birim</label><div style="display: flex; gap: 6px;"><input type="number" id="stokMiktar" placeholder="10"><input type="text" id="stokBirim" value="Adet" style="width: 75px;"></div></div>
@@ -546,7 +536,7 @@
                     </div>
                     <div class="form-grid" style="margin-top: 15px;">
                         <div class="form-group"><label>Proje / Katalog Adı</label><input type="text" id="araziAd" placeholder="Proje Adı"></div>
-                        <div class="form-group"><label>Kurulu Güç</label><input type="text" id="araziGuc" placeholder="1000 kW"></div>
+                        <div class="form-group"><label>Kurulu Güç (kW veya MW)</label><input type="text" id="araziGuc" placeholder="Örn: 1000 kW"></div>
                         <div class="form-group"><label>Klasör Seç</label><select id="araziKlasorSec"></select></div>
                         <div class="form-group full"><label>Masaüstünden Dosya Ekle</label><input type="file" id="araziDosya" multiple onchange="handleFileSelection('araziDosya', event)"></div>
                     </div>
@@ -576,6 +566,7 @@
                     </div>
                     <div class="form-grid" style="margin-top: 15px;">
                         <div class="form-group"><label>Tesis Adı</label><input type="text" id="catiTesis" placeholder="Tesis Adı"></div>
+                        <div class="form-group"><label>Güç (Opsiyonel)</label><input type="text" id="catiGuc" placeholder="Örn: 250 kW"></div>
                         <div class="form-group"><label>Klasör Seç</label><select id="catiKlasorSec"></select></div>
                         <div class="form-group full"><label>Masaüstünden Dosya Ekle</label><input type="file" id="catiDosya" multiple onchange="handleFileSelection('catiDosya', event)"></div>
                     </div>
@@ -588,7 +579,7 @@
                     </div>
                     <div class="table-container">
                         <table>
-                            <thead><tr><th>Tesis Adı</th><th>Klasör</th><th>Tarih</th><th>Dosyalar</th><th>İşlem</th></tr></thead>
+                            <thead><tr><th>Tesis Adı</th><th>Güç</th><th>Klasör</th><th>Tarih</th><th>Dosyalar</th><th>İşlem</th></tr></thead>
                             <tbody id="catiTableBody"></tbody>
                         </table>
                     </div>
@@ -830,7 +821,6 @@
             const email = document.getElementById('loginEmail').value.trim();
             const pass = document.getElementById('loginPass').value.trim();
 
-            // Geçerli kullanıcılar ve şifreleri
             const validUsers = {
                 "halilfatih.tulek@inomerenerji.com": { pass: "260513", name: "Halil Fatih Tülek" },
                 "hasanbugra.yildirim@inomerenerji.com": { pass: "260513", name: "Hasan Buğra Yıldırım" },
@@ -839,7 +829,6 @@
 
             if(validUsers[email] && validUsers[email].pass === pass) {
                 const userName = validUsers[email].name;
-                // Oturum kalıcı kalmasın diye sessionStorage kullanıyoruz, böylece tarayıcı kapatıldığında/yeniden açıldığında şifre ister.
                 sessionStorage.setItem("inomer_logged", "true");
                 sessionStorage.setItem("inomer_user", userName);
                 
@@ -850,7 +839,7 @@
                 logHareket(userName, "Sisteme giriş yaptı.");
                 initApp();
             } else {
-                alert("Hatalı e-posta veya şifre! (Lütfen mail ve şifrenizi kontrol edin)");
+                alert("Hatalı e-posta veya şifre!");
             }
         };
 
@@ -863,7 +852,6 @@
         };
 
         window.onload = function() {
-            // Otomatik giriş olmaması için localStorage yerine sessionStorage kontrolü yapılıyor
             if(sessionStorage.getItem("inomer_logged") === "true") {
                 const loggedUser = sessionStorage.getItem("inomer_user") || "Halil Fatih Tülek";
                 document.getElementById('loginOverlay').style.display = 'none';
@@ -937,13 +925,43 @@
             renderMusteri(); renderHareketler(); renderTrash();
         }
 
+        // DİNAMİK İSTATİSTİK GÜNCELLEME
         function updateStats() {
+            // Aktif projeler = Arazi projeleri + Çatı tesisleri toplamı
+            const toplamAktifProje = araziProjeler.length + catiProjeler.length;
             const pEl = document.getElementById('statProje');
-            if(pEl) pEl.innerText = araziProjeler.length + catiProjeler.length + 14;
-            const persEl = document.getElementById('statPersonelSayisi');
-            if(persEl) persEl.innerText = personeller.length + 48;
+            if(pEl) pEl.innerText = toplamAktifProje;
+
+            // Bekleyen onaylar = Bekleyen izinler + Bekleyen avanslar
+            const bekleyenIzinSayisi = izinler.filter(i => i.durum === 'Bekliyor').length;
+            const bekleyenAvansSayisi = avanslar.filter(a => a.durum === 'Bekliyor').length;
             const onayEl = document.getElementById('statOnay');
-            if(onayEl) onayEl.innerText = izinler.filter(i=>i.durum==='Bekliyor').length + avanslar.filter(a=>a.durum==='Bekliyor').length + 5;
+            if(onayEl) onayEl.innerText = bekleyenIzinSayisi + bekleyenAvansSayisi;
+
+            // Toplam Güç Hesaplama (Arazi projelerindeki güç ifadelerinden sayısal değerleri çekmeye çalışır)
+            let toplamKw = 0;
+            araziProjeler.forEach(p => {
+                let sayi = parseFloat(p.guc);
+                if(!isNaN(sayi)) {
+                    if(p.guc.toLowerCase().includes('mw')) {
+                        toplamKw += (sayi * 1000); // MW ise kW'a çevir
+                    } else {
+                        toplamKw += sayi;
+                    }
+                }
+            });
+            const kapEl = document.getElementById('statKapasite');
+            if(kapEl) {
+                if(toplamKw >= 1000) {
+                    kapEl.innerText = (toplamKw / 1000).toFixed(1) + " MW";
+                } else {
+                    kapEl.innerText = toplamKw + " kW";
+                }
+            }
+
+            // Personel Sayısı
+            const persEl = document.getElementById('statPersonelSayisi');
+            if(persEl) persEl.innerText = personeller.length;
         }
 
         window.createFolder = function(type) {
@@ -1085,34 +1103,48 @@
             let user = sessionStorage.getItem("inomer_user") || "Kullanıcı";
             logHareket(user, `Arazi GES projesi ekledi: "${ad}".`);
         };
+
         function renderArazi() {
             let tb = document.getElementById('araziTableBody');
             if(!tb) return;
             tb.innerHTML = '';
-            araziProjeler.filter(p => p.klasor === aktifKlasorler.arazi).forEach(p => {
+            let filtered = araziProjeler.filter(p => p.klasor === aktifKlasorler.arazi);
+            if(filtered.length === 0) {
+                tb.innerHTML = `<tr><td colspan="5" style="text-align:center; color:var(--text-muted);">Bu klasörde arazi projesi bulunmuyor.</td></tr>`;
+                return;
+            }
+            filtered.forEach(p => {
                 tb.innerHTML += `<tr><td>${p.ad}</td><td>${p.guc}</td><td>${p.klasor}</td><td>${renderFileLinks(p.dosyalar)}</td><td><button class="btn btn-danger" style="padding:4px 8px; font-size:0.75rem;" onclick="deleteItem('arazi', ${p.id})">Sil</button></td></tr>`;
             });
         }
 
         window.addCati = function() {
             let tesis = document.getElementById('catiTesis').value.trim();
+            let guc = document.getElementById('catiGuc').value.trim();
             let klasor = document.getElementById('catiKlasorSec').value;
             let dosyalar = currentFilesCache['catiDosya'] || [];
             if(!tesis) return alert('Tesis adı giriniz.');
-            catiProjeler.push({ id: Date.now(), tesis, klasor, dosyalar, tarih: new Date().toLocaleDateString('tr-TR') });
+            catiProjeler.push({ id: Date.now(), tesis, guc: guc || '-', klasor, dosyalar, tarih: new Date().toLocaleDateString('tr-TR') });
             document.getElementById('catiTesis').value = '';
+            document.getElementById('catiGuc').value = '';
             document.getElementById('catiDosya').value = '';
             currentFilesCache['catiDosya'] = [];
             saveAll(); renderCati(); updateStats();
             let user = sessionStorage.getItem("inomer_user") || "Kullanıcı";
             logHareket(user, `Çatı GES tesisi ekledi: "${tesis}".`);
         };
+
         function renderCati() {
             let tb = document.getElementById('catiTableBody');
             if(!tb) return;
             tb.innerHTML = '';
-            catiProjeler.filter(c => c.klasor === aktifKlasorler.cati).forEach(c => {
-                tb.innerHTML += `<tr><td>${c.tesis}</td><td>${c.klasor}</td><td>${c.tarih}</td><td>${renderFileLinks(c.dosyalar)}</td><td><button class="btn btn-danger" style="padding:4px 8px; font-size:0.75rem;" onclick="deleteItem('cati', ${c.id})">Sil</button></td></tr>`;
+            let filtered = catiProjeler.filter(c => c.klasor === aktifKlasorler.cati);
+            if(filtered.length === 0) {
+                tb.innerHTML = `<tr><td colspan="6" style="text-align:center; color:var(--text-muted);">Bu klasörde çatı projesi bulunmuyor.</td></tr>`;
+                return;
+            }
+            filtered.forEach(c => {
+                tb.innerHTML += `<tr><td>${c.tesis}</td><td>${c.guc}</td><td>${c.klasor}</td><td>${c.tarih}</td><td>${renderFileLinks(c.dosyalar)}</td><td><button class="btn btn-danger" style="padding:4px 8px; font-size:0.75rem;" onclick="deleteItem('cati', ${c.id})">Sil</button></td></tr>`;
             });
         }
 
@@ -1137,6 +1169,7 @@
             let user = sessionStorage.getItem("inomer_user") || "Kullanıcı";
             logHareket(user, `${fisNo} nolu saha fişini ekledi.`);
         };
+
         function renderSaha() {
             let tb = document.getElementById('sahaTableBody');
             if(!tb) return;
@@ -1160,6 +1193,7 @@
             let user = sessionStorage.getItem("inomer_user") || "Kullanıcı";
             logHareket(user, `Personel kaydetti: "${ad}".`);
         };
+
         function renderPersonel() {
             let tb = document.getElementById('personelTableBody');
             if(!tb) return;
@@ -1180,6 +1214,7 @@
             saveAll(); renderIzin(); updateStats();
             logHareket(personel, `İzin talebi oluşturdu.`);
         };
+
         function renderIzin() {
             let tb = document.getElementById('izinTableBody');
             if(!tb) return;
@@ -1199,6 +1234,7 @@
             saveAll(); renderAvans(); updateStats();
             logHareket(personel, `${tutar} ₺ avans talebinde bulundu.`);
         };
+
         function renderAvans() {
             let tb = document.getElementById('avansTableBody');
             if(!tb) return;
@@ -1221,6 +1257,7 @@
             let user = sessionStorage.getItem("inomer_user") || "Kullanıcı";
             logHareket(user, `"${unvan}" firmasına ait ${tutar} ₺ faturayı işledi.`);
         };
+
         function renderFatura() {
             let tb = document.getElementById('faturaTableBody');
             if(!tb) return;
@@ -1243,6 +1280,7 @@
             let user = sessionStorage.getItem("inomer_user") || "Kullanıcı";
             logHareket(user, `Müşteri cari ekledi: "${unvan}".`);
         };
+
         function renderMusteri() {
             let tb = document.getElementById('musteriTableBody');
             if(!tb) return;
@@ -1268,7 +1306,6 @@
 
         window.globalFilter = function() {
             let q = document.getElementById('globalSearch').value.toLowerCase();
-            // Basit genel filtre yönlendirmesi
             if(q.length > 2) {
                 document.querySelectorAll('table tbody tr').forEach(r => {
                     r.style.display = r.innerText.toLowerCase().includes(q) ? '' : 'none';
@@ -1322,6 +1359,7 @@
             else if(item.tur.includes('Çatı')) catiProjeler.push(p);
             else if(item.tur.includes('Fişi')) sahaFisleri.push(p);
             else if(item.tur.includes('Personel')) personeller.push(p);
+            else if(item.tur.entries && item.tur.includes('İzin')) izinler.push(p); // Güvenli kontrol
             else if(item.tur.includes('İzin')) izinler.push(p);
             else if(item.tur.includes('Avans')) avanslar.push(p);
             else if(item.tur.includes('Fatura')) faturalar.push(p);
