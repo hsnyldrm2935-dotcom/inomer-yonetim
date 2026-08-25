@@ -842,7 +842,29 @@
                     </div>
                 </div>
             </div>
-
+<!-- KOLAYBİ FATURA ENTEGRASYONU MODÜLÜ -->
+    <div class="module-section" style="margin-top: 20px; background: #fff; padding: 15px; border-radius: 6px;">
+        <h3>KolayBi Entegre Faturalar</h3>
+        <p>KolayBi'de işlenen faturalarınız buraya anlık olarak yansır.</p>
+        <button class="btn" onclick="fetchKolayBiInvoices()">Faturaları KolayBi'den Güncelle</button>
+        
+        <table id="kolayBiInvoicesTable" style="width:100%; border-collapse: collapse; margin-top: 10px;">
+            <thead>
+                <tr style="background-color: #007bff; color: white;">
+                    <th style="border: 1px solid #ddd; padding: 8px;">Fatura No</th>
+                    <th style="border: 1px solid #ddd; padding: 8px;">Müşteri / Cari</th>
+                    <th style="border: 1px solid #VS; padding: 8px;">Tarih</th>
+                    <th style="border: 1px solid #ddd; padding: 8px;">Tutar</th>
+                    <th style="border: 1px solid #ddd; padding: 8px;">Durum</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td colspan="5" style="text-align: center; border: 1px solid #ddd; padding: 8px;">Henüz senkronize edilmedi.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
             <!-- 11. 📊 KOLAYBİ & FATURA -->
             <div id="kolayBi" class="tab-pane">
                 <div class="card">
@@ -955,7 +977,27 @@
                     </div>
                 </div>
             </div>
-
+<div style="margin-top: 20px; background: #fff; padding: 15px; border-radius: 6px;">
+    <h3>KolayBi Entegre Faturalar</h3>
+    <button class="btn" onclick="fetchKolayBiInvoices()">Faturaları KolayBi'den Güncelle</button>
+    
+    <table id="kolayBiInvoicesTable" style="width:100%; border-collapse: collapse; margin-top: 10px;">
+        <thead>
+            <tr style="background-color: #007bff; color: white;">
+                <th style="border: 1px solid #ddd; padding: 8px;">Fatura No</th>
+                <th style="border: 1px solid #ddd; padding: 8px;">Müşteri / Cari</th>
+                <th style="border: 1px solid #ddd; padding: 8px;">Tarih</th>
+                <th style="border: 1px solid #ddd; padding: 8px;">Tutar</th>
+                <th style="border: 1px solid #ddd; padding: 8px;">Durum</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td colspan="5" style="text-align: center; border: 1px solid #ddd; padding: 8px;">Henüz senkronize edilmedi.</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
             <!-- 16. 📋 HAREKETLER -->
             <div id="hareketler" class="tab-pane">
                 <div class="card">
@@ -1239,6 +1281,52 @@
 
             tbody.appendChild(row);
             alert('Başarıyla kaydedildi ve listeye eklendi!');
+            // --- KOLAYBİ ENTEGRASYON FONKSİYONU ---
+async function fetchKolayBiInvoices() {
+    const apiKey = localStorage.getItem('kolayBiApiKey') || 'BURAYA_KOLAYBI_API_KEY_GIRIN';
+    const endpoint = 'https://api.kolaybi.com/v1/invoices'; // KolayBi API endpoint adresi
+
+    const tableBody = document.querySelector('#kolayBiInvoicesTable tbody');
+    if (!tableBody) return;
+
+    tableBody.innerHTML = `<tr><td colspan="5" style="text-align: center; padding: 8px;">Faturalar KolayBi'den yükleniyor...</td></tr>`;
+
+    try {
+        const response = await fetch(endpoint, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${apiKey}`,
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error('KolayBi API bağlantısı başarısız.');
+        }
+
+        const data = await response.json();
+        tableBody.innerHTML = '';
+
+        if (data && data.length > 0) {
+            data.forEach(invoice => {
+                const row = `<tr>
+                    <td style="border: 1px solid #ddd; padding: 8px;">${invoice.invoice_number || '-'}</td>
+                    <td style="border: 1px solid #ddd; padding: 8px;">${invoice.client_name || '-'}</td>
+                    <td style="border: 1px solid #ddd; padding: 8px;">${invoice.date || '-'}</td>
+                    <td style="border: 1px solid #ddd; padding: 8px;">${invoice.total_amount || 0} ₺</td>
+                    <td style="border: 1px solid #ddd; padding: 8px;">${invoice.status || 'Kesildi'}</td>
+                </tr>`;
+                tableBody.innerHTML += row;
+            });
+        } else {
+            tableBody.innerHTML = `<tr><td colspan="5" style="text-align: center; padding: 8px;">Kayıtlı fatura bulunamadı.</td></tr>`;
+        }
+
+    } catch (error) {
+        console.error('KolayBi entegrasyon hatası:', error);
+        tableBody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: red; padding: 8px;">CORS veya API Anahtarı hatası. Lütfen Vercel Serverless proxy kullanın.</td></tr>`;
+    }
+}
         }
     </script>
 </body>
