@@ -3,262 +3,326 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>İNOMER ENERJİ | Stok & Saha Yönetim Paneli</title>
+    <title>İNOMER ENERJİ | Profesyonel Yönetim Paneli</title>
     <!-- Supabase CDN -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <!-- Html5-Qrcode for Barcode/QR scanning -->
+    <!-- Html5-Qrcode -->
     <script src="https://unpkg.com/html5-qrcode"></script>
     <style>
         :root {
-            --primary-color: #0284c7;
-            --primary-dark: #0369a1;
-            --secondary-color: #0f172a;
-            --accent-color: #f59e0b;
-            --danger-color: #ef4444;
-            --success-color: #22c55e;
-            --border-color: #e2e8f0;
-            --bg-color: #f8fafc;
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --slate-900: #0f172a;
+            --slate-800: #1e293b;
+            --slate-100: #f1f5f9;
+            --border: #e2e8f0;
+            --danger: #dc2626;
+            --success: #16a34a;
+            --warning: #d97706;
+            --radius: 12px;
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
         }
 
         body {
-            background-color: var(--bg-color);
-            color: #334155;
-            padding: 20px;
+            background-color: #f8fafc;
+            color: var(--slate-900);
+            min-height: 100vh;
         }
 
         /* Giriş Ekranı */
         #loginOverlay {
             position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(15, 23, 42, 0.9);
+            inset: 0;
+            background: linear-gradient(135deg, var(--slate-900), #1e1b4b);
             display: flex;
             justify-content: center;
             align-items: center;
             z-index: 9999;
+            padding: 20px;
         }
 
         .login-card {
-            background: #fff;
+            background: #ffffff;
             padding: 40px;
-            border-radius: 12px;
+            border-radius: var(--radius);
             width: 100%;
-            max-width: 400px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            max-width: 420px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
         }
 
         .login-card h2 {
-            margin-bottom: 20px;
-            color: var(--secondary-color);
+            font-size: 1.5rem;
+            color: var(--slate-900);
+            margin-bottom: 8px;
             text-align: center;
         }
 
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-
-        .header-top {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            background: #fff;
-            padding: 20px;
-            border-radius: 10px;
-            border: 1px solid var(--border-color);
-            margin-bottom: 25px;
-        }
-
-        .logo-area h2 {
-            font-size: 1.5rem;
-            color: var(--secondary-color);
-        }
-
-        .logo-area p {
+        .login-card p {
             color: #64748b;
-            font-size: 0.95rem;
-            margin-top: 4px;
+            font-size: 0.9rem;
+            text-align: center;
+            margin-bottom: 24px;
         }
 
-        /* Navigasyon Butonları */
-        .nav-buttons {
+        /* Ana Düzen */
+        .app-layout {
             display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-            margin-bottom: 25px;
+            min-height: 100vh;
+        }
+
+        /* Sidebar (Sol Menü) */
+        .sidebar {
+            width: 260px;
+            background: var(--slate-900);
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .sidebar-brand {
+            padding: 24px 20px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+            padding: 20px 12px;
+            flex-grow: 1;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
         }
 
         .nav-btn {
-            background: #fff;
-            border: 1px solid var(--border-color);
-            padding: 10px 14px;
+            width: 100%;
+            background: transparent;
+            border: none;
+            color: #94a3b8;
+            padding: 12px 16px;
             border-radius: 8px;
             cursor: pointer;
-            font-weight: 600;
-            color: var(--secondary-color);
-            display: inline-flex;
+            font-weight: 500;
+            display: flex;
             align-items: center;
-            gap: 6px;
-            font-size: 0.85rem;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-            transition: all 0.2s;
+            gap: 12px;
+            font-size: 0.9rem;
+            text-align: left;
+            transition: all 0.2s ease;
         }
 
-        .nav-btn:hover, .nav-btn.active {
-            background: var(--primary-color);
-            color: white;
-            border-color: var(--primary-color);
+        .nav-btn:hover {
+            background: rgba(255,255,255,0.05);
+            color: #fff;
         }
 
-        /* İstatistik Kartları */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 15px;
-            margin-bottom: 25px;
+        .nav-btn.active {
+            background: var(--primary);
+            color: #fff;
+            font-weight: 600;
         }
 
-        .stat-card {
+        .sidebar-footer {
+            padding: 16px 20px;
+            border-top: 1px solid rgba(255,255,255,0.08);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #090d16;
+        }
+
+        /* Ana İçerik Alanı */
+        .main-content {
+            flex-grow: 1;
+            padding: 30px;
+            overflow-y: auto;
+            max-width: calc(100vw - 260px);
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
             background: #fff;
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-            padding: 15px;
-            text-align: center;
+            padding: 20px 24px;
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
         }
 
-        .stat-card h4 {
-            font-size: 0.75rem;
+        .page-title h1 {
+            font-size: 1.3rem;
+            color: var(--slate-900);
+            font-weight: 600;
+        }
+
+        .page-title p {
             color: #64748b;
-            text-transform: uppercase;
+            font-size: 0.85rem;
+            margin-top: 2px;
         }
 
-        .stat-card .number {
-            font-size: 1.6rem;
-            font-weight: bold;
-            color: var(--secondary-color);
-            margin-top: 5px;
-        }
-
-        .tab-pane { display: none; }
-        .tab-pane.active { display: block; }
-
+        /* Kart ve Form Yapıları */
         .card {
             background: #fff;
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
             padding: 24px;
             margin-bottom: 24px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.02);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .card-header h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--slate-900);
         }
 
         .form-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin-bottom: 15px;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+            margin-bottom: 20px;
         }
 
-        .form-group { margin-bottom: 15px; }
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group.full {
+            grid-column: 1 / -1;
+        }
 
         label {
             display: block;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             font-weight: 600;
             margin-bottom: 6px;
-            color: var(--secondary-color);
+            color: #475569;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
         }
 
         input, select, textarea {
             width: 100%;
             padding: 10px 14px;
-            border: 1px solid var(--border-color);
+            border: 1px solid var(--border);
             border-radius: 8px;
             font-size: 0.9rem;
             outline: none;
             background: #fff;
+            color: var(--slate-900);
+            transition: border-color 0.2s;
         }
 
         input:focus, select:focus, textarea:focus {
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.1);
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
         }
 
+        /* Butonlar */
         .btn {
-            background: var(--primary-color);
+            background: var(--primary);
             color: white;
             border: none;
             padding: 10px 18px;
             border-radius: 8px;
             cursor: pointer;
-            font-weight: 600;
+            font-weight: 500;
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             transition: background 0.2s;
         }
 
         .btn:hover { background: var(--primary-dark); }
-        .btn-danger { background: var(--danger-color); }
-        .btn-success { background: var(--success-color); }
-        .btn-accent { background: var(--accent-color); color: #0f172a; }
+        .btn-danger { background: var(--danger); }
+        .btn-success { background: var(--success); }
+        .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--slate-900); }
+        .btn-outline:hover { background: var(--slate-100); }
+
+        /* Tablolar */
+        .table-container {
+            overflow-x: auto;
+        }
 
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 15px;
+            text-align: left;
         }
 
         th, td {
-            padding: 12px 14px;
-            border-bottom: 1px solid var(--border-color);
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border);
             font-size: 0.85rem;
-            text-align: left;
         }
 
         th {
             background: #f8fafc;
             font-weight: 600;
-            color: var(--secondary-color);
+            color: #475569;
         }
 
-        /* Klasör Sistemi Tasarımı */
-        .folder-container {
+        /* Klasör Paneli */
+        .folder-bar {
             display: flex;
-            gap: 12px;
+            gap: 8px;
             flex-wrap: wrap;
             margin-bottom: 20px;
-            padding: 15px;
-            background: #f1f5f9;
+            padding: 12px;
+            background: var(--slate-100);
             border-radius: 8px;
-            border: 1px dashed var(--border-color);
+            border: 1px solid var(--border);
+            align-items: center;
         }
 
         .folder-chip {
             background: #fff;
-            border: 1px solid var(--border-color);
-            padding: 8px 16px;
+            border: 1px solid var(--border);
+            padding: 6px 12px;
             border-radius: 6px;
             cursor: pointer;
-            font-weight: 600;
-            display: flex;
+            font-weight: 500;
+            font-size: 0.8rem;
+            display: inline-flex;
             align-items: center;
-            gap: 8px;
-            color: var(--secondary-color);
-            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+            gap: 6px;
+            color: var(--slate-900);
+            transition: all 0.2s;
         }
 
         .folder-chip.active {
-            background: var(--secondary-color);
+            background: var(--slate-900);
             color: white;
-            border-color: var(--secondary-color);
+            border-color: var(--slate-900);
         }
+
+        .tab-pane { display: none; }
+        .tab-pane.active { display: block; }
     </style>
 </head>
 <body>
@@ -266,468 +330,480 @@
     <!-- GİRİŞ EKRANI -->
     <div id="loginOverlay">
         <div class="login-card">
-            <h2>⚡ İNOMER ENERJİ Giriş</h2>
+            <h2>İNOMER ENERJİ</h2>
+            <p>Kurumsal Yönetim Paneli</p>
             <div class="form-group">
                 <label>E-Posta Adresi</label>
-                <input type="email" id="loginEmail" value="halilfatih.tulek@inomerenerji.com">
+                <input type="email" id="loginEmail" value="bugrayildiriiim@inomerenerji.com">
             </div>
             <div class="form-group">
                 <label>Şifre</label>
-                <input type="password" id="loginPassword" value="260513">
+                <input type="password" id="loginPassword" value="Bugra134679++">
             </div>
-            <button class="btn" style="width: 100%; justify-content: center;" onclick="handleLogin()">Sisteme Giriş Yap</button>
-            <p id="loginError" style="color: var(--danger-color); font-size: 0.85rem; margin-top: 12px; text-align: center;"></p>
+            <button class="btn" style="width: 100%; justify-content: center; margin-top: 8px;" onclick="handleLogin()">Sisteme Giriş Yap</button>
+            <p id="loginError" style="color: var(--danger); font-size: 0.8rem; margin-top: 12px; text-align: center;"></p>
         </div>
     </div>
 
-    <!-- ANA UYGULAMA PANELİ -->
-    <div class="container" id="appContainer" style="display: none;">
+    <!-- ANA UYGULAMA LAYOUT -->
+    <div class="app-layout" id="appContainer" style="display: none;">
         
-        <div class="header-top">
-            <div class="logo-area">
-                <h2>İNOMER ENERJİ</h2>
-                <p>Güneş Enerjisi, Trafo & Elektrik Mühendislik Yönetim Paneli</p>
+        <!-- YAN MENÜ (SIDEBAR) -->
+        <aside class="sidebar">
+            <div class="sidebar-brand">
+                ⚡ İNOMER ENERJİ
             </div>
-            <div style="text-align: right;">
-                <span style="font-weight: 600; font-size: 0.95rem; color: var(--secondary-color);">Halil Fatih Tülek</span><br>
-                <button onclick="handleLogout()" style="background:none; border:none; color:var(--danger-color); cursor:pointer; font-size:0.85rem; margin-top:4px; font-weight:600;">Çıkış Yap</button>
+            <ul class="sidebar-menu">
+                <li><button class="nav-btn active" onclick="switchTab('stokDepo', this)">📦 Stok & Ürünler</button></li>
+                <li><button class="nav-btn" onclick="switchTab('araziGes', this)">☀️ Arazi GES</button></li>
+                <li><button class="nav-btn" onclick="switchTab('catiGes', this)">🏭 Çatı GES & Trafo</button></li>
+                <li><button class="nav-btn" onclick="switchTab('sahaFisi', this)">📝 Saha Fişleri</button></li>
+                <li><button class="nav-btn" onclick="switchTab('personel', this)">👥 Personel</button></li>
+                <li><button class="nav-btn" onclick="switchTab('izinTalebi', this)">🌴 İzin Talepleri</button></li>
+                <li><button class="nav-btn" onclick="switchTab('avansTalebi', this)">💰 Avans Talepleri</button></li>
+                <li><button class="nav-btn" onclick="switchTab('kolayBi', this)">📊 KolayBİ & Fatura</button></li>
+                <li><button class="nav-btn" onclick="switchTab('musteri', this)">🤝 Müşteriler & Cari</button></li>
+                <li><button class="nav-btn" onclick="switchTab('copKutusu', this)">🗑️ Çöp Kutusu</button></li>
+            </ul>
+            <div class="sidebar-footer">
+                <span style="font-size: 0.8rem; color: #94a3b8;">Hasan Buğra Yıldırım</span>
+                <button onclick="handleLogout()" class="btn btn-outline" style="padding: 4px 8px; font-size: 0.75rem; color: #f87171; border-color: rgba(255,255,255,0.1);">Çıkış</button>
             </div>
-        </div>
+        </aside>
 
-        <!-- ÜST MENÜ SEKMELERİ -->
-        <div class="nav-buttons">
-            <button class="nav-btn active" onclick="switchTab('stokDepo', this)">📦 Stok & Ürünler</button>
-            <button class="nav-btn" onclick="switchTab('araziGes', this)">☀️ Arazi GES</button>
-            <button class="nav-btn" onclick="switchTab('catiGes', this)">🏭 Çatı GES & Trafo</button>
-            <button class="nav-btn" onclick="switchTab('sahaFisi', this)">📝 Saha Fişleri</button>
-            <button class="nav-btn" onclick="switchTab('personel', this)">👥 Personel</button>
-            <button class="nav-btn" onclick="switchTab('izinTalebi', this)">🌴 İzin Talepleri</button>
-            <button class="nav-btn" onclick="switchTab('avansTalebi', this)">💰 Avans Talepleri</button>
-            <button class="nav-btn" onclick="switchTab('kolayBi', this)">📊 KolayBİ & Fatura</button>
-            <button class="nav-btn" onclick="switchTab('musteri', this)">🤝 Müşteriler & Cari</button>
-            <button class="nav-btn" onclick="switchTab('copKutusu', this)">🗑️ Çöp Kutusu</button>
-        </div>
-
-        <!-- İSTATİSTİKLER -->
-        <div class="stats-grid">
-            <div class="stat-card">
-                <h4>ÜRÜN ÇEŞİDİ</h4>
-                <div class="number" id="statUrunCesit">0</div>
-            </div>
-            <div class="stat-card">
-                <h4>TOPLAM STOK</h4>
-                <div class="number" id="statStokAdet">0</div>
-            </div>
-            <div class="stat-card">
-                <h4>KRİTİK STOK</h4>
-                <div class="number" id="statKritik" style="color:var(--danger-color);">0</div>
-            </div>
-            <div class="stat-card">
-                <h4>AKTİF PERSONEL</h4>
-                <div class="number" id="statPersonel" style="color:var(--success-color);">0</div>
-            </div>
-        </div>
-
-        <!-- 1. STOK & ÜRÜNLER -->
-        <div id="stokDepo" class="tab-pane active">
-            <div class="card">
-                <h3>📦 Yeni Ürün / Malzeme Ekle</h3>
-                <div style="margin: 15px 0;">
-                    <button class="btn btn-accent" onclick="startBarcodeScanner()">📷 Kamera ile Barkod / Karekod Tara</button>
-                    <div id="reader" style="width: 300px; margin-top: 10px;"></div>
+        <!-- İÇERİK ALANI -->
+        <main class="main-content">
+            
+            <div class="page-header">
+                <div class="page-title">
+                    <h1 id="pageHeading">Stok & Ürün Yönetimi</h1>
+                    <p>Malzeme girişleri, depo takibi ve barkod işlemleri.</p>
                 </div>
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label>Barkod / Karekod No</label>
-                        <input type="text" id="stokBarkod" placeholder="Barkod okutun veya yazın">
+                <div style="font-size: 0.85rem; font-weight: 500; color: #64748b;" id="liveClock"></div>
+            </div>
+
+            <!-- 1. STOK & ÜRÜNLER -->
+            <div id="stokDepo" class="tab-pane active">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Yeni Ürün Ekle</h3>
+                        <button class="btn btn-outline" onclick="startBarcodeScanner()">📷 Barkod Tara</button>
                     </div>
-                    <div class="form-group">
-                        <label>Ürün Adı</label>
-                        <input type="text" id="stokAd" placeholder="Örn: Daxler 585W Panel">
-                    </div>
-                    <div class="form-group">
-                        <label>Marka & Model</label>
-                        <input type="text" id="stokMarkaModel" placeholder="Marka / Model bilgisi">
-                    </div>
-                    <div class="form-group">
-                        <label>Kategori / Klasör</label>
-                        <select id="stokKlasorSec"></select>
-                    </div>
-                    <div class="form-group">
-                        <label>Alış Fiyatı (₺)</label>
-                        <input type="number" id="stokAlis" placeholder="0.00">
-                    </div>
-                    <div class="form-group">
-                        <label>Satış Fiyatı (₺)</label>
-                        <input type="number" id="stokSatis" placeholder="0.00">
-                    </div>
-                    <div class="form-group">
-                        <label>Miktar & Birim</label>
-                        <div style="display: flex; gap: 5px;">
-                            <input type="number" id="stokMiktar" placeholder="10">
-                            <input type="text" id="stokBirim" value="Adet" style="width: 80px;">
+                    <div id="reader" style="width: 280px; margin-bottom: 15px; display:none;"></div>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Barkod No</label>
+                            <input type="text" id="stokBarkod" placeholder="Otomatik veya manuel">
+                        </div>
+                        <div class="form-group">
+                            <label>Ürün Adı</label>
+                            <input type="text" id="stokAd" placeholder="Örn: Daxler 585W Panel">
+                        </div>
+                        <div class="form-group">
+                            <label>Marka & Model</label>
+                            <input type="text" id="stokMarkaModel" placeholder="Marka bilgisi">
+                        </div>
+                        <div class="form-group">
+                            <label>Klasör / Kategori</label>
+                            <select id="stokKlasorSec"></select>
+                        </div>
+                        <div class="form-group">
+                            <label>Alış Fiyatı (₺)</label>
+                            <input type="number" id="stokAlis" placeholder="0.00">
+                        </div>
+                        <div class="form-group">
+                            <label>Satış Fiyatı (₺)</label>
+                            <input type="number" id="stokSatis" placeholder="0.00">
+                        </div>
+                        <div class="form-group">
+                            <label>Miktar & Birim</label>
+                            <div style="display: flex; gap: 6px;">
+                                <input type="number" id="stokMiktar" placeholder="10">
+                                <input type="text" id="stokBirim" value="Adet" style="width: 75px;">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Tedarikçi</label>
+                            <input type="text" id="stokTedarikci" placeholder="Tedarikçi firma">
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label>Tedarikçi Firma</label>
-                        <input type="text" id="stokTedarikci" placeholder="Tedarikçi adı">
+                    <button class="btn btn-success" onclick="addStok()">Kataloğa Ekle</button>
+                </div>
+
+                <div class="folder-bar" id="stokKlasorListesi"></div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Stok Listesi</h3>
+                        <button class="btn btn-outline" onclick="createFolder('stok')">+ Klasör Oluştur</button>
+                    </div>
+                    <div style="margin-bottom: 15px;">
+                        <input type="text" id="stokSearch" placeholder="Ürün adı, barkod veya marka ara..." onkeyup="filterStok()">
+                    </div>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Barkod</th>
+                                    <th>Ürün Adı</th>
+                                    <th>Marka / Model</th>
+                                    <th>Alış / Satış</th>
+                                    <th>Miktar</th>
+                                    <th>Tedarikçi</th>
+                                    <th>İşlem</th>
+                                </tr>
+                            </thead>
+                            <tbody id="stokTableBody"></tbody>
+                        </table>
                     </div>
                 </div>
-                <button class="btn btn-success" onclick="addStok()">Ürünü Kataloğa Ekle</button>
             </div>
 
-            <div class="folder-container" id="stokKlasorListesi"></div>
+            <!-- 2. ARAZİ GES -->
+            <div id="araziGes" class="tab-pane">
+                <div class="folder-bar" id="araziKlasorListesi"></div>
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Arazi GES Projeleri</h3>
+                        <button class="btn btn-outline" onclick="createFolder('arazi')">+ Klasör Oluştur</button>
+                    </div>
+                    <div class="form-grid" style="margin-top: 15px;">
+                        <div class="form-group">
+                            <label>Proje Adı</label>
+                            <input type="text" id="araziAd" placeholder="Proje Adı">
+                        </div>
+                        <div class="form-group">
+                            <label>Kurulu Güç</label>
+                            <input type="text" id="araziGuc" placeholder="1000 kW">
+                        </div>
+                        <div class="form-group">
+                            <label>Klasör</label>
+                            <select id="araziKlasorSec"></select>
+                        </div>
+                    </div>
+                    <button class="btn" onclick="addArazi()">Proje Ekle</button>
+                </div>
+                <div class="card">
+                    <div class="table-container">
+                        <table>
+                            <thead><tr><th>Proje Adı</th><th>Güç</th><th>Klasör</th><th>İşlem</th></tr></thead>
+                            <tbody id="araziTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
 
-            <div class="card">
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <h3>Stok Listesi</h3>
-                    <button class="btn" onclick="createFolder('stok')">📁 Yeni Klasör Oluştur</button>
+            <!-- 3. ÇATI GES & TRAFO -->
+            <div id="catiGes" class="tab-pane">
+                <div class="folder-bar" id="catiKlasorListesi"></div>
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Çatı GES & Trafo Projeleri</h3>
+                        <button class="btn btn-outline" onclick="createFolder('cati')">+ Klasör Oluştur</button>
+                    </div>
+                    <div class="form-grid" style="margin-top: 15px;">
+                        <div class="form-group">
+                            <label>Tesis Adı</label>
+                            <input type="text" id="catiTesis" placeholder="Tesis Adı">
+                        </div>
+                        <div class="form-group">
+                            <label>Klasör</label>
+                            <select id="catiKlasorSec"></select>
+                        </div>
+                    </div>
+                    <button class="btn" onclick="addCati()">Proje Kaydet</button>
                 </div>
-                <div style="margin-top: 15px;">
-                    <input type="text" id="stokSearch" placeholder="Ürün adı, barkod veya marka arayın..." onkeyup="filterStok()">
+                <div class="card">
+                    <div class="table-container">
+                        <table>
+                            <thead><tr><th>Tesis Adı</th><th>Klasör</th><th>Tarih</th><th>İşlem</th></tr></thead>
+                            <tbody id="catiTableBody"></tbody>
+                        </table>
+                    </div>
                 </div>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Barkod</th>
-                            <th>Ürün Adı</th>
-                            <th>Marka/Model</th>
-                            <th>Alış / Satış</th>
-                            <th>Miktar</th>
-                            <th>Tedarikçi</th>
-                            <th>İşlemler</th>
-                        </tr>
-                    </thead>
-                    <tbody id="stokTableBody"></tbody>
-                </table>
             </div>
-        </div>
 
-        <!-- 2. ARAZİ GES PROJELERİ -->
-        <div id="araziGes" class="tab-pane">
-            <div class="folder-container" id="araziKlasorListesi"></div>
-            <div class="card">
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <h3>Arazi Tipi GES Projeleri</h3>
-                    <button class="btn" onclick="createFolder('arazi')">📁 Yeni Klasör Oluştur</button>
+            <!-- 4. SAHA FİŞLERİ -->
+            <div id="sahaFisi" class="tab-pane">
+                <div class="folder-bar" id="sahaKlasorListesi"></div>
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Saha Fişi & Rapor</h3>
+                        <button class="btn btn-outline" onclick="createFolder('saha')">+ Klasör Oluştur</button>
+                    </div>
+                    <div class="form-grid" style="margin-top: 15px;">
+                        <div class="form-group">
+                            <label>Müşteri / Şantiye</label>
+                            <input type="text" id="sahaMusteri" placeholder="Şantiye Adı">
+                        </div>
+                        <div class="form-group">
+                            <label>Klasör</label>
+                            <select id="sahaKlasorSec"></select>
+                        </div>
+                        <div class="form-group full">
+                            <label>İşlem Açıklaması</label>
+                            <textarea id="sahaAciklama" rows="2" placeholder="Detaylar..."></textarea>
+                        </div>
+                        <div class="form-group full">
+                            <label>Fotoğraf / Dosya</label>
+                            <input type="file" id="sahaDosya" multiple accept="image/*,.pdf">
+                        </div>
+                    </div>
+                    <button class="btn" onclick="addSaha()">Fişi Kaydet</button>
                 </div>
-                <div class="form-grid" style="margin-top: 15px;">
-                    <div class="form-group">
-                        <label>Proje Adı</label>
-                        <input type="text" id="araziAd" placeholder="Aliağa Arazi GES">
-                    </div>
-                    <div class="form-group">
-                        <label>Kurulu Güç</label>
-                        <input type="text" id="araziGuc" placeholder="1000 kW">
-                    </div>
-                    <div class="form-group">
-                        <label>Klasör Seç</label>
-                        <select id="araziKlasorSec"></select>
+                <div class="card">
+                    <div class="table-container">
+                        <table>
+                            <thead><tr><th>Tarih</th><th>Müşteri</th><th>Açıklama</th><th>Dosya</th><th>İşlem</th></tr></thead>
+                            <tbody id="sahaTableBody"></tbody>
+                        </table>
                     </div>
                 </div>
-                <button class="btn" onclick="addArazi()">Proje Ekle</button>
             </div>
-            <div class="card">
-                <table>
-                    <thead><tr><th>Proje Adı</th><th>Güç</th><th>Klasör</th><th>İşlem</th></tr></thead>
-                    <tbody id="araziTableBody"></tbody>
-                </table>
-            </div>
-        </div>
 
-        <!-- 3. ÇATI GES & TRAFO -->
-        <div id="catiGes" class="tab-pane">
-            <div class="folder-container" id="catiKlasorListesi"></div>
-            <div class="card">
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <h3>Çatı GES & Trafo Projeleri</h3>
-                    <button class="btn" onclick="createFolder('cati')">📁 Yeni Klasör Oluştur</button>
-                </div>
-                <div class="form-grid" style="margin-top: 15px;">
-                    <div class="form-group">
-                        <label>Tesis Adı</label>
-                        <input type="text" id="catiTesis" placeholder="Fabrika Çatı GES">
+            <!-- 5. PERSONEL -->
+            <div id="personel" class="tab-pane">
+                <div class="folder-bar" id="personelKlasorListesi"></div>
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Personel Listesi</h3>
+                        <button class="btn btn-outline" onclick="createFolder('personel')">+ Klasör Oluştur</button>
                     </div>
-                    <div class="form-group">
-                        <label>Klasör Seç</label>
-                        <select id="catiKlasorSec"></select>
+                    <div class="form-grid" style="margin-top: 15px;">
+                        <div class="form-group">
+                            <label>Ad Soyad</label>
+                            <input type="text" id="personelAd" placeholder="Ad Soyad">
+                        </div>
+                        <div class="form-group">
+                            <label>Telefon</label>
+                            <input type="text" id="personelTel" placeholder="0555...">
+                        </div>
+                        <div class="form-group">
+                            <label>Unvan</label>
+                            <input type="text" id="personelUnvan" placeholder="Mühendis / Teknisyen">
+                        </div>
+                        <div class="form-group">
+                            <label>Klasör</label>
+                            <select id="personelKlasorSec"></select>
+                        </div>
+                    </div>
+                    <button class="btn" onclick="addPersonel()">Personel Ekle</button>
+                </div>
+                <div class="card">
+                    <div class="table-container">
+                        <table>
+                            <thead><tr><th>Ad Soyad</th><th>Telefon</th><th>Unvan</th><th>Klasör</th><th>İşlem</th></tr></thead>
+                            <tbody id="personelTableBody"></tbody>
+                        </table>
                     </div>
                 </div>
-                <button class="btn" onclick="addCati()">Proje Kaydet</button>
             </div>
-            <div class="card">
-                <table>
-                    <thead><tr><th>Tesis Adı</th><th>Klasör</th><th>Tarih</th><th>İşlem</th></tr></thead>
-                    <tbody id="catiTableBody"></tbody>
-                </table>
-            </div>
-        </div>
 
-        <!-- 4. SAHA FİŞLERİ -->
-        <div id="sahaFisi" class="tab-pane">
-            <div class="folder-container" id="sahaKlasorListesi"></div>
-            <div class="card">
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <h3>Saha Fişleri & Fotoğraf / Dosya Ekle</h3>
-                    <button class="btn" onclick="createFolder('saha')">📁 Yeni Klasör Oluştur</button>
+            <!-- 6. İZİN TALEPLERİ -->
+            <div id="izinTalebi" class="tab-pane">
+                <div class="folder-bar" id="izinKlasorListesi"></div>
+                <div class="card">
+                    <div class="card-header">
+                        <h3>İzin Talebi</h3>
+                        <button class="btn btn-outline" onclick="createFolder('izin')">+ Klasör Oluştur</button>
+                    </div>
+                    <div class="form-grid" style="margin-top: 15px;">
+                        <div class="form-group">
+                            <label>Personel Adı</label>
+                            <input type="text" id="izinPersonel" placeholder="Personel">
+                        </div>
+                        <div class="form-group">
+                            <label>İzin Türü</label>
+                            <select id="izinTuru">
+                                <option>Yıllık İzin</option>
+                                <option>Mazeret İzni</option>
+                                <option>Hastalık / Rapor</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Başlangıç</label>
+                            <input type="date" id="izinBaslangic">
+                        </div>
+                        <div class="form-group">
+                            <label>Bitiş</label>
+                            <input type="date" id="izinBitis">
+                        </div>
+                        <div class="form-group">
+                            <label>Klasör</label>
+                            <select id="izinKlasorSec"></select>
+                        </div>
+                    </div>
+                    <button class="btn" onclick="addIzin()">Talep Kaydet</button>
                 </div>
-                <div class="form-grid" style="margin-top: 15px;">
-                    <div class="form-group">
-                        <label>Müşteri / Şantiye</label>
-                        <input type="text" id="sahaMusteri" placeholder="Şantiye Adı">
-                    </div>
-                    <div class="form-group">
-                        <label>Klasör Seç</label>
-                        <select id="sahaKlasorSec"></select>
-                    </div>
-                    <div class="form-group" style="grid-column: span 2;">
-                        <label>Yapılan İşlem Açıklaması</label>
-                        <textarea id="sahaAciklama" rows="2" placeholder="Saha detayları..."></textarea>
-                    </div>
-                    <div class="form-group" style="grid-column: span 2;">
-                        <label>Fotoğraf / Dosya Yükle</label>
-                        <input type="file" id="sahaDosya" multiple accept="image/*,.pdf">
+                <div class="card">
+                    <div class="table-container">
+                        <table>
+                            <thead><tr><th>Personel</th><th>Tür</th><th>Tarih Aralığı</th><th>Klasör</th><th>Durum</th><th>İşlem</th></tr></thead>
+                            <tbody id="izinTableBody"></tbody>
+                        </table>
                     </div>
                 </div>
-                <button class="btn" onclick="addSaha()">Fişi Kaydet</button>
             </div>
-            <div class="card">
-                <table>
-                    <thead><tr><th>Tarih</th><th>Müşteri</th><th>Açıklama</th><th>Dosyalar</th><th>İşlem</th></tr></thead>
-                    <tbody id="sahaTableBody"></tbody>
-                </table>
-            </div>
-        </div>
 
-        <!-- 5. PERSONEL -->
-        <div id="personel" class="tab-pane">
-            <div class="folder-container" id="personelKlasorListesi"></div>
-            <div class="card">
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <h3>Personel Yönetimi</h3>
-                    <button class="btn" onclick="createFolder('personel')">📁 Yeni Klasör Oluştur</button>
+            <!-- 7. AVANS TALEPLERİ -->
+            <div id="avansTalebi" class="tab-pane">
+                <div class="folder-bar" id="avansKlasorListesi"></div>
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Avans Talebi</h3>
+                        <button class="btn btn-outline" onclick="createFolder('avans')">+ Klasör Oluştur</button>
+                    </div>
+                    <div class="form-grid" style="margin-top: 15px;">
+                        <div class="form-group">
+                            <label>Personel</label>
+                            <input type="text" id="avansPersonel" placeholder="Personel">
+                        </div>
+                        <div class="form-group">
+                            <label>Tutar (₺)</label>
+                            <input type="number" id="avansTutar" placeholder="0.00">
+                        </div>
+                        <div class="form-group">
+                            <label>Açıklama</label>
+                            <input type="text" id="avansAciklama" placeholder="Sebep">
+                        </div>
+                        <div class="form-group">
+                            <label>Klasör</label>
+                            <select id="avansKlasorSec"></select>
+                        </div>
+                    </div>
+                    <button class="btn" onclick="addAvans()">Avans Kaydet</button>
                 </div>
-                <div class="form-grid" style="margin-top: 15px;">
-                    <div class="form-group">
-                        <label>Adı Soyadı</label>
-                        <input type="text" id="personelAd" placeholder="Ad Soyad">
-                    </div>
-                    <div class="form-group">
-                        <label>Telefon Numarası</label>
-                        <input type="text" id="personelTel" placeholder="0555...">
-                    </div>
-                    <div class="form-group">
-                        <label>Unvan / Pozisyon</label>
-                        <input type="text" id="personelUnvan" placeholder="Elektrik Mühendisi">
-                    </div>
-                    <div class="form-group">
-                        <label>Klasör Seç</label>
-                        <select id="personelKlasorSec"></select>
+                <div class="card">
+                    <div class="table-container">
+                        <table>
+                            <thead><tr><th>Personel</th><th>Tutar</th><th>Açıklama</th><th>Klasör</th><th>Durum</th><th>İşlem</th></tr></thead>
+                            <tbody id="avansTableBody"></tbody>
+                        </table>
                     </div>
                 </div>
-                <button class="btn" onclick="addPersonel()">Personel Ekle</button>
             </div>
-            <div class="card">
-                <table>
-                    <thead><tr><th>Ad Soyad</th><th>Telefon</th><th>Unvan</th><th>Klasör</th><th>İşlem</th></tr></thead>
-                    <tbody id="personelTableBody"></tbody>
-                </table>
-            </div>
-        </div>
 
-        <!-- 6. İZİN TALEPLERİ -->
-        <div id="izinTalebi" class="tab-pane">
-            <div class="folder-container" id="izinKlasorListesi"></div>
-            <div class="card">
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <h3>Personel İzin Talebi Oluştur</h3>
-                    <button class="btn" onclick="createFolder('izin')">📁 Yeni Klasör Oluştur</button>
+            <!-- 8. KOLAYBİ & FATURALAR -->
+            <div id="kolayBi" class="tab-pane">
+                <div class="folder-bar" id="faturaKlasorListesi"></div>
+                <div class="card">
+                    <div class="card-header">
+                        <h3>KolayBİ & Fatura Arşivi</h3>
+                        <button class="btn btn-outline" onclick="createFolder('fatura')">+ Klasör Oluştur</button>
+                    </div>
+                    <div class="form-grid" style="margin-top: 15px;">
+                        <div class="form-group">
+                            <label>Firma / Cari</label>
+                            <input type="text" id="faturaUnvan" placeholder="Firma Unvanı">
+                        </div>
+                        <div class="form-group">
+                            <label>Tutar (₺)</label>
+                            <input type="number" id="faturaTutar" placeholder="0.00">
+                        </div>
+                        <div class="form-group">
+                            <label>Klasör</label>
+                            <select id="faturaKlasorSec"></select>
+                        </div>
+                        <div class="form-group">
+                            <label>PDF Dosyası</label>
+                            <input type="file" id="faturaDosya">
+                        </div>
+                    </div>
+                    <button class="btn" onclick="addFatura()">Faturayı İşle</button>
                 </div>
-                <div class="form-grid" style="margin-top: 15px;">
-                    <div class="form-group">
-                        <label>Personel Adı</label>
-                        <input type="text" id="izinPersonel" placeholder="Personel Adı">
-                    </div>
-                    <div class="form-group">
-                        <label>İzin Türü</label>
-                        <select id="izinTuru">
-                            <option>Yıllık İzin</option>
-                            <option>Mazeret İzni</option>
-                            <option>Hastalık / Rapor</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Başlangıç Tarihi</label>
-                        <input type="date" id="izinBaslangic">
-                    </div>
-                    <div class="form-group">
-                        <label>Bitiş Tarihi</label>
-                        <input type="date" id="izinBitis">
-                    </div>
-                    <div class="form-group">
-                        <label>Klasör Seç</label>
-                        <select id="izinKlasorSec"></select>
+                <div class="card">
+                    <div class="table-container">
+                        <table>
+                            <thead><tr><th>Firma</th><th>Klasör</th><th>Tutar</th><th>Dosya</th><th>İşlem</th></tr></thead>
+                            <tbody id="faturaTableBody"></tbody>
+                        </table>
                     </div>
                 </div>
-                <button class="btn" onclick="addIzin()">İzin Talebi Kaydet</button>
             </div>
-            <div class="card">
-                <table>
-                    <thead><tr><th>Personel</th><th>İzin Türü</th><th>Tarih Aralığı</th><th>Klasör</th><th>Durum</th><th>İşlem</th></tr></thead>
-                    <tbody id="izinTableBody"></tbody>
-                </table>
-            </div>
-        </div>
 
-        <!-- 7. AVANS TALEPLERİ -->
-        <div id="avansTalebi" class="tab-pane">
-            <div class="folder-container" id="avansKlasorListesi"></div>
-            <div class="card">
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <h3>Avans Talebi Oluştur</h3>
-                    <button class="btn" onclick="createFolder('avans')">📁 Yeni Klasör Oluştur</button>
+            <!-- 9. MÜŞTERİLER & CARİ -->
+            <div id="musteri" class="tab-pane">
+                <div class="folder-bar" id="musteriKlasorListesi"></div>
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Müşteri & Cari Yönetimi</h3>
+                        <button class="btn btn-outline" onclick="createFolder('musteri')">+ Klasör Oluştur</button>
+                    </div>
+                    <div class="form-grid" style="margin-top: 15px;">
+                        <div class="form-group">
+                            <label>Firma / Müşteri</label>
+                            <input type="text" id="musteriUnvan" placeholder="Müşteri Adı">
+                        </div>
+                        <div class="form-group">
+                            <label>Yapılan İş / Malzeme</label>
+                            <input type="text" id="musteriIs" placeholder="İş kalemi">
+                        </div>
+                        <div class="form-group">
+                            <label>Tutar (₺)</label>
+                            <input type="number" id="musteriTutar" placeholder="0.00">
+                        </div>
+                        <div class="form-group">
+                            <label>Tahsilat Durumu</label>
+                            <select id="musteriDurum">
+                                <option value="Ödendi">Ödendi</option>
+                                <option value="Ödenmedi">Ödenmedi</option>
+                            </select>
+                        </div>
+                        <div class="form-group full">
+                            <label>Notlar / Açıklama</label>
+                            <textarea id="musteriNot" rows="2" placeholder="Notlar..."></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Klasör</label>
+                            <select id="musteriKlasorSec"></select>
+                        </div>
+                    </div>
+                    <button class="btn" onclick="addMusteri()">Cari Kaydet</button>
                 </div>
-                <div class="form-grid" style="margin-top: 15px;">
-                    <div class="form-group">
-                        <label>Personel Adı</label>
-                        <input type="text" id="avansPersonel" placeholder="Personel Adı">
-                    </div>
-                    <div class="form-group">
-                        <label>Talep Edilen Tutar (₺)</label>
-                        <input type="number" id="avansTutar" placeholder="0.00">
-                    </div>
-                    <div class="form-group">
-                        <label>Açıklama</label>
-                        <input type="text" id="avansAciklama" placeholder="Avans sebebi...">
-                    </div>
-                    <div class="form-group">
-                        <label>Klasör Seç</label>
-                        <select id="avansKlasorSec"></select>
+                <div class="card">
+                    <div class="table-container">
+                        <table>
+                            <thead><tr><th>Müşteri</th><th>Yapılan İş</th><th>Tutar</th><th>Durum / Not</th><th>Klasör</th><th>İşlem</th></tr></thead>
+                            <tbody id="musteriTableBody"></tbody>
+                        </table>
                     </div>
                 </div>
-                <button class="btn" onclick="addAvans()">Avans Talebi Kaydet</button>
             </div>
-            <div class="card">
-                <table>
-                    <thead><tr><th>Personel</th><th>Tutar</th><th>Açıklama</th><th>Klasör</th><th>Durum</th><th>İşlem</th></tr></thead>
-                    <tbody id="avansTableBody"></tbody>
-                </table>
-            </div>
-        </div>
 
-        <!-- 8. KOLAYBİ & FATURALAR -->
-        <div id="kolayBi" class="tab-pane">
-            <div class="folder-container" id="faturaKlasorListesi"></div>
-            <div class="card">
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <h3>KolayBİ & Fatura Arşivi (Ay / Yıl Klasörleme)</h3>
-                    <button class="btn" onclick="createFolder('fatura')">📁 Yeni Klasör Oluştur</button>
-                </div>
-                <div class="form-grid" style="margin-top: 15px;">
-                    <div class="form-group">
-                        <label>Fatura / Cari Adı</label>
-                        <input type="text" id="faturaUnvan" placeholder="Firma / Müşteri">
+            <!-- ÇÖP KUTUSU -->
+            <div id="copKutusu" class="tab-pane">
+                <div class="card" style="border-color: var(--danger); background: #fef2f2;">
+                    <div class="card-header" style="border-color: #fecaca;">
+                        <h3 style="color: var(--danger);">🗑️ Silinen Öğeler Arşivi</h3>
                     </div>
-                    <div class="form-group">
-                        <label>Hedef Klasör</label>
-                        <select id="faturaKlasorSec"></select>
-                    </div>
-                    <div class="form-group">
-                        <label>Tutar (₺)</label>
-                        <input type="number" id="faturaTutar" placeholder="0.00">
-                    </div>
-                    <div class="form-group">
-                        <label>Fatura Dosyası / PDF</label>
-                        <input type="file" id="faturaDosya">
+                    <div class="table-container" style="margin-top: 15px;">
+                        <table>
+                            <thead><tr><th>Veri Türü</th><th>Detay</th><th>Silinme Zamanı</th><th>İşlem</th></tr></thead>
+                            <tbody id="trashTableBody">
+                                <tr><td colspan="4" style="text-align: center; color: #64748b;">Çöp kutusu boş.</td></tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
-                <button class="btn" onclick="addFatura()">Faturayı Klasöre İşle</button>
             </div>
-            <div class="card">
-                <table>
-                    <thead><tr><th>Firma</th><th>Klasör</th><th>Tutar</th><th>Dosya</th><th>İşlem</th></tr></thead>
-                    <tbody id="faturaTableBody"></tbody>
-                </table>
-            </div>
-        </div>
 
-        <!-- 9. DETAYLI MÜŞTERİLER & CARİ -->
-        <div id="musteri" class="tab-pane">
-            <div class="folder-container" id="musteriKlasorListesi"></div>
-            <div class="card">
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <h3>Müşteri & Detaylı Cari Yönetimi</h3>
-                    <button class="btn" onclick="createFolder('musteri')">📁 Yeni Klasör Oluştur</button>
-                </div>
-                <div class="form-grid" style="margin-top: 15px;">
-                    <div class="form-group">
-                        <label>Firma / Müşteri Ünvanı</label>
-                        <input type="text" id="musteriUnvan" placeholder="Firma Adı">
-                    </div>
-                    <div class="form-group">
-                        <label>Satılan Malzeme / Yapılan İş</label>
-                        <input type="text" id="musteriIs" placeholder="Örn: 10kW GES Kurulumu">
-                    </div>
-                    <div class="form-group">
-                        <label>Tutar (₺)</label>
-                        <input type="number" id="musteriTutar" placeholder="0.00">
-                    </div>
-                    <div class="form-group">
-                        <label>Ödeme / Tahsilat Durumu</label>
-                        <select id="musteriDurum">
-                            <option value="Ödendi">Ödendi</option>
-                            <option value="Ödenmedi">Ödenmedi (Nedenini Aşağıya Yazın)</option>
-                        </select>
-                    </div>
-                    <div class="form-group" style="grid-column: span 2;">
-                        <label>Detaylar / Niye Ödemedi / Notlar</label>
-                        <textarea id="musteriNot" rows="2" placeholder="Ödeme detayları veya gecikme sebebi..."></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label>Klasör Seç</label>
-                        <select id="musteriKlasorSec"></select>
-                    </div>
-                </div>
-                <button class="btn" onclick="addMusteri()">Müşteri Cari Kaydet</button>
-            </div>
-            <div class="card">
-                <table>
-                    <thead><tr><th>Müşteri</th><th>Yapılan İş / Malzeme</th><th>Tutar</th><th>Durum / Not</th><th>Klasör</th><th>İşlem</th></tr></thead>
-                    <tbody id="musteriTableBody"></tbody>
-                </table>
-            </div>
-        </div>
-
-        <!-- ÇÖP KUTUSU -->
-        <div id="copKutusu" class="tab-pane">
-            <div class="card" style="border: 2px dashed var(--danger-color); background: #fef2f2;">
-                <h3 style="color: var(--danger-color);">🗑️ Çöp Kutusu ve Silinen Öğeler Arşivi</h3>
-                <table style="margin-top: 15px;">
-                    <thead><tr><th>Veri Türü</th><th>İçerik Detayı</th><th>Silinme Zamanı</th><th>İşlemler</th></tr></thead>
-                    <tbody id="trashTableBody">
-                        <tr><td colspan="4" style="text-align: center; color: #64748b;">Çöp kutusu boş.</td></tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
+        </main>
     </div>
 
     <!-- JavaScript Kodları -->
     <script>
-        // Global fonksiyon tanımlamaları (Scope hatası almamak için window nesnesine atanıyor)
         window.handleLogin = function() {
             const email = document.getElementById('loginEmail').value.trim();
             const pass = document.getElementById('loginPassword').value.trim();
             const errEl = document.getElementById('loginError');
 
-            if (email === "halilfatih.tulek@inomerenerji.com" && pass === "260513") {
+            if (email === "bugrayildiriiim@inomerenerji.com" && pass === "Bugra134679++") {
                 localStorage.setItem("inomer_logged", "true");
                 document.getElementById('loginOverlay').style.display = 'none';
-                document.getElementById('appContainer').style.display = 'block';
+                document.getElementById('appContainer').style.display = 'flex';
                 initApp();
             } else {
-                errEl.innerText = "Hatalı e-posta veya şifre! (Şifre: 260513)";
+                errEl.innerText = "Hatalı e-posta veya şifre!";
             }
         };
 
@@ -739,41 +815,36 @@
         window.onload = function() {
             if(localStorage.getItem("inomer_logged") === "true") {
                 document.getElementById('loginOverlay').style.display = 'none';
-                document.getElementById('appContainer').style.display = 'block';
+                document.getElementById('appContainer').style.display = 'flex';
                 initApp();
             }
+            setInterval(() => {
+                const now = new Date();
+                const el = document.getElementById('liveClock');
+                if(el) el.innerText = now.toLocaleDateString('tr-TR') + ' ' + now.toLocaleTimeString('tr-TR');
+            }, 1000);
         };
 
         window.switchTab = function(tabId, btn) {
             document.querySelectorAll('.tab-pane').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
             document.getElementById(tabId).classList.add('active');
-            if(btn) btn.classList.add('active');
+            if(btn) {
+                btn.classList.add('active');
+                document.getElementById('pageHeading').innerText = btn.innerText.replace(/[\u{1F000}-\u{1F6FF}]/gu, '').trim();
+            }
         };
 
-        // State & Klasörler
         let klasorler = JSON.parse(localStorage.getItem('inomer_klasorler')) || {
-            stok: ['Genel Depo'],
-            arazi: ['Aktif Projeler'],
-            cati: ['Fabrikalar'],
-            saha: ['Günlük Fişler'],
-            personel: ['Merkez Ekip'],
-            izin: ['2026 İzinleri'],
-            avans: ['2026 Avansları'],
-            fatura: ['2026 Ağustos', '2026 Temmuz'],
-            musteri: ['Aktif Cariler']
+            stok: ['Genel Depo'], arazi: ['Aktif Projeler'], cati: ['Fabrikalar'],
+            saha: ['Günlük Fişler'], personel: ['Merkez Ekip'], izin: ['2026 İzinleri'],
+            avans: ['2026 Avansları'], fatura: ['2026 Ağustos'], musteri: ['Aktif Cariler']
         };
 
         let aktifKlasorler = {
-            stok: 'Genel Depo',
-            arazi: 'Aktif Projeler',
-            cati: 'Fabrikalar',
-            saha: 'Günlük Fişler',
-            personel: 'Merkez Ekip',
-            izin: '2026 İzinleri',
-            avans: '2026 Avansları',
-            fatura: '2026 Ağustos',
-            musteri: 'Aktif Cariler'
+            stok: 'Genel Depo', arazi: 'Aktif Projeler', cati: 'Fabrikalar',
+            saha: 'Günlük Fişler', personel: 'Merkez Ekip', izin: '2026 İzinleri',
+            avans: '2026 Avansları', fatura: '2026 Ağustos', musteri: 'Aktif Cariler'
         };
 
         let stoklar = JSON.parse(localStorage.getItem('inomer_stok')) || [];
@@ -799,35 +870,17 @@
             localStorage.setItem('inomer_fatura', JSON.stringify(faturalar));
             localStorage.setItem('inomer_musteri', JSON.stringify(musteriler));
             localStorage.setItem('inomer_cop', JSON.stringify(copKutusu));
-            updateStats();
         }
 
         function initApp() {
-            updateStats();
             renderAllFolders();
-            renderStok();
-            renderArazi();
-            renderCati();
-            renderSaha();
-            renderPersonel();
-            renderIzin();
-            renderAvans();
-            renderFatura();
-            renderMusteri();
-            renderTrash();
+            renderStok(); renderArazi(); renderCati(); renderSaha(); 
+            renderPersonel(); renderIzin(); renderAvans(); renderFatura(); 
+            renderMusteri(); renderTrash();
         }
 
-        function updateStats() {
-            document.getElementById('statUrunCesit').innerText = stoklar.length;
-            let total = stoklar.reduce((acc, cur) => acc + Number(cur.miktar || 0), 0);
-            document.getElementById('statStokAdet').innerText = total;
-            document.getElementById('statKritik').innerText = stoklar.filter(i => Number(i.miktar) < 5).length;
-            document.getElementById('statPersonel').innerText = personeller.length;
-        }
-
-        // Klasör Yönetimi
         window.createFolder = function(type) {
-            let ad = prompt("Yeni Klasör Adı (Örn: Eylül 2026 veya Şantiye B):");
+            let ad = prompt("Yeni Klasör Adı:");
             if(!ad) return;
             if(!klasorler[type].includes(ad)) {
                 klasorler[type].push(ad);
@@ -863,7 +916,6 @@
             renderStok(); renderArazi(); renderCati(); renderSaha(); renderPersonel(); renderIzin(); renderAvans(); renderFatura(); renderMusteri();
         }
 
-        // Kamera Barkod Okuyucu
         window.startBarcodeScanner = function() {
             const scannerContainer = document.getElementById('reader');
             scannerContainer.style.display = 'block';
@@ -871,17 +923,16 @@
             html5QrCode.start(
                 { facingMode: "environment" },
                 { fps: 10, qrbox: { width: 250, height: 150 } },
-                (decodedText, decodedResult) => {
+                (decodedText) => {
                     document.getElementById('stokBarkod').value = decodedText;
                     html5QrCode.stop();
                     scannerContainer.style.display = 'none';
-                    alert("Barkod başarıyla okundu: " + decodedText);
+                    alert("Barkod okundu: " + decodedText);
                 },
-                (errorMessage) => { }
+                () => {}
             ).catch(err => { alert("Kamera açılamadı: " + err); });
         };
 
-        // 1. STOK EYLEMLERİ
         window.addStok = function() {
             let barkod = document.getElementById('stokBarkod').value.trim();
             let ad = document.getElementById('stokAd').value.trim();
@@ -908,8 +959,7 @@
             document.getElementById('stokSatis').value = '';
             document.getElementById('stokMiktar').value = '';
             document.getElementById('stokTedarikci').value = '';
-            saveAll();
-            renderStok();
+            saveAll(); renderStok();
         };
 
         function renderStok() {
@@ -933,13 +983,12 @@
             });
         };
 
-        // 2. ARAZİ GES
         window.addArazi = function() {
             let ad = document.getElementById('araziAd').value.trim();
             let guc = document.getElementById('araziGuc').value.trim();
             let klasor = document.getElementById('araziKlasorSec').value;
             if(!ad) return alert('Proje adı giriniz.');
-            araziProjeler.push({ id: Date.now(), ad, guc: guc || 'Belirtilmemiş', klasor });
+            araziProjeler.push({ id: Date.now(), ad, guc: guc || '-', klasor });
             document.getElementById('araziAd').value = '';
             document.getElementById('araziGuc').value = '';
             saveAll(); renderArazi();
@@ -953,7 +1002,6 @@
             });
         }
 
-        // 3. ÇATI GES
         window.addCati = function() {
             let tesis = document.getElementById('catiTesis').value.trim();
             let klasor = document.getElementById('catiKlasorSec').value;
@@ -971,13 +1019,12 @@
             });
         }
 
-        // 4. SAHA FİŞLERİ & FOTOĞRAF
         window.addSaha = function() {
             let musteri = document.getElementById('sahaMusteri').value.trim();
             let aciklama = document.getElementById('sahaAciklama').value.trim();
             let klasor = document.getElementById('sahaKlasorSec').value;
             let fileInput = document.getElementById('sahaDosya');
-            let dosyaAdi = fileInput.files.length > 0 ? `${fileInput.files.length} Dosya Seçildi` : 'Dosya Yok';
+            let dosyaAdi = fileInput.files.length > 0 ? `${fileInput.files.length} Dosya` : 'Yok';
 
             if(!musteri || !aciklama) return alert('Müşteri ve açıklama doldurun.');
             sahaFisleri.push({ id: Date.now(), musteri, aciklama, klasor, dosyaAdi, tarih: new Date().toLocaleDateString('tr-TR') });
@@ -991,11 +1038,10 @@
             if(!tb) return;
             tb.innerHTML = '';
             sahaFisleri.filter(s => s.klasor === aktifKlasorler.saha).forEach(s => {
-                tb.innerHTML += `<tr><td>${s.tarih}</td><td>${s.musteri}</td><td>${s.aciklama}</td><td><span style="color:var(--primary-color); font-weight:600;">📎 ${s.dosyaAdi}</span></td><td><button class="btn btn-danger" style="padding:4px 8px; font-size:0.75rem;" onclick="deleteItem('saha', ${s.id})">Sil</button></td></tr>`;
+                tb.innerHTML += `<tr><td>${s.tarih}</td><td>${s.musteri}</td><td>${s.aciklama}</td><td>📎 ${s.dosyaAdi}</td><td><button class="btn btn-danger" style="padding:4px 8px; font-size:0.75rem;" onclick="deleteItem('saha', ${s.id})">Sil</button></td></tr>`;
             });
         }
 
-        // 5. PERSONEL
         window.addPersonel = function() {
             let ad = document.getElementById('personelAd').value.trim();
             let tel = document.getElementById('personelTel').value.trim();
@@ -1006,7 +1052,7 @@
             document.getElementById('personelAd').value = '';
             document.getElementById('personelTel').value = '';
             document.getElementById('personelUnvan').value = '';
-            saveAll(); renderPersonel(); updateStats();
+            saveAll(); renderPersonel();
         };
         function renderPersonel() {
             let tb = document.getElementById('personelTableBody');
@@ -1017,7 +1063,6 @@
             });
         }
 
-        // 6. İZİN TALEPLERİ
         window.addIzin = function() {
             let personel = document.getElementById('izinPersonel').value.trim();
             let tur = document.getElementById('izinTuru').value;
@@ -1033,18 +1078,17 @@
             if(!tb) return;
             tb.innerHTML = '';
             izinler.filter(i => i.klasor === aktifKlasorler.izin).forEach(i => {
-                tb.innerHTML += `<tr><td>${i.personel}</td><td>${i.tur}</td><td>${i.tarih}</td><td>${i.klasor}</td><td><span style="color:var(--accent-color); font-weight:bold;">${i.durum}</span></td><td><button class="btn btn-danger" style="padding:4px 8px; font-size:0.75rem;" onclick="deleteItem('izin', ${i.id})">Sil</button></td></tr>`;
+                tb.innerHTML += `<tr><td>${i.personel}</td><td>${i.tur}</td><td>${i.tarih}</td><td>${i.klasor}</td><td><span style="color:var(--warning); font-weight:600;">${i.durum}</span></td><td><button class="btn btn-danger" style="padding:4px 8px; font-size:0.75rem;" onclick="deleteItem('izin', ${i.id})">Sil</button></td></tr>`;
             });
         }
 
-        // 7. AVANS TALEPLERİ
         window.addAvans = function() {
             let personel = document.getElementById('avansPersonel').value.trim();
             let tutar = document.getElementById('avansTutar').value.trim();
             let aciklama = document.getElementById('avansAciklama').value.trim();
             let klasor = document.getElementById('avansKlasorSec').value;
             if(!personel || !tutar) return alert('Personel ve tutar giriniz.');
-            avanslar.push({ id: Date.now(), personel, tutar, aciklama, klasor, durum: 'Onay Bekliyor' });
+            avanslar.push({ id: Date.now(), personel, tutar, aciklama, klasor, durum: 'Bekliyor' });
             saveAll(); renderAvans();
         };
         function renderAvans() {
@@ -1052,17 +1096,16 @@
             if(!tb) return;
             tb.innerHTML = '';
             avanslar.filter(a => a.klasor === aktifKlasorler.avans).forEach(a => {
-                tb.innerHTML += `<tr><td>${a.personel}</td><td><b>${a.tutar} ₺</b></td><td>${a.aciklama}</td><td>${a.klasor}</td><td><span style="color:var(--accent-color); font-weight:bold;">${a.durum}</span></td><td><button class="btn btn-danger" style="padding:4px 8px; font-size:0.75rem;" onclick="deleteItem('avans', ${a.id})">Sil</button></td></tr>`;
+                tb.innerHTML += `<tr><td>${a.personel}</td><td><b>${a.tutar} ₺</b></td><td>${a.aciklama}</td><td>${a.klasor}</td><td><span style="color:var(--warning); font-weight:600;">${a.durum}</span></td><td><button class="btn btn-danger" style="padding:4px 8px; font-size:0.75rem;" onclick="deleteItem('avans', ${a.id})">Sil</button></td></tr>`;
             });
         }
 
-        // 8. KOLAYBİ & FATURALAR
         window.addFatura = function() {
             let unvan = document.getElementById('faturaUnvan').value.trim();
             let tutar = document.getElementById('faturaTutar').value.trim();
             let klasor = document.getElementById('faturaKlasorSec').value;
             let fileInput = document.getElementById('faturaDosya');
-            let dosyaAdi = fileInput.files.length > 0 ? fileInput.files[0].name : 'PDF Yok';
+            let dosyaAdi = fileInput.files.length > 0 ? fileInput.files[0].name : 'Yok';
             if(!unvan || !tutar) return alert('Unvan ve tutar giriniz.');
             faturalar.push({ id: Date.now(), unvan, tutar, klasor, dosyaAdi });
             saveAll(); renderFatura();
@@ -1076,7 +1119,6 @@
             });
         }
 
-        // 9. DETAYLI MÜŞTERİLER & CARİ
         window.addMusteri = function() {
             let unvan = document.getElementById('musteriUnvan').value.trim();
             let isKalemi = document.getElementById('musteriIs').value.trim();
@@ -1093,12 +1135,11 @@
             if(!tb) return;
             tb.innerHTML = '';
             musteriler.filter(m => m.klasor === aktifKlasorler.musteri).forEach(m => {
-                let renk = m.durum.includes('Ödendi') ? 'var(--success-color)' : 'var(--danger-color)';
+                let renk = m.durum.includes('Ödendi') ? 'var(--success)' : 'var(--danger)';
                 tb.innerHTML += `<tr><td><b>${m.unvan}</b></td><td>${m.isKalemi}</td><td>${m.tutar} ₺</td><td><span style="color:${renk}; font-weight:600;">${m.durum}</span><br><small>${m.notlar}</small></td><td>${m.klasor}</td><td><button class="btn btn-danger" style="padding:4px 8px; font-size:0.75rem;" onclick="deleteItem('musteri', ${m.id})">Sil</button></td></tr>`;
             });
         }
 
-        // Silme ve Çöp Kutusu
         window.deleteItem = function(type, id) {
             let arr, name;
             if(type === 'stok') { arr = stoklar; name = 'Stok Ürün'; }
