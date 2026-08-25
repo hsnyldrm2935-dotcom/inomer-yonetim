@@ -1053,7 +1053,7 @@
     </div>
 
     <script>
-        window.onload = function() {
+window.onload = function() {
             let emailInput = document.getElementById('loginEmail');
             let passInput = document.getElementById('loginPass');
             if(emailInput) emailInput.value = '';
@@ -1262,10 +1262,60 @@
                 row.innerHTML = `<td>${bHtml}</td><td>${ad}</td><td><div class="file-preview-box">${thumbsHtml}</div></td>${delBtnHtml}`;
             }
 
-           tbody.appendChild(row);
-        alert('Başarıyla kaydedildi ve listeye eklendi!');
-    }
-}
+            tbody.appendChild(row);
+            alert('Başarıyla kaydedildi ve listeye eklendi!');
+        }
+
+        // --- KOLAYBİ ENTEGRASYON FONKSİYONU (Dışarıya alındı) ---
+        async function fetchKolayBiInvoices() {
+            // API anahtarını localStorage'dan alıyoruz
+            const apiKey = localStorage.getItem('kolayBiApiKey') || '40e1006b-d590-4d3b-bde3-513ececdf435';
+            
+            // KolayBi'nin resmi API fatura listeleme adresi
+            const endpoint = 'https://api.kolaybi.com/v1/invoices'; 
+
+            const tableBody = document.querySelector('#kolayBiInvoicesTable');
+            if (!tableBody) return;
+
+            tableBody.innerHTML = `<tr><td colspan="5" style="text-align: center; padding: 12px;">KolayBi'den faturalar yükleniyor...</td></tr>`;
+
+            try {
+                const response = await fetch(endpoint, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${apiKey}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('KolayBi API bağlantısı başarısız oldu.');
+                }
+
+                const data = await response.json();
+                
+                if (data && data.length > 0) {
+                    tableBody.innerHTML = '';
+                    data.forEach(invoice => {
+                        tableBody.innerHTML += `
+                            <tr>
+                                <td>${invoice.invoiceNumber || 'N/A'}</td>
+                                <td>${invoice.customerName || 'N/A'}</td>
+                                <td>${invoice.date || 'N/A'}</td>
+                                <td>${invoice.totalAmount || 0} ₺</td>
+                                <td><span class="badge ${invoice.status === 'Paid' ? 'success' : 'warning'}">${invoice.status || 'Bekliyor'}</span></td>
+                            </tr>
+                        `;
+                    });
+                } else {
+                    tableBody.innerHTML = `<tr><td colspan="5" style="text-align: center; padding: 12px;">KolayBi'de kayıtlı fatura bulunamadı.</td></tr>`;
+                }
+
+            } catch (error) {
+                console.error('KolayBi entegrasyon hatası:', error);
+                tableBody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: red; padding: 12px;">CORS veya API Anahtarı hatası. Lütfen API anahtarınızı kontrol edin.</td></tr>`;
+            }
+        }
 
 // --- KOLAYBİ ENTEGRASYON FONKSİYONU ---
 async function fetchKolayBiInvoices() {
