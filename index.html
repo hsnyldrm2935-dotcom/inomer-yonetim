@@ -4,26 +4,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>İNOMER ENERJİ | Kurumsal ERP & Yönetim Paneli</title>
-    <!-- Html5-Qrcode Kütüphanesi -->
+    <!-- Html5-Qrcode Kütüphanesi (Barkod Okuma için) -->
     <script src="https://unpkg.com/html5-qrcode"></script>
     <style>
         :root {
-            --primary: #0284c7;
-            --primary-dark: #0369a1;
-            --slate-900: #0f172a;
-            --slate-800: #1e293b;
-            --slate-700: #334155;
-            --slate-600: #475569;
-            --slate-200: #e2e8f0;
-            --slate-100: #f8fafc;
+            --primary: #dc2626;       /* Kırmızı */
+            --primary-dark: #b91c1c;  /* Koyu Kırmızı */
+            --primary-light: #fef2f2; /* Çok açık kırmızı / zemin */
+            --slate-900: #18181b;
+            --slate-800: #27272a;
+            --slate-700: #3f3f46;
+            --slate-600: #52525b;
+            --slate-200: #e4e4e7;
+            --slate-100: #f4f4f5;
             --white: #ffffff;
-            --border: #cbd5e1;
-            --text-main: #0f172a;
-            --text-muted: #64748b;
+            --border: #d4d4d8;
+            --text-main: #18181b;
+            --text-muted: #71717a;
             --success: #16a34a;
             --warning: #d97706;
             --danger: #dc2626;
-            --radius: 12px;
+            --radius: 10px;
             --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
         }
 
@@ -44,7 +45,7 @@
         #loginOverlay {
             position: fixed;
             inset: 0;
-            background: linear-gradient(135deg, #0f172a, #1e293b);
+            background: linear-gradient(135deg, #18181b, #27272a);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -59,13 +60,12 @@
             width: 100%;
             max-width: 420px;
             box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
-            border: 1px solid var(--border);
             border-top: 5px solid var(--primary);
             text-align: center;
         }
 
         .login-card h2 {
-            font-size: 1.5rem;
+            font-size: 1.6rem;
             color: var(--slate-900);
             margin-bottom: 6px;
         }
@@ -86,7 +86,7 @@
             font-size: 0.75rem;
             font-weight: 700;
             margin-bottom: 6px;
-            color: var(--slate-600);
+            color: var(--slate-700);
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
@@ -105,7 +105,7 @@
 
         input:focus, select:focus, textarea:focus {
             border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
+            box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.15);
         }
 
         .btn {
@@ -128,7 +128,6 @@
         .btn:hover { background: var(--primary-dark); }
         .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--slate-700); width: auto; }
         .btn-outline:hover { background: var(--slate-200); }
-        .btn-danger { background: var(--danger); width: auto; color: white; }
         .btn-success { background: var(--success); width: auto; color: white; }
 
         /* Ana Düzen */
@@ -139,19 +138,20 @@
 
         .sidebar {
             width: 280px;
-            background: var(--slate-900);
-            color: #fff;
+            background: var(--white);
+            color: var(--slate-900);
             display: flex;
             flex-direction: column;
-            border-right: 1px solid var(--slate-800);
+            border-right: 1px solid var(--border);
         }
 
         .sidebar-brand {
             padding: 24px 20px;
-            border-bottom: 1px solid var(--slate-800);
+            border-bottom: 1px solid var(--border);
             display: flex;
             align-items: center;
             gap: 12px;
+            background: var(--slate-100);
         }
 
         .sidebar-menu {
@@ -168,7 +168,7 @@
             font-size: 0.7rem;
             text-transform: uppercase;
             letter-spacing: 1px;
-            color: #94a3b8;
+            color: var(--text-muted);
             padding: 12px 10px 4px 10px;
             font-weight: 700;
         }
@@ -177,7 +177,7 @@
             width: 100%;
             background: transparent;
             border: none;
-            color: #cbd5e1;
+            color: var(--slate-700);
             padding: 10px 14px;
             border-radius: 8px;
             cursor: pointer;
@@ -191,8 +191,8 @@
         }
 
         .nav-btn:hover {
-            background: rgba(255, 255, 255, 0.08);
-            color: #fff;
+            background: var(--primary-light);
+            color: var(--primary);
         }
 
         .nav-btn.active {
@@ -395,39 +395,6 @@
             color: var(--text-main);
         }
 
-        .folder-bar {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-            margin-bottom: 20px;
-            padding: 12px;
-            background: var(--white);
-            border-radius: 8px;
-            border: 1px solid var(--border);
-            align-items: center;
-        }
-
-        .folder-chip {
-            background: var(--slate-100);
-            border: 1px solid var(--border);
-            padding: 6px 14px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: 500;
-            font-size: 0.8rem;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            color: var(--slate-700);
-            transition: all 0.2s;
-        }
-
-        .folder-chip.active {
-            background: var(--primary);
-            color: white;
-            border-color: var(--primary);
-        }
-
         .tab-pane { display: none; }
         .tab-pane.active { display: block; }
         
@@ -435,14 +402,24 @@
             display: flex;
             gap: 8px;
             flex-wrap: wrap;
-            margin-top: 8px;
         }
         .file-thumb {
-            width: 45px;
-            height: 45px;
+            width: 40px;
+            height: 40px;
             object-fit: cover;
             border-radius: 6px;
             border: 1px solid var(--border);
+        }
+
+        .barcode-badge {
+            background: var(--primary-light);
+            color: var(--primary);
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            border: 1px solid rgba(220, 38, 38, 0.2);
+            display: inline-block;
         }
 
         #notificationDropdown {
@@ -465,7 +442,7 @@
     <!-- GİRİŞ EKRANI -->
     <div id="loginOverlay">
         <div class="login-card">
-            <h2>İNOMER ENERJİ</h2>
+            <h2 style="color:var(--primary);">İNOMER ENERJİ</h2>
             <p>Kurumsal ERP & Yönetim Paneli</p>
             <div class="form-group">
                 <label>E-posta Adresi</label>
@@ -482,10 +459,10 @@
     <!-- ANA UYGULAMA LAYOUT -->
     <div class="app-layout" id="appContainer" style="display: none;">
         
-        <!-- YAN MENÜ -->
+        <!-- YAN MENÜ (BEYAZ & KIRMIZI) -->
         <aside class="sidebar">
             <div class="sidebar-brand">
-                <span style="font-weight: 700; letter-spacing: 0.5px; font-size: 1rem;">İNOMER <span style="color:#38bdf8">ENERJİ</span></span>
+                <span style="font-weight: 700; letter-spacing: 0.5px; font-size: 1rem; color:var(--slate-900);">İNOMER <span style="color:var(--primary)">ENERJİ</span></span>
             </div>
             <ul class="sidebar-menu">
                 <div class="menu-section-title">🏠 Genel</div>
@@ -528,7 +505,7 @@
             <div class="top-navbar">
                 <div class="search-box">
                     <span>🔍</span>
-                    <input type="text" id="globalSearch" placeholder="Genel arama yap..." onkeyup="globalFilter()">
+                    <input type="text" id="globalSearch" placeholder="Genel arama yap...">
                 </div>
                 <div class="top-actions">
                     <div class="notification-bell" onclick="toggleNotifications()">
@@ -562,64 +539,47 @@
                 <div class="stats-grid">
                     <div class="stat-card">
                         <h4>Toplam Ürün Sayısı</h4>
-                        <div class="value" id="homeTopUrun">14</div>
+                        <div class="value">14</div>
                     </div>
-                    <div class="stat-card" style="border-left-color: var(--warning);">
+                    <div class="stat-card">
                         <h4>Kritik Stoktaki Ürünler</h4>
-                        <div class="value" id="homeKritikStok" style="color:var(--warning)">2</div>
+                        <div class="value" style="color:var(--danger)">2</div>
                     </div>
                     <div class="stat-card">
                         <h4>Devam Eden GES</h4>
-                        <div class="value" id="homeDevamGes">4</div>
-                    </div>
-                    <div class="stat-card" style="border-left-color: var(--warning);">
-                        <h4>Bekleyen İzinler</h4>
-                        <div class="value" id="homeBekleyenIzin">1</div>
-                    </div>
-                    <div class="stat-card" style="border-left-color: var(--success);">
-                        <h4>Bu Ay Kesilen Faturalar</h4>
-                        <div class="value" id="homeBuAyFatura" style="color:var(--success)">₺342.500</div>
+                        <div class="value">4</div>
                     </div>
                     <div class="stat-card">
-                        <h4>Toplam Alacak</h4>
-                        <div class="value" id="homeToplamAlacak">₺185.000</div>
+                        <h4>Bekleyen İzinler</h4>
+                        <div class="value">1</div>
                     </div>
                 </div>
-
                 <div class="card">
-                    <div class="card-header">
-                        <h3>Hızlı Kısayollar & Son Durum</h3>
-                    </div>
-                    <p style="color:var(--text-muted); font-size: 0.9rem;">İnomer Enerji operasyonel paneline hoş geldiniz. Sol menüden modüller arası geçiş yapabilir, tüm bölümlere fotoğraf ekleyebilir, saha ekipmanlarını, araçları ve finansal cari hesapları anlık takip edebilirsiniz.</p>
+                    <div class="card-header"><h3>İnomer Enerji Yönetim Paneline Hoş Geldiniz</h3></div>
+                    <p style="color:var(--text-muted); font-size: 0.9rem;">Tüm menülerde sağ üst köşeden barkod/seri numarası girebilir ve alt kısımdan fotoğraflar/belgeler yükleyebilirsiniz.</p>
                 </div>
             </div>
 
             <!-- 2. 📦 STOK & ÜRÜNLER -->
             <div id="stokDepo" class="tab-pane">
                 <div class="card">
-                    <div class="card-header">
-                        <h3>Yeni Ürün / Malzeme Ekle</h3>
-                    </div>
+                    <div class="card-header"><h3>Yeni Ürün / Malzeme Ekle</h3></div>
                     <div class="form-grid">
-                        <div class="form-group"><label>Barkod No</label><input type="text" id="stokBarkod" placeholder="Barkod giriniz"></div>
+                        <div class="form-group"><label>Barkod / Seri No</label><input type="text" id="stokBarkod" placeholder="Barkod giriniz veya okutunuz"></div>
                         <div class="form-group"><label>Ürün Adı</label><input type="text" id="stokAd" placeholder="Örn: Daxler 585W Panel"></div>
                         <div class="form-group"><label>Marka & Model</label><input type="text" id="stokMarkaModel" placeholder="Marka bilgisi"></div>
-                        <div class="form-group"><label>Kategori</label><input type="text" id="stokKategori" placeholder="Solar Paneller"></div>
-                        <div class="form-group"><label>Alış Fiyatı (₺)</label><input type="number" id="stokAlis" placeholder="0.00"></div>
                         <div class="form-group"><label>Satış Fiyatı (₺)</label><input type="number" id="stokSatis" placeholder="0.00"></div>
-                        <div class="form-group"><label>Miktar & Kritik Sınır</label><div style="display: flex; gap: 6px;"><input type="number" id="stokMiktar" placeholder="Miktar"><input type="number" id="stokKritik" placeholder="Kritik"></div></div>
-                        <div class="form-group"><label>Tedarikçi</label><input type="text" id="stokTedarikci" placeholder="Tedarikçi firma"></div>
                         <div class="form-group full"><label>📸 Ürün Fotoğrafları / Dosyalar</label><input type="file" id="stokDosya" multiple accept="image/*"></div>
                     </div>
-                    <button class="btn btn-success" style="width:auto;" onclick="addGenericItem('stok')">Kataloğa Ekle</button>
+                    <button class="btn" style="width:auto;" onclick="addItem('stok')">Ürünü Kaydet</button>
                 </div>
                 <div class="card">
                     <div class="card-header"><h3>Stok Listesi</h3></div>
                     <div class="table-container">
                         <table>
-                            <thead><tr><th>Barkod</th><th>Ürün Adı</th><th>Marka</th><th>Fiyat</th><th>Miktar</th><th>Fotoğraflar</th></tr></thead>
+                            <thead><tr><th>Barkod</th><th>Ürün Adı</th><th>Marka</th><th>Fiyat</th><th>Fotoğraflar</th></tr></thead>
                             <tbody id="stokTableBody">
-                                <tr><td>869001</td><td>Daxler 585W Panel</td><td>Daxler</td><td>₺4.200</td><td>45</td><td>-</td></tr>
+                                <tr><td><span class="barcode-badge">869001</span></td><td>Daxler 585W Panel</td><td>Daxler</td><td>₺4.200</td><td>-</td></tr>
                             </tbody>
                         </table>
                     </div>
@@ -631,22 +591,20 @@
                 <div class="card">
                     <div class="card-header"><h3>Yeni Arazi GES Projesi</h3></div>
                     <div class="form-grid">
+                        <div class="form-group"><label>Proje Kodu / Barkod</label><input type="text" id="araziBarkod" placeholder="GES-BARKOD-01"></div>
                         <div class="form-group"><label>Proje Adı</label><input type="text" id="araziAd" placeholder="Proje Adı"></div>
-                        <div class="form-group"><label>Müşteri</label><input type="text" id="araziMusteri" placeholder="Müşteri Adı"></div>
                         <div class="form-group"><label>Lokasyon</label><input type="text" id="araziLokasyon" placeholder="İzmir / Aliağa"></div>
                         <div class="form-group"><label>Güç (MW)</label><input type="text" id="araziGuc" placeholder="5 MW"></div>
                         <div class="form-group full"><label>📸 Şantiye / Saha Fotoğrafları</label><input type="file" id="araziDosya" multiple accept="image/*"></div>
                     </div>
-                    <button class="btn" style="width:auto;" onclick="addGenericItem('arazi')">Projeyi Kaydet</button>
+                    <button class="btn" style="width:auto;" onclick="addItem('arazi')">Projeyi Kaydet</button>
                 </div>
                 <div class="card">
-                    <div class="card-header"><h3>Arazi GES Projeleri Listesi</h3></div>
+                    <div class="card-header"><h3>Arazi GES Projeleri</h3></div>
                     <div class="table-container">
                         <table>
-                            <thead><tr><th>Proje Adı</th><th>Müşteri</th><th>Lokasyon</th><th>Güç</th><th>Fotoğraflar</th></tr></thead>
-                            <tbody id="araziTableBody">
-                                <tr><td>Aliağa OSB GES</td><td>Aliağa Kimya A.Ş.</td><td>İzmir</td><td>10 MW</td><td>-</td></tr>
-                            </tbody>
+                            <thead><tr><th>Barkod</th><th>Proje Adı</th><th>Lokasyon</th><th>Güç</th><th>Fotoğraflar</th></tr></thead>
+                            <tbody id="araziTableBody"></tbody>
                         </table>
                     </div>
                 </div>
@@ -657,20 +615,19 @@
                 <div class="card">
                     <div class="card-header"><h3>Çatı GES & Trafo Tesisi Ekle</h3></div>
                     <div class="form-grid">
+                        <div class="form-group"><label>Tesis Barkodu</label><input type="text" id="catiBarkod" placeholder="TRF-BARKOD-01"></div>
                         <div class="form-group"><label>Tesis Adı</label><input type="text" id="catiTesis" placeholder="Fabrika Çatı GES"></div>
                         <div class="form-group"><label>Güç (kW)</label><input type="text" id="catiGuc" placeholder="250 kW"></div>
                         <div class="form-group full"><label>📸 Tesis Fotoğrafları</label><input type="file" id="catiDosya" multiple accept="image/*"></div>
                     </div>
-                    <button class="btn" style="width:auto;" onclick="addGenericItem('cati')">Tesis Kaydet</button>
+                    <button class="btn" style="width:auto;" onclick="addItem('cati')">Tesisi Kaydet</button>
                 </div>
                 <div class="card">
                     <div class="card-header"><h3>Kayıtlı Çatı Tesisleri</h3></div>
                     <div class="table-container">
                         <table>
-                            <thead><tr><th>Tesis Adı</th><th>Güç</th><th>Fotoğraflar</th></tr></thead>
-                            <tbody id="catiTableBody">
-                                <tr><td>STAR Rafineri Çatı GES</td><td>500 kW</td><td>-</td></tr>
-                            </tbody>
+                            <thead><tr><th>Barkod</th><th>Tesis Adı</th><th>Güç</th><th>Fotoğraflar</th></tr></thead>
+                            <tbody id="catiTableBody"></tbody>
                         </table>
                     </div>
                 </div>
@@ -681,18 +638,18 @@
                 <div class="card">
                     <div class="card-header"><h3>Yeni Saha Fişi / Tutanak</h3></div>
                     <div class="form-grid">
-                        <div class="form-group"><label>Fiş No</label><input type="text" id="sahaNo" placeholder="SF-2026-001"></div>
+                        <div class="form-group"><label>Fiş / Barkod No</label><input type="text" id="sahaBarkod" placeholder="SF-2026-001"></div>
                         <div class="form-group"><label>Sorumlu</label><input type="text" id="sahaPersonel" placeholder="Ad Soyad"></div>
-                        <div class="form-group full"><label>Açıklama</label><textarea id="sahaAciklama" rows="2" placeholder="Tespit detayları..."></textarea></div>
+                        <div class="form-group full"><label>Açıklama</label><textarea id="sahaAciklama" rows="2" placeholder="Detaylar..."></textarea></div>
                         <div class="form-group full"><label>📸 Saha Tutanak Fotoğrafları</label><input type="file" id="sahaDosya" multiple accept="image/*"></div>
                     </div>
-                    <button class="btn" style="width:auto;" onclick="addGenericItem('saha')">Fişi Kaydet</button>
+                    <button class="btn" style="width:auto;" onclick="addItem('saha')">Fişi Kaydet</button>
                 </div>
                 <div class="card">
                     <div class="card-header"><h3>Saha Fişleri Arşivi</h3></div>
                     <div class="table-container">
                         <table>
-                            <thead><tr><th>Fiş No</th><th>Sorumlu</th><th>Açıklama</th><th>Fotoğraflar</th></tr></thead>
+                            <thead><tr><th>Barkod / Fiş No</th><th>Sorumlu</th><th>Açıklama</th><th>Fotoğraflar</th></tr></thead>
                             <tbody id="sahaTableBody"></tbody>
                         </table>
                     </div>
@@ -704,17 +661,18 @@
                 <div class="card">
                     <div class="card-header"><h3>Şirket Aracı Ekle</h3></div>
                     <div class="form-grid">
+                        <div class="form-group"><label>Araç Barkod / Seri No</label><input type="text" id="aracBarkod" placeholder="ARC-BARKOD"></div>
                         <div class="form-group"><label>Plaka</label><input type="text" id="aracPlaka" placeholder="35 ENR 35"></div>
                         <div class="form-group"><label>Model</label><input type="text" id="aracModel" placeholder="Ford Transit"></div>
                         <div class="form-group full"><label>📸 Araç Fotoğrafları / Ruhsat</label><input type="file" id="aracDosya" multiple accept="image/*"></div>
                     </div>
-                    <button class="btn" style="width:auto;" onclick="addGenericItem('arac')">Aracı Kaydet</button>
+                    <button class="btn" style="width:auto;" onclick="addItem('arac')">Aracı Kaydet</button>
                 </div>
                 <div class="card">
                     <div class="card-header"><h3>Araç Filosu Listesi</h3></div>
                     <div class="table-container">
                         <table>
-                            <thead><tr><th>Plaka</th><th>Model</th><th>Fotoğraflar</th></tr></thead>
+                            <thead><tr><th>Barkod</th><th>Plaka</th><th>Model</th><th>Fotoğraflar</th></tr></thead>
                             <tbody id="aracTableBody"></tbody>
                         </table>
                     </div>
@@ -726,17 +684,17 @@
                 <div class="card">
                     <div class="card-header"><h3>Şantiye Ekipmanı Ekle</h3></div>
                     <div class="form-grid">
+                        <div class="form-group"><label>Ekipman Barkod / Seri No</label><input type="text" id="ekipmanBarkod" placeholder="SN-9988"></div>
                         <div class="form-group"><label>Ekipman Adı</label><input type="text" id="ekipmanAd" placeholder="Fluke Multimetre"></div>
-                        <div class="form-group"><label>Seri No</label><input type="text" id="ekipmanSeri" placeholder="SN-9988"></div>
                         <div class="form-group full"><label>📸 Ekipman Fotoğrafları</label><input type="file" id="ekipmanDosya" multiple accept="image/*"></div>
                     </div>
-                    <button class="btn" style="width:auto;" onclick="addGenericItem('ekipman')">Ekipman Kaydet</button>
+                    <button class="btn" style="width:auto;" onclick="addItem('ekipman')">Ekipman Kaydet</button>
                 </div>
                 <div class="card">
                     <div class="card-header"><h3>Ekipman Listesi</h3></div>
                     <div class="table-container">
                         <table>
-                            <thead><tr><th>Ekipman Adı</th><th>Seri No</th><th>Fotoğraflar</th></tr></thead>
+                            <thead><tr><th>Barkod / Seri No</th><th>Ekipman Adı</th><th>Fotoğraflar</th></tr></thead>
                             <tbody id="ekipmanTableBody"></tbody>
                         </table>
                     </div>
@@ -748,17 +706,18 @@
                 <div class="card">
                     <div class="card-header"><h3>Personel Kaydı Ekle</h3></div>
                     <div class="form-grid">
+                        <div class="form-group"><label>Sicil / Barkod No</label><input type="text" id="personelBarkod" placeholder="SICIL-01"></div>
                         <div class="form-group"><label>Ad Soyad</label><input type="text" id="personelAd" placeholder="Ahmet Yılmaz"></div>
                         <div class="form-group"><label>Pozisyon</label><input type="text" id="personelPoz" placeholder="Elektrik Mühendisi"></div>
                         <div class="form-group full"><label>📸 Personel Fotoğrafı / Belgeler</label><input type="file" id="personelDosya" multiple accept="image/*"></div>
                     </div>
-                    <button class="btn" style="width:auto;" onclick="addGenericItem('personel')">Personel Kaydet</button>
+                    <button class="btn" style="width:auto;" onclick="addItem('personel')">Personel Kaydet</button>
                 </div>
                 <div class="card">
                     <div class="card-header"><h3>Personel Listesi</h3></div>
                     <div class="table-container">
                         <table>
-                            <thead><tr><th>Ad Soyad</th><th>Pozisyon</th><th>Fotoğraflar</th></tr></thead>
+                            <thead><tr><th>Sicil No</th><th>Ad Soyad</th><th>Pozisyon</th><th>Fotoğraflar</th></tr></thead>
                             <tbody id="personelTableBody"></tbody>
                         </table>
                     </div>
@@ -770,17 +729,18 @@
                 <div class="card">
                     <div class="card-header"><h3>Yeni İzin Talebi</h3></div>
                     <div class="form-grid">
+                        <div class="form-group"><label>Talep Barkod No</label><input type="text" id="izinBarkod" placeholder="IZIN-01"></div>
                         <div class="form-group"><label>Personel Adı</label><input type="text" id="izinAd" placeholder="Ad Soyad"></div>
                         <div class="form-group"><label>Gün Sayısı</label><input type="number" id="izinGun" placeholder="3"></div>
                         <div class="form-group full"><label>📸 İzin Belgesi / Dilekçe Fotoğrafı</label><input type="file" id="izinDosya" multiple accept="image/*"></div>
                     </div>
-                    <button class="btn" style="width:auto;" onclick="addGenericItem('izin')">Talep Oluştur</button>
+                    <button class="btn" style="width:auto;" onclick="addItem('izin')">Talep Oluştur</button>
                 </div>
                 <div class="card">
                     <div class="card-header"><h3>İzin Talepleri Listesi</h3></div>
                     <div class="table-container">
                         <table>
-                            <thead><tr><th>Personel</th><th>Gün</th><th>Fotoğraflar</th></tr></thead>
+                            <thead><tr><th>Barkod</th><th>Personel</th><th>Gün</th><th>Fotoğraflar</th></tr></thead>
                             <tbody id="izinTableBody"></tbody>
                         </table>
                     </div>
@@ -792,17 +752,18 @@
                 <div class="card">
                     <div class="card-header"><h3>Yeni Avans Talebi</h3></div>
                     <div class="form-grid">
+                        <div class="form-group"><label>Avans Barkod No</label><input type="text" id="avansBarkod" placeholder="AVN-01"></div>
                         <div class="form-group"><label>Personel Adı</label><input type="text" id="avansAd" placeholder="Ad Soyad"></div>
                         <div class="form-group"><label>Tutar (₺)</label><input type="number" id="avansTutar" placeholder="5000"></div>
                         <div class="form-group full"><label>📸 Talep Formu / Fotoğraf</label><input type="file" id="avansDosya" multiple accept="image/*"></div>
                     </div>
-                    <button class="btn" style="width:auto;" onclick="addGenericItem('avans')">Avans Talep Et</button>
+                    <button class="btn" style="width:auto;" onclick="addItem('avans')">Avans Talep Et</button>
                 </div>
                 <div class="card">
                     <div class="card-header"><h3>Avans Talepleri Listesi</h3></div>
                     <div class="table-container">
                         <table>
-                            <thead><tr><th>Personel</th><th>Tutar</th><th>Fotoğraflar</th></tr></thead>
+                            <thead><tr><th>Barkod</th><th>Personel</th><th>Tutar</th><th>Fotoğraflar</th></tr></thead>
                             <tbody id="avansTableBody"></tbody>
                         </table>
                     </div>
@@ -814,17 +775,17 @@
                 <div class="card">
                     <div class="card-header"><h3>KolayBİ & Fatura Entegrasyonu</h3></div>
                     <div class="form-grid">
-                        <div class="form-group"><label>Fatura No</label><input type="text" id="faturaNo" placeholder="FTR-2026-001"></div>
+                        <div class="form-group"><label>Fatura / Barkod No</label><input type="text" id="kolayBiBarkod" placeholder="FTR-2026-001"></div>
                         <div class="form-group"><label>Tutar (₺)</label><input type="number" id="faturaTutar" placeholder="15000"></div>
                         <div class="form-group full"><label>📸 Fatura Görseli / Belge</label><input type="file" id="kolayBiDosya" multiple accept="image/*"></div>
                     </div>
-                    <button class="btn" style="width:auto;" onclick="addGenericItem('kolayBi')">Fatura Senkronize Et</button>
+                    <button class="btn" style="width:auto;" onclick="addItem('kolayBi')">Fatura Ekle</button>
                 </div>
                 <div class="card">
-                    <div class="card-header"><h3>Senkronize Faturalar</h3></div>
+                    <div class="card-header"><h3>Faturalar</h3></div>
                     <div class="table-container">
                         <table>
-                            <thead><tr><th>Fatura No</th><th>Tutar</th><th>Fotoğraflar</th></tr></thead>
+                            <thead><tr><th>Fatura / Barkod No</th><th>Tutar</th><th>Fotoğraflar</th></tr></thead>
                             <tbody id="kolayBiTableBody"></tbody>
                         </table>
                     </div>
@@ -836,17 +797,18 @@
                 <div class="card">
                     <div class="card-header"><h3>Yeni Müşteri / Cari Ekle</h3></div>
                     <div class="form-grid">
-                        <div class="form-group"><label>Firma / Müşteri Adı</label><input type="text" id=" cariAd" placeholder="Firma Adı"></div>
+                        <div class="form-group"><label>Cari Barkod / Kod</label><input type="text" id="musteriBarkod" placeholder="CARİ-01"></div>
+                        <div class="form-group"><label>Firma / Müşteri Adı</label><input type="text" id="cariAd" placeholder="Firma Adı"></div>
                         <div class="form-group"><label>Telefon / İletişim</label><input type="text" id="cariTel" placeholder="0532..."></div>
                         <div class="form-group full"><label>📸 Sözleşmeler / Evrak Fotoğrafları</label><input type="file" id="musteriDosya" multiple accept="image/*"></div>
                     </div>
-                    <button class="btn" style="width:auto;" onclick="addGenericItem('musteri')">Cari Kaydet</button>
+                    <button class="btn" style="width:auto;" onclick="addItem('musteri')">Cari Kaydet</button>
                 </div>
                 <div class="card">
                     <div class="card-header"><h3>Cari Listesi</h3></div>
                     <div class="table-container">
                         <table>
-                            <thead><tr><th>Firma Adı</th><th>İletişim</th><th>Fotoğraflar</th></tr></thead>
+                            <thead><tr><th>Barkod / Kod</th><th>Firma Adı</th><th>İletişim</th><th>Fotoğraflar</th></tr></thead>
                             <tbody id="musteriTableBody"></tbody>
                         </table>
                     </div>
@@ -858,17 +820,18 @@
                 <div class="card">
                     <div class="card-header"><h3>Yeni Teklif Hazırla</h3></div>
                     <div class="form-grid">
+                        <div class="form-group"><label>Teklif Barkod No</label><input type="text" id="teklifBarkod" placeholder="TKL-01"></div>
                         <div class="form-group"><label>Teklif Konusu</label><input type="text" id="teklifKonu" placeholder="GES Kurulum Teklifi"></div>
                         <div class="form-group"><label>Toplam Tutar (₺)</label><input type="number" id="teklifTutar" placeholder="250000"></div>
                         <div class="form-group full"><label>📸 Teklif Dosyası / Çizim Görseli</label><input type="file" id="teklifDosya" multiple accept="image/*"></div>
                     </div>
-                    <button class="btn" style="width:auto;" onclick="addGenericItem('teklif')">Teklif Kaydet</button>
+                    <button class="btn" style="width:auto;" onclick="addItem('teklif')">Teklif Kaydet</button>
                 </div>
                 <div class="card">
                     <div class="card-header"><h3>Teklifler Arşivi</h3></div>
                     <div class="table-container">
                         <table>
-                            <thead><tr><th>Konu</th><th>Tutar</th><th>Fotoğraflar</th></tr></thead>
+                            <thead><tr><th>Barkod</th><th>Konu</th><th>Tutar</th><th>Fotoğraflar</th></tr></thead>
                             <tbody id="teklifTableBody"></tbody>
                         </table>
                     </div>
@@ -880,17 +843,18 @@
                 <div class="card">
                     <div class="card-header"><h3>Yeni Sipariş Ekle</h3></div>
                     <div class="form-grid">
+                        <div class="form-group"><label>Sipariş Barkod No</label><input type="text" id="siparisBarkod" placeholder="SPR-01"></div>
                         <div class="form-group"><label>Sipariş Tanımı</label><input type="text" id="siparisAd" placeholder="İnverter Siparişi"></div>
                         <div class="form-group"><label>Tedarikçi</label><input type="text" id="siparisTed" placeholder="Lexron A.Ş."></div>
                         <div class="form-group full"><label>📸 Sipariş Fişi / Fotoğraf</label><input type="file" id="siparisDosya" multiple accept="image/*"></div>
                     </div>
-                    <button class="btn" style="width:auto;" onclick="addGenericItem('siparis')">Sipariş Kaydet</button>
+                    <button class="btn" style="width:auto;" onclick="addItem('siparis')">Sipariş Kaydet</button>
                 </div>
                 <div class="card">
                     <div class="card-header"><h3>Sipariş Listesi</h3></div>
                     <div class="table-container">
                         <table>
-                            <thead><tr><th>Sipariş Tanımı</th><th>Tedarikçi</th><th>Fotoğraflar</th></tr></thead>
+                            <thead><tr><th>Barkod</th><th>Sipariş Tanımı</th><th>Tedarikçi</th><th>Fotoğraflar</th></tr></thead>
                             <tbody id="siparisTableBody"></tbody>
                         </table>
                     </div>
@@ -901,15 +865,18 @@
             <div id="raporlar" class="tab-pane">
                 <div class="card">
                     <div class="card-header"><h3>Raporlar ve İstatistikler</h3></div>
-                    <p style="color:var(--text-muted); margin-bottom:15px;">Şirket genel finans, stok ve saha performans raporlarını buradan inceleyebilir, rapor görseli ekleyebilirsiniz.</p>
-                    <div class="form-group full"><label>📸 Rapor Belgesi Ekles</label><input type="file" id="raporDosya" multiple accept="image/*"></div>
-                    <button class="btn" style="width:auto;" onclick="addGenericItem('rapor')">Raporu Kaydet</button>
+                    <div class="form-grid">
+                        <div class="form-group"><label>Rapor Barkod No</label><input type="text" id="raporBarkod" placeholder="RPR-01"></div>
+                        <div class="form-group"><label>Rapor Adı</label><input type="text" id="raporAd" placeholder="Aylık Performans"></div>
+                        <div class="form-group full"><label>📸 Rapor Belgesi / Fotoğraf</label><input type="file" id="raporDosya" multiple accept="image/*"></div>
+                    </div>
+                    <button class="btn" style="width:auto;" onclick="addItem('rapor')">Raporu Kaydet</button>
                 </div>
                 <div class="card">
                     <div class="card-header"><h3>Kayıtlı Raporlar</h3></div>
                     <div class="table-container">
                         <table>
-                            <thead><tr><th>Rapor Adı</th><th>Tarih</th><th>Fotoğraflar</th></tr></thead>
+                            <thead><tr><th>Barkod</th><th>Rapor Adı</th><th>Fotoğraflar</th></tr></thead>
                             <tbody id="raporTableBody"></tbody>
                         </table>
                     </div>
@@ -925,7 +892,6 @@
                             <thead><tr><th>İşlem Tarihi</th><th>Kullanıcı</th><th>İşlem Detayı</th></tr></thead>
                             <tbody>
                                 <tr><td>25.08.2026 14:32</td><td>Hasan Buğra Yıldırım</td><td>Sisteme giriş yapıldı.</td></tr>
-                                <tr><td>25.08.2026 12:10</td><td>Hasan Buğra Yıldırım</td><td>Stok kataloğuna yeni ürün eklendi.</td></tr>
                             </tbody>
                         </table>
                     </div>
@@ -937,16 +903,17 @@
                 <div class="card">
                     <div class="card-header"><h3>Kurumsal Belge Arşivi</h3></div>
                     <div class="form-grid">
+                        <div class="form-group"><label>Belge Barkod No</label><input type="text" id="belgeBarkod" placeholder="BLG-01"></div>
                         <div class="form-group"><label>Belge Adı</label><input type="text" id="belgeAd" placeholder="ISO Sertifikası"></div>
                         <div class="form-group full"><label>📸 Arşiv Belge / Fotoğrafı</label><input type="file" id="belgeDosya" multiple accept="image/*"></div>
                     </div>
-                    <button class="btn" style="width:auto;" onclick="addGenericItem('belge')">Arşive Ekle</button>
+                    <button class="btn" style="width:auto;" onclick="addItem('belge')">Arşive Ekle</button>
                 </div>
                 <div class="card">
                     <div class="card-header"><h3>Arşiv Listesi</h3></div>
                     <div class="table-container">
                         <table>
-                            <thead><tr><th>Belge Adı</th><th>Fotoğraflar</th></tr></thead>
+                            <thead><tr><th>Barkod</th><th>Belge Adı</th><th>Fotoğraflar</th></tr></thead>
                             <tbody id="belgeTableBody"></tbody>
                         </table>
                     </div>
@@ -969,7 +936,7 @@
             <div id="copKutusu" class="tab-pane">
                 <div class="card">
                     <div class="card-header"><h3>Silinen Öğeler (Çöp Kutusu)</h3></div>
-                    <p style="color:var(--text-muted); font-size:0.9rem;">Silinen kayıtlar burada geçici olarak saklanır.</p>
+                    <p style="color:var(--text-muted); font-size:0.9rem;">Silinen kayıtlar burada saklanır.</p>
                 </div>
             </div>
 
@@ -999,8 +966,8 @@
             drop.style.display = drop.style.display === 'block' ? 'none' : 'block';
         }
 
-        // Tüm tablar için ortak fotoğraf yüklemeli dinamik kayıt fonksiyonu
-        function addGenericItem(type) {
+        // Tüm sekme formlarına dinamik barkod ve fotoğraf ekleme desteği
+        function addItem(type) {
             let fileInput = document.getElementById(type + 'Dosya');
             let files = fileInput ? fileInput.files : [];
             let thumbsHtml = '';
@@ -1018,78 +985,71 @@
             if (!tbody) return;
 
             let row = document.createElement('tr');
+            let barkod = document.getElementById(type + 'Barkod') ? document.getElementById(type + 'Barkod').value || 'N/A' : 'N/A';
+            let bHtml = `<span class="barcode-badge">${barkod}</span>`;
+
             if (type === 'stok') {
-                let b = document.getElementById('stokBarkod').value || 'N/A';
                 let a = document.getElementById('stokAd').value || 'Ürün';
                 let m = document.getElementById('stokMarkaModel').value || '-';
                 let f = document.getElementById('stokSatis').value || '0';
-                let mik = document.getElementById('stokMiktar').value || '0';
-                row.innerHTML = `<td>${b}</td><td>${a}</td><td>${m}</td><td>₺${f}</td><td>${mik}</td><td><div class="file-preview-box">${thumbsHtml}</div></td>`;
+                row.innerHTML = `<td>${bHtml}</td><td>${a}</td><td>${m}</td><td>₺${f}</td><td><div class="file-preview-box">${thumbsHtml}</div></td>`;
             } else if (type === 'arazi') {
                 let ad = document.getElementById('araziAd').value || 'Proje';
-                let mus = document.getElementById('araziMusteri').value || '-';
                 let lok = document.getElementById('araziLokasyon').value || '-';
                 let guc = document.getElementById('araziGuc').value || '-';
-                row.innerHTML = `<td>${ad}</td><td>${mus}</td><td>${lok}</td><td>${guc}</td><td><div class="file-preview-box">${thumbsHtml}</div></td>`;
+                row.innerHTML = `<td>${bHtml}</td><td>${ad}</td><td>${lok}</td><td>${guc}</td><td><div class="file-preview-box">${thumbsHtml}</div></td>`;
             } else if (type === 'cati') {
                 let t = document.getElementById('catiTesis').value || 'Tesis';
                 let g = document.getElementById('catiGuc').value || '-';
-                row.innerHTML = `<td>${t}</td><td>${g}</td><td><div class="file-preview-box">${thumbsHtml}</div></td>`;
+                row.innerHTML = `<td>${bHtml}</td><td>${t}</td><td>${g}</td><td><div class="file-preview-box">${thumbsHtml}</div></td>`;
             } else if (type === 'saha') {
-                let no = document.getElementById('sahaNo').value || 'SF-01';
                 let per = document.getElementById('sahaPersonel').value || '-';
                 let acik = document.getElementById('sahaAciklama').value || '-';
-                row.innerHTML = `<td>${no}</td><td>${per}</td><td>${acik}</td><td><div class="file-preview-box">${thumbsHtml}</div></td>`;
+                row.innerHTML = `<td>${bHtml}</td><td>${per}</td><td>${acik}</td><td><div class="file-preview-box">${thumbsHtml}</div></td>`;
             } else if (type === 'arac') {
                 let plaka = document.getElementById('aracPlaka').value || '35 ABC';
                 let model = document.getElementById('aracModel').value || '-';
-                row.innerHTML = `<td>${plaka}</td><td>${model}</td><td><div class="file-preview-box">${thumbsHtml}</div></td>`;
+                row.innerHTML = `<td>${bHtml}</td><td>${plaka}</td><td>${model}</td><td><div class="file-preview-box">${thumbsHtml}</div></td>`;
             } else if (type === 'ekipman') {
                 let ad = document.getElementById('ekipmanAd').value || 'Ekipman';
-                let seri = document.getElementById('ekipmanSeri').value || '-';
-                row.innerHTML = `<td>${ad}</td><td>${seri}</td><td><div class="file-preview-box">${thumbsHtml}</div></td>`;
+                row.innerHTML = `<td>${bHtml}</td><td>${ad}</td><td><div class="file-preview-box">${thumbsHtml}</div></td>`;
             } else if (type === 'personel') {
                 let ad = document.getElementById('personelAd').value || 'Personel';
                 let poz = document.getElementById('personelPoz').value || '-';
-                row.innerHTML = `<td>${ad}</td><td>${poz}</td><td><div class="file-preview-box">${thumbsHtml}</div></td>`;
+                row.innerHTML = `<td>${bHtml}</td><td>${ad}</td><td>${poz}</td><td><div class="file-preview-box">${thumbsHtml}</div></td>`;
             } else if (type === 'izin') {
                 let ad = document.getElementById('izinAd').value || 'Personel';
                 let gun = document.getElementById('izinGun').value || '1';
-                row.innerHTML = `<td>${ad}</td><td>${gun} Gün</td><td><div class="file-preview-box">${thumbsHtml}</div></td>`;
+                row.innerHTML = `<td>${bHtml}</td><td>${ad}</td><td>${gun} Gün</td><td><div class="file-preview-box">${thumbsHtml}</div></td>`;
             } else if (type === 'avans') {
                 let ad = document.getElementById('avansAd').value || 'Personel';
                 let tutar = document.getElementById('avansTutar').value || '0';
-                row.innerHTML = `<td>${ad}</td><td>₺${tutar}</td><td><div class="file-preview-box">${thumbsHtml}</div></td>`;
+                row.innerHTML = `<td>${bHtml}</td><td>${ad}</td><td>₺${tutar}</td><td><div class="file-preview-box">${thumbsHtml}</div></td>`;
             } else if (type === 'kolayBi') {
-                let no = document.getElementById('faturaNo').value || 'FTR-01';
                 let tutar = document.getElementById('faturaTutar').value || '0';
-                row.innerHTML = `<td>${no}</td><td>₺${tutar}</td><td><div class="file-preview-box">${thumbsHtml}</div></td>`;
+                row.innerHTML = `<td>${bHtml}</td><td>₺${tutar}</td><td><div class="file-preview-box">${thumbsHtml}</div></td>`;
             } else if (type === 'musteri') {
                 let ad = document.getElementById('cariAd').value || 'Firma';
                 let tel = document.getElementById('cariTel').value || '-';
-                row.innerHTML = `<td>${ad}</td><td>${tel}</td><td><div class="file-preview-box">${thumbsHtml}</div></td>`;
+                row.innerHTML = `<td>${bHtml}</td><td>${ad}</td><td>${tel}</td><td><div class="file-preview-box">${thumbsHtml}</div></td>`;
             } else if (type === 'teklif') {
                 let konu = document.getElementById('teklifKonu').value || 'Teklif';
                 let tutar = document.getElementById('teklifTutar').value || '0';
-                row.innerHTML = `<td>${konu}</td><td>₺${tutar}</td><td><div class="file-preview-box">${thumbsHtml}</div></td>`;
+                row.innerHTML = `<td>${bHtml}</td><td>${konu}</td><td>₺${tutar}</td><td><div class="file-preview-box">${thumbsHtml}</div></td>`;
             } else if (type === 'siparis') {
                 let ad = document.getElementById('siparisAd').value || 'Sipariş';
                 let ted = document.getElementById('siparisTed').value || '-';
-                row.innerHTML = `<td>${ad}</td><td>${ted}</td><td><div class="file-preview-box">${thumbsHtml}</div></td>`;
+                row.innerHTML = `<td>${bHtml}</td><td>${ad}</td><td>${ted}</td><td><div class="file-preview-box">${thumbsHtml}</div></td>`;
             } else if (type === 'rapor') {
-                row.innerHTML = `<td>Genel Performans Raporu</td><td>Bugün</td><td><div class="file-preview-box">${thumbsHtml}</div></td>`;
+                let ad = document.getElementById('raporAd').value || 'Rapor';
+                row.innerHTML = `<td>${bHtml}</td><td>${ad}</td><td><div class="file-preview-box">${thumbsHtml}</div></td>`;
             } else if (type === 'belge') {
                 let ad = document.getElementById('belgeAd').value || 'Belge';
-                row.innerHTML = `<td>${ad}</td><td><div class="file-preview-box">${thumbsHtml}</div></td>`;
+                row.innerHTML = `<td>${bHtml}</td><td>${ad}</td><td><div class="file-preview-box">${thumbsHtml}</div></td>`;
             }
 
             tbody.appendChild(row);
-            alert('Başarıyla kaydedildi ve fotoğraflar eklendi!');
-        }
-
-        function globalFilter() {
-            let query = document.getElementById('globalSearch').value.toLowerCase();
-            // Arama mantığı eklenebilir
+            alert('Başarıyla kaydedildi!');
         }
     </script>
 </body>
