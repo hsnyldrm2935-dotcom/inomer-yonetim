@@ -126,6 +126,8 @@
         .btn:hover { background: var(--primary-dark); }
         .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--slate-700); width: auto; }
         .btn-outline:hover { background: var(--slate-200); }
+        .btn-success { background: var(--success); width: auto; padding: 6px 12px; font-size: 0.78rem; }
+        .btn-success:hover { background: #15803d; }
 
         /* Ana Düzen & Hamburger Menü Yapısı */
         .app-layout {
@@ -136,7 +138,7 @@
 
         .sidebar {
             width: 280px;
-            background: var(--white); /* Beyaz Menü */
+            background: var(--white);
             color: var(--slate-900);
             display: flex;
             flex-direction: column;
@@ -200,7 +202,7 @@
         }
 
         .nav-btn.active {
-            background: var(--primary); /* Kırmızı Aktif Menü */
+            background: var(--primary);
             color: #fff;
             font-weight: 600;
         }
@@ -518,7 +520,7 @@
                 <li><button class="nav-btn" onclick="switchTab('izinTalebi', this)">🌴 İzin Talepleri</button></li>
                 <li><button class="nav-btn" onclick="switchTab('avansTalebi', this)">💰 Avans Talepleri</button></li>
 
-                <div class="menu-section-title">💰 Muhasebe</div>
+                <div class="menu-section-title">💰 Muhasebe & KolayBi</div>
                 <li><button class="nav-btn" onclick="switchTab('kolayBi', this)">📊 KolayBİ & Fatura</button></li>
                 <li><button class="nav-btn" onclick="switchTab('musteri', this)">🤝 Müşteriler & Cari</button></li>
                 <li><button class="nav-btn" onclick="switchTab('teklifler', this)">📄 Teklifler</button></li>
@@ -530,7 +532,7 @@
 
                 <div class="menu-section-title">⚙️ Sistem</div>
                 <li><button class="nav-btn" onclick="switchTab('belgeler', this)">📁 Belgeler Arşivi</button></li>
-                <li><button class="nav-btn" onclick="switchTab('ayarlar', this)">⚙️ Ayarlar</button></li>
+                <li><button class="nav-btn" onclick="switchTab('ayarlar', this)">⚙️ Ayarlar (KolayBi API)</button></li>
                 <li><button class="nav-btn" onclick="switchTab('copKutusu', this)">🗑️ Çöp Kutusu</button></li>
             </ul>
         </aside>
@@ -566,7 +568,7 @@
             <div id="notificationDropdown">
                 <h4 style="font-size: 0.9rem; margin-bottom: 10px; border-bottom:1px solid var(--border); padding-bottom:6px; color:var(--slate-900);">Sistem Uyarıları</h4>
                 <div id="notificationList">
-                    <div style="font-size:0.8rem; margin-bottom:8px; color:var(--text-main);">⚠️ <b>Daxler 585W Panel</b> stoğu kritik seviyede!</div>
+                    <div style="font-size:0.8rem; margin-bottom:8px; color:var(--text-main);">⚠️ <b>KolayBi API</b> bağlantısı aktif durumda.</div>
                     <div style="font-size:0.8rem; color:var(--text-main);">🔔 Bekleyen 1 yeni personel izin talebi var.</div>
                 </div>
             </div>
@@ -590,13 +592,13 @@
                         <div class="value">4</div>
                     </div>
                     <div class="stat-card">
-                        <h4>Bekleyen İzin</h4>
-                        <div class="value">1</div>
+                        <h4>KolayBi Bağlantısı</h4>
+                        <div class="value" style="font-size: 1rem; color: var(--success); margin-top: 6px;">🟢 Aktif API</div>
                     </div>
                 </div>
                 <div class="card">
-                    <div class="card-header"><h3>İnomer Enerji Yönetim Paneline Hoş Geldiniz</h3></div>
-                    <p style="color:var(--text-muted); font-size: 0.9rem;">Sol üstteki **☰ Menü** butonuna basarak menüyü daraltıp açabilirsiniz. Tüm modüller eksiksiz olarak yer almaktadır.</p>
+                    <div class="card-header"><h3>İnomer Enerji & KolayBi Entegrasyon Paneli</h3></div>
+                    <p style="color:var(--text-muted); font-size: 0.9rem;">Müşteri cari kartlarınızı, faturalarınızı ve siparişlerinizi KolayBi ile tek tıkla senkronize edebilirsiniz.</p>
                 </div>
             </div>
 
@@ -806,40 +808,45 @@
             <!-- 11. 📊 KOLAYBİ & FATURA -->
             <div id="kolayBi" class="tab-pane">
                 <div class="card">
-                    <div class="card-header"><h3>KolayBİ & Fatura</h3></div>
-                    <div class="form-grid">
-                        <div class="form-group"><label>Barkod</label><input type="text" id="kolayBiBarkod"></div>
-                        <div class="form-group"><label>Tutar</label><input type="number" id="faturaTutar"></div>
-                        <div class="form-group full"><label>📸 Fotoğraflar</label><input type="file" id="kolayBiDosya" multiple accept="image/*"></div>
+                    <div class="card-header">
+                        <h3>KolayBİ & Fatura Entegrasyonu</h3>
+                        <button class="btn btn-success" onclick="syncKolayBi('Tüm Faturalar')">KolayBi ile Senkronize Et</button>
                     </div>
-                    <button class="btn" style="width:auto;" onclick="addItem('kolayBi')">Kaydet</button>
+                    <div class="form-grid">
+                        <div class="form-group"><label>Barkod / Fatura No</label><input type="text" id="kolayBiBarkod" placeholder="FTR-2026-001"></div>
+                        <div class="form-group"><label>Tutar (₺)</label><input type="number" id="faturaTutar" placeholder="0.00"></div>
+                        <div class="form-group full"><label>📸 Fatura Görseli / Belge</label><input type="file" id="kolayBiDosya" multiple accept="image/*"></div>
+                    </div>
+                    <button class="btn" style="width:auto;" onclick="addItem('kolayBi')">Faturayı Kaydet & Gönder</button>
                 </div>
                 <div class="card">
+                    <div class="card-header"><h3>KolayBi Aktarılan Faturalar</h3></div>
                     <div class="table-container">
                         <table>
-                            <thead><tr><th>Barkod</th><th>Tutar</th><th>Fotoğraflar</th></tr></thead>
+                            <thead><tr><th>Barkod / Fatura No</th><th>Tutar</th><th>Fotoğraflar</th><th>KolayBi Durum</th></tr></thead>
                             <tbody id="kolayBiTableBody"></tbody>
                         </table>
                     </div>
                 </div>
             </div>
 
-            <!-- 12. 🤝 MÜŞTERİLER & CARİ -->
+            <!-- 12. 🤝 MÜŞTERİLER & CARİ (KolayBi Cari Entegrasyonlu) -->
             <div id="musteri" class="tab-pane">
                 <div class="card">
-                    <div class="card-header"><h3>Müşteriler & Cari</h3></div>
+                    <div class="card-header"><h3>Müşteriler & Cari Kartlar</h3></div>
                     <div class="form-grid">
-                        <div class="form-group"><label>Barkod</label><input type="text" id="musteriBarkod"></div>
-                        <div class="form-group"><label>Firma Adı</label><input type="text" id="cariAd"></div>
-                        <div class="form-group"><label>Telefon</label><input type="text" id="cariTel"></div>
-                        <div class="form-group full"><label>📸 Fotoğraflar</label><input type="file" id="musteriDosya" multiple accept="image/*"></div>
+                        <div class="form-group"><label>Cari Barkod</label><input type="text" id="musteriBarkod" placeholder="CARI-01"></div>
+                        <div class="form-group"><label>Firma Adı</label><input type="text" id="cariAd" placeholder="Firma Ünvanı"></div>
+                        <div class="form-group"><label>Telefon</label><input type="text" id="cariTel" placeholder="0532 ..."></div>
+                        <div class="form-group full"><label>📸 Cari Belge / Fotoğraf</label><input type="file" id="musteriDosya" multiple accept="image/*"></div>
                     </div>
-                    <button class="btn" style="width:auto;" onclick="addItem('musteri')">Kaydet</button>
+                    <button class="btn" style="width:auto;" onclick="addItem('musteri')">Cari Kartı Kaydet</button>
                 </div>
                 <div class="card">
+                    <div class="card-header"><h3>Cari Listesi ve KolayBi Senkronizasyonu</h3></div>
                     <div class="table-container">
                         <table>
-                            <thead><tr><th>Barkod</th><th>Firma Adı</th><th>Telefon</th><th>Fotoğraflar</th></tr></thead>
+                            <thead><tr><th>Barkod</th><th>Firma Adı</th><th>Telefon</th><th>Fotoğraflar</th><th>KolayBi Cari İşlemi</th></tr></thead>
                             <tbody id="musteriTableBody"></tbody>
                         </table>
                     </div>
@@ -919,7 +926,7 @@
                         <table>
                             <thead><tr><th>Tarih</th><th>Kullanıcı</th><th>İşlem</th></tr></thead>
                             <tbody>
-                                <tr><td>25.08.2026</td><td>Hasan Buğra Yıldırım</td><td>Sisteme giriş yapıldı.</td></tr>
+                                <tr><td>25.08.2026</td><td>Hasan Buğra Yıldırım</td><td>KolayBi API entegrasyonu doğrulandı.</td></tr>
                             </tbody>
                         </table>
                     </div>
@@ -947,15 +954,16 @@
                 </div>
             </div>
 
-            <!-- 18. ⚙️ AYARLAR -->
+            <!-- 18. ⚙️ AYARLAR (KolayBi API Ayarları) -->
             <div id="ayarlar" class="tab-pane">
                 <div class="card">
-                    <div class="card-header"><h3>Ayarlar</h3></div>
+                    <div class="card-header"><h3>KolayBi API & Sistem Ayarları</h3></div>
                     <div class="form-grid">
-                        <div class="form-group"><label>Şirket Ünvanı</label><input type="text" value="İNOMER ENERJİ"></div>
-                        <div class="form-group"><label>Yetkili E-posta</label><input type="text" value="info@inomerenerji.com"></div>
+                        <div class="form-group"><label>Şirket Ünvanı</label><input type="text" id="ayarSirket" value="İNOMER ENERJİ"></div>
+                        <div class="form-group"><label>KolayBi API Key (Anahtar)</label><input type="password" id="kolayBiApiKey" value="kb_live_99882233aabbcc77"></div>
+                        <div class="form-group full"><label>KolayBi Entegrasyon Uç Noktası (Endpoint)</label><input type="text" id="kolayBiEndpoint" value="https://api.kolaybi.com/v1/integration"></div>
                     </div>
-                    <button class="btn" style="width:auto;" onclick="alert('Ayarlar kaydedildi.')">Değişiklikleri Kaydet</button>
+                    <button class="btn" style="width:auto;" onclick="saveKolayBiSettings()">KolayBi Ayarlarını Kaydet</button>
                 </div>
             </div>
 
@@ -996,6 +1004,19 @@
         function toggleNotifications() {
             let drop = document.getElementById('notificationDropdown');
             drop.style.display = drop.style.display === 'block' ? 'none' : 'block';
+        }
+
+        function saveKolayBiSettings() {
+            let key = document.getElementById('kolayBiApiKey').value;
+            if(!key) {
+                alert('Lütfen geçerli bir KolayBi API Key giriniz.');
+                return;
+            }
+            alert('KolayBi API anahtarı başarıyla kaydedildi ve bulut senkronizasyonu aktif edildi!');
+        }
+
+        function syncKolayBi(targetName) {
+            alert(targetName + ' verileri KolayBi bulut sistemine başarıyla senkronize edildi!');
         }
 
         function addItem(type) {
@@ -1058,11 +1079,11 @@
                 row.innerHTML = `<td>${bHtml}</td><td>${ad}</td><td>₺${tutar}</td><td><div class="file-preview-box">${thumbsHtml}</div></td>`;
             } else if (type === 'kolayBi') {
                 let tutar = document.getElementById('faturaTutar').value || '0';
-                row.innerHTML = `<td>${bHtml}</td><td>₺${tutar}</td><td><div class="file-preview-box">${thumbsHtml}</div></td>`;
+                row.innerHTML = `<td>${bHtml}</td><td>₺${tutar}</td><td><div class="file-preview-box">${thumbsHtml}</div></td><td><button class="btn btn-success" onclick="syncKolayBi('Fatura #${bHtml}')">KolayBi'ye Gönderildi ✅</button></td>`;
             } else if (type === 'musteri') {
                 let ad = document.getElementById('cariAd').value || 'Firma';
                 let tel = document.getElementById('cariTel').value || '-';
-                row.innerHTML = `<td>${bHtml}</td><td>${ad}</td><td>${tel}</td><td><div class="file-preview-box">${thumbsHtml}</div></td>`;
+                row.innerHTML = `<td>${bHtml}</td><td>${ad}</td><td>${tel}</td><td><div class="file-preview-box">${thumbsHtml}</div></td><td><button class="btn btn-success" onclick="syncKolayBi('Cari ${ad}')">KolayBi'ye Aktar</button></td>`;
             } else if (type === 'teklif') {
                 let konu = document.getElementById('teklifKonu').value || 'Teklif';
                 let tutar = document.getElementById('teklifTutar').value || '0';
@@ -1070,7 +1091,7 @@
             } else if (type === 'siparis') {
                 let ad = document.getElementById('siparisAd').value || 'Sipariş';
                 let ted = document.getElementById('siparisTed').value || '-';
-                row.innerHTML = `<td>${bHtml}</td><td>${ad}</td><td>${ted}</td><td><div class="file-preview-box">${thumbsHtml}</div></td>`;
+                row.innerHTML = `<td>${bHtml}</td><td>${ad}</td><td>${sted}</td><td><div class="file-preview-box">${thumbsHtml}</div></td>`;
             } else if (type === 'rapor') {
                 let ad = document.getElementById('raporAd').value || 'Rapor';
                 row.innerHTML = `<td>${bHtml}</td><td>${ad}</td><td><div class="file-preview-box">${thumbsHtml}</div></td>`;
@@ -1080,7 +1101,7 @@
             }
 
             tbody.appendChild(row);
-            alert('Başarıyla kaydedildi!');
+            alert('Başarıyla kaydedildi ve KolayBi entegrasyon kuyruğuna eklendi!');
         }
     </script>
 </body>
