@@ -1314,7 +1314,7 @@ async function fetchKolayBiInvoices() {
         tableBody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: red; padding: 12px;">CORS veya API Anahtarı hatası. Lütfen API anahtarınızı kontrol edin.</td></tr>`;
     }
 }
-    } catch (error) {
+     catch (error) {
         console.error('KolayBi Entegrasyon Hatası:', error);
         tableBody.innerHTML = `<tr><td colspan="5" style="text-align: center; padding: 12px; color: red;">Bağlantı Hatası: API Anahtarınızı kontrol edin.</td></tr>`;
     }
