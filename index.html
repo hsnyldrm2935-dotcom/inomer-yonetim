@@ -479,18 +479,18 @@
 </head>
 <body>
 
-    <!-- GİRİŞ EKRANI (Boş ve Güvenli) -->
+    <!-- GİRİŞ EKRANI (Tarayıcı hafızasını engellemek için autocomplete ve dinamik temizleme eklendi) -->
     <div id="loginOverlay">
         <div class="login-card">
             <h2 style="color:var(--primary);">İNOMER ENERJİ</h2>
             <p>Kurumsal ERP & Yönetim Paneli</p>
             <div class="form-group">
                 <label>E-posta Adresi</label>
-                <input type="email" id="loginEmail" placeholder="ornek@inomerenerji.com">
+                <input type="email" id="loginEmail" autocomplete="new-email" value="" placeholder="ornek@inomerenerji.com" onfocus="if(this.value==='admin@inomerenerji.com')this.value='';">
             </div>
             <div class="form-group">
                 <label>Şifre</label>
-                <input type="password" id="loginPass" placeholder="••••••••">
+                <input type="password" id="loginPass" autocomplete="new-password" value="" placeholder="••••••••" onfocus="if(this.value==='123456')this.value='';">
             </div>
             <button class="btn" onclick="handleLogin()">Sisteme Giriş Yap</button>
         </div>
@@ -532,10 +532,10 @@
                 <li><button class="nav-btn" onclick="switchTab('raporlar', this)">📈 Raporlar</button></li>
                 <li><button class="nav-btn" onclick="switchTab('hareketler', this)">📋 Hareketler</button></li>
 
-                <div class="menu-section-title">⚙️ Sistem</div>
+                <div class="menu-section-title">⚙️ Sistem & Yönetim</div>
                 <li><button class="nav-btn" onclick="switchTab('belgeler', this)">📁 Belgeler Arşivi</button></li>
                 <li><button class="nav-btn" onclick="switchTab('ayarlar', this)">⚙️ Ayarlar (KolayBi API)</button></li>
-                <li><button class="nav-btn" onclick="switchTab('copKutusu', this)">🗑️ Çöp Kutusu</button></li>
+                <li><button class="nav-btn" onclick="switchTab('copKutusu', this)">🗑️ Çöp Kutusu & Veri Yönetimi</button></li>
             </ul>
         </aside>
 
@@ -600,7 +600,7 @@
                 </div>
                 <div class="card">
                     <div class="card-header"><h3>İnomer Enerji & KolayBi Entegrasyon Paneli</h3></div>
-                    <p style="color:var(--text-muted); font-size: 0.9rem;">Müşteri cari kartlarınızı, faturalarınızı ve siparişlerinizi KolayBi ile tek tıkla senkronize edebilirsiniz.</p>
+                    <p style="color:var(--text-muted); font-size: 0.9rem;">Müşteri cari kartlarınızı, faturalarınızı ve siparişlerinizi KolayBi ile tek tıkla senkronize edebilirsiniz. Tüm sekmelerden eklenen kayıtları silebilir veya "Çöp Kutusu" menüsünden yönetebilirsiniz.</p>
                 </div>
             </div>
 
@@ -839,7 +839,7 @@
                 </div>
             </div>
 
-            <!-- 12. 🤝 MÜŞTERİLER & CARİ (KolayBi Cari Entegrasyonlu) -->
+            <!-- 12. 🤝 MÜŞTERİLER & CARİ -->
             <div id="musteri" class="tab-pane">
                 <div class="card">
                     <div class="card-header"><h3>Müşteriler & Cari Kartlar</h3></div>
@@ -963,7 +963,7 @@
                 </div>
             </div>
 
-            <!-- 18. ⚙️ AYARLAR (KolayBi API Ayarları) -->
+            <!-- 18. ⚙️ AYARLAR -->
             <div id="ayarlar" class="tab-pane">
                 <div class="card">
                     <div class="card-header"><h3>KolayBi API & Sistem Ayarları</h3></div>
@@ -976,11 +976,22 @@
                 </div>
             </div>
 
-            <!-- 19. 🗑️ ÇÖP KUTUSU -->
+            <!-- 19. 🗑️ ÇÖP KUTUSU & VERİ YÖNETİMİ -->
             <div id="copKutusu" class="tab-pane">
                 <div class="card">
-                    <div class="card-header"><h3>Çöp Kutusu</h3></div>
-                    <p style="color:var(--text-muted); font-size:0.9rem;">Silinen öğeler bu alanda saklanır.</p>
+                    <div class="card-header">
+                        <h3>Çöp Kutusu & Veri Yönetimi</h3>
+                        <button class="btn btn-danger" onclick="clearAllData()">Tüm Sistem Kayıtlarını Temizle / Sıfırla</button>
+                    </div>
+                    <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom: 16px;">Sildiğiniz öğeler veya sistemdeki tüm listelenen verileri buradan tek tuşla tamamen sıfırlayabilirsiniz.</p>
+                    <div class="table-container">
+                        <table>
+                            <thead><tr><th>Kayıt Tipi / Bilgisi</th><th>İşlem Durumu</th><th>Yönet</th></tr></thead>
+                            <tbody id="trashTableBody">
+                                <tr><td>Sistem Arşiv Çöp Kutusu boş.</td><td>Aktif</td><td>-</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
 
@@ -988,6 +999,14 @@
     </div>
 
     <script>
+        // Sayfa açıldığında giriş alanlarını garanti olsun diye sıfırla
+        window.onload = function() {
+            let emailInput = document.getElementById('loginEmail');
+            let passInput = document.getElementById('loginPass');
+            if(emailInput) emailInput.value = '';
+            if(passInput) passInput.value = '';
+        };
+
         function handleLogin() {
             let email = document.getElementById('loginEmail').value.trim();
             let pass = document.getElementById('loginPass').value.trim();
@@ -997,7 +1016,6 @@
                 return;
             }
 
-            // Güvenlik kontrolü (Örnek yetkili bilgileri)
             if (email === 'admin@inomerenerji.com' && pass === '123456') {
                 document.getElementById('loginOverlay').style.display = 'none';
                 document.getElementById('appContainer').style.display = 'flex';
@@ -1007,8 +1025,10 @@
         }
 
         function handleLogout() {
-            document.getElementById('loginEmail').value = '';
-            document.getElementById('loginPass').value = '';
+            let emailInput = document.getElementById('loginEmail');
+            let passInput = document.getElementById('loginPass');
+            if(emailInput) emailInput.value = '';
+            if(passInput) passInput.value = '';
             document.getElementById('appContainer').style.display = 'none';
             document.getElementById('loginOverlay').style.display = 'flex';
         }
@@ -1045,8 +1065,28 @@
 
         function deleteRow(btn) {
             let row = btn.closest('tr');
+            let rowText = row.innerText.substring(0, 30) + '...';
+            
+            // Çöp kutusuna ekle
+            let trashBody = document.getElementById('trashTableBody');
+            if(trashBody.innerHTML.includes('boş.')) {
+                trashBody.innerHTML = '';
+            }
+            let trashRow = document.createElement('tr');
+            trashRow.innerHTML = `<td>Silinen: ${rowText}</td><td><span style="color:var(--danger)">Çöp Kutusunda</span></td><td><button class="btn btn-outline" style="padding:4px 8px; font-size:0.75rem;" onclick="this.closest('tr').remove()">Kalıcı Olarak Sil</button></td>`;
+            trashBody.appendChild(trashRow);
+
             row.remove();
-            alert('Kayıt başarıyla silindi!');
+            alert('Kayıt başarıyla silindi ve Çöp Kutusuna taşındı!');
+        }
+
+        function clearAllData() {
+            if(confirm('Tüm tablolardaki kayıtları silmek istediğinize emin misiniz?')) {
+                document.querySelectorAll('tbody').forEach(tb => {
+                    if(tb.id !== 'trashTableBody') tb.innerHTML = '';
+                });
+                alert('Tüm veriler temizlendi!');
+            }
         }
 
         function addItem(type) {
@@ -1132,7 +1172,7 @@
             }
 
             tbody.appendChild(row);
-            alert('Başarıyla kaydedildi ve KolayBi entegrasyon kuyruğuna eklendi!');
+            alert('Başarıyla kaydedildi ve listeye eklendi!');
         }
     </script>
 </body>
