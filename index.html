@@ -818,11 +818,12 @@
         };
 
         window.handleLogin = function() {
-            const email = document.getElementById('loginEmail').value.trim();
+            const email = document.getElementById('loginEmail').value.trim().toLowerCase();
             const pass = document.getElementById('loginPass').value.trim();
 
             const validUsers = {
                 "halilfatih.tulek@inomerenerji.com": { pass: "260513", name: "Halil Fatih Tülek" },
+                "bugrayildiriiim@gmail.com": { pass: "260513", name: "Hasan Buğra Yıldırım" },
                 "hasanbugra.yildirim@inomerenerji.com": { pass: "260513", name: "Hasan Buğra Yıldırım" },
                 "admin@inomerenerji.com": { pass: "260513", name: "Hasan Buğra Yıldırım" }
             };
@@ -927,24 +928,21 @@
 
         // DİNAMİK İSTATİSTİK GÜNCELLEME
         function updateStats() {
-            // Aktif projeler = Arazi projeleri + Çatı tesisleri toplamı
             const toplamAktifProje = araziProjeler.length + catiProjeler.length;
             const pEl = document.getElementById('statProje');
             if(pEl) pEl.innerText = toplamAktifProje;
 
-            // Bekleyen onaylar = Bekleyen izinler + Bekleyen avanslar
             const bekleyenIzinSayisi = izinler.filter(i => i.durum === 'Bekliyor').length;
             const bekleyenAvansSayisi = avanslar.filter(a => a.durum === 'Bekliyor').length;
             const onayEl = document.getElementById('statOnay');
             if(onayEl) onayEl.innerText = bekleyenIzinSayisi + bekleyenAvansSayisi;
 
-            // Toplam Güç Hesaplama (Arazi projelerindeki güç ifadelerinden sayısal değerleri çekmeye çalışır)
             let toplamKw = 0;
             araziProjeler.forEach(p => {
                 let sayi = parseFloat(p.guc);
                 if(!isNaN(sayi)) {
                     if(p.guc.toLowerCase().includes('mw')) {
-                        toplamKw += (sayi * 1000); // MW ise kW'a çevir
+                        toplamKw += (sayi * 1000);
                     } else {
                         toplamKw += sayi;
                     }
@@ -959,7 +957,6 @@
                 }
             }
 
-            // Personel Sayısı
             const persEl = document.getElementById('statPersonelSayisi');
             if(persEl) persEl.innerText = personeller.length;
         }
@@ -1359,7 +1356,6 @@
             else if(item.tur.includes('Çatı')) catiProjeler.push(p);
             else if(item.tur.includes('Fişi')) sahaFisleri.push(p);
             else if(item.tur.includes('Personel')) personeller.push(p);
-            else if(item.tur.entries && item.tur.includes('İzin')) izinler.push(p); // Güvenli kontrol
             else if(item.tur.includes('İzin')) izinler.push(p);
             else if(item.tur.includes('Avans')) avanslar.push(p);
             else if(item.tur.includes('Fatura')) faturalar.push(p);
