@@ -1,22 +1,30 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="tr" class="h-full">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>İNOMER ENERJİ - Yönetim Paneli</title>
+    <title>İNOMER ENERJİ - Profesyonel Kurumsal Yönetim, Saha ve Otomasyon Sistemi</title>
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- SheetJS (XLSX) Kütüphanesi -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <!-- html2canvas ve jsPDF -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <!-- FontAwesome İkon Kütüphanesi -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
                         inomerSilver: '#E5E7EB',
-                        inomerDark: '#1F2937',
-                        inomerRed: '#DC2626'
+                        inomerDark: '#111827',
+                        inomerDarker: '#0B0F19',
+                        inomerCard: '#1F2937',
+                        inomerRed: '#DC2626',
+                        inomerRedDark: '#B91C1C'
                     }
                 }
             }
@@ -24,107 +32,123 @@
     </script>
     <style>
         .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
-        .custom-scrollbar::-webkit-scrollbar-track { background: #1F2937; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #0B0F19; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #DC2626; border-radius: 3px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #B91C1C; }
+        body { background-color: #0B0F19; color: #E5E7EB; font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
     </style>
 </head>
-<body class="bg-inomerDark text-inomerSilver font-sans antialiased min-h-screen flex flex-col">
+<body class="h-full flex flex-col overflow-hidden">
 
-    <!-- GİRİŞ EKRANI -->
-    <div id="loginScreen" class="fixed inset-0 bg-inomerDark z-50 flex items-center justify-center p-4">
-        <div class="bg-gray-900 border border-inomerRed/40 rounded-2xl p-8 w-full max-w-md shadow-2xl relative overflow-hidden">
+    <!-- ================= GİRİŞ EKRANI ================= -->
+    <div id="loginScreen" class="fixed inset-0 bg-inomerDarker z-50 flex items-center justify-center p-4">
+        <div class="bg-inomerCard border border-inomerRed/40 rounded-2xl p-8 w-full max-w-md shadow-2xl relative overflow-hidden">
             <div class="absolute top-0 left-0 w-full h-2 bg-inomerRed"></div>
             <div class="text-center mb-8">
+                <div class="inline-flex w-16 h-16 bg-inomerRed/20 border border-inomerRed/50 rounded-2xl items-center justify-center text-inomerRed text-3xl font-black mb-3 shadow-lg">
+                    İ
+                </div>
                 <h1 class="text-3xl font-black tracking-wider text-inomerSilver">İNOMER <span class="text-inomerRed">ENERJİ</span></h1>
-                <p class="text-xs text-gray-400 mt-1 uppercase tracking-widest">Kurumsal Yönetim & Takip Sistemi</p>
+                <p class="text-xs text-gray-400 mt-1 uppercase tracking-widest font-semibold">Gelişmiş Kurumsal Yönetim Sistemi</p>
             </div>
+            
             <form onsubmit="handleLogin(event)" class="space-y-5">
                 <div>
-                    <label class="block text-xs uppercase font-bold text-gray-400 mb-2"><i class="fa-solid fa-envelope mr-1 text-inomerRed"></i> E-Posta / Kullanıcı Adı</label>
-                    <input type="text" id="loginEmail" required class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-inomerRed transition" placeholder="admin@inomer.com">
+                    <label class="block text-xs uppercase font-bold text-gray-400 mb-2">
+                        <i class="fa-solid fa-envelope mr-1 text-inomerRed"></i> E-Posta / Kullanıcı Adı
+                    </label>
+                    <input type="text" id="loginEmail" required class="w-full bg-gray-900 border border-gray-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-inomerRed transition text-sm" placeholder="admin@inomer.com">
                 </div>
                 <div>
-                    <label class="block text-xs uppercase font-bold text-gray-400 mb-2"><i class="fa-solid fa-lock mr-1 text-inomerRed"></i> Şifre</label>
-                    <input type="password" id="loginPass" required class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-inomerRed transition" placeholder="••••••••">
+                    <label class="block text-xs uppercase font-bold text-gray-400 mb-2">
+                        <i class="fa-solid fa-lock mr-1 text-inomerRed"></i> Şifre
+                    </label>
+                    <input type="password" id="loginPass" required class="w-full bg-gray-900 border border-gray-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-inomerRed transition text-sm" placeholder="••••••••">
                 </div>
-                <button type="submit" class="w-full bg-inomerRed hover:bg-red-700 text-white font-bold py-3 px-4 rounded-lg transition duration-200 shadow-lg shadow-inomerRed/30 flex items-center justify-center space-x-2">
+                <button type="submit" class="w-full bg-inomerRed hover:bg-inomerRedDark text-white font-bold py-3.5 px-4 rounded-lg transition duration-200 shadow-lg shadow-inomerRed/30 flex items-center justify-center space-x-2 text-sm uppercase tracking-wider">
                     <i class="fa-solid fa-right-to-bracket"></i>
                     <span>SİSTEME GİRİŞ YAP</span>
                 </button>
             </form>
-            <div id="loginError" class="mt-4 text-center text-red-400 text-xs hidden"></div>
+            <div id="loginError" class="mt-4 text-center text-red-400 text-xs font-bold hidden bg-red-950/50 p-2.5 rounded border border-red-900"></div>
+            
+            <div class="mt-6 pt-6 border-t border-gray-800 text-center text-[11px] text-gray-500">
+                Aliağa / İzmir • İNOMER ENERJİ © 2026
+            </div>
         </div>
     </div>
 
-    <!-- ANA UYGULAMA KAPSAYICISI -->
-    <div id="appContainer" class="flex-1 flex flex-col hidden">
+    <!-- ================= ANA UYGULAMA KAPSAYICISI ================= -->
+    <div id="appContainer" class="flex-1 flex flex-col h-full hidden">
         
         <!-- ÜST NAVBAR & HAMBURGER MENÜ -->
-        <header class="bg-gray-900 border-b border-gray-800 sticky top-0 z-40 px-4 py-3 flex items-center justify-between shadow-md">
+        <header class="bg-inomerCard border-b border-gray-800 h-16 px-4 md:px-6 flex items-center justify-between shadow-md z-40 shrink-0">
             <div class="flex items-center space-x-4">
-                <button onclick="toggleMobileMenu()" class="text-inomerSilver hover:text-inomerRed text-xl focus:outline-none md:hidden transition">
+                <button onclick="toggleMobileMenu()" class="text-inomerSilver hover:text-inomerRed text-xl focus:outline-none md:hidden transition p-1">
                     <i class="fa-solid fa-bars" id="menuIcon"></i>
                 </button>
-                <div class="flex items-center space-x-2">
-                    <div class="w-8 h-8 bg-inomerRed rounded flex items-center justify-center text-white font-black text-lg shadow">İ</div>
-                    <span class="font-extrabold text-lg tracking-wider text-white">İNOMER <span class="text-inomerRed">ENERJİ</span></span>
+                <div class="flex items-center space-x-2.5">
+                    <div class="w-9 h-9 bg-inomerRed rounded-lg flex items-center justify-center text-white font-black text-xl shadow">İ</div>
+                    <span class="font-black text-lg tracking-wider text-white">İNOMER <span class="text-inomerRed">ENERJİ</span></span>
                 </div>
             </div>
             
             <div class="flex items-center space-x-4">
                 <div class="hidden sm:flex flex-col text-right">
-                    <span id="navUserName" class="text-xs font-bold text-white">Admin Kullanıcı</span>
-                    <span id="navUserRole" class="text-[10px] text-inomerRed uppercase font-semibold">Yönetici</span>
+                    <span id="navUserName" class="text-xs font-bold text-white">Hasan Buğra Yıldırım</span>
+                    <span id="navUserRole" class="text-[10px] text-inomerRed uppercase font-extrabold tracking-wider">YÖNETİCİ</span>
                 </div>
-                <button onclick="handleLogout()" class="bg-gray-800 hover:bg-inomerRed hover:text-white text-gray-300 p-2 rounded-lg transition" title="Çıkış Yap">
-                    <i class="fa-solid fa-power-off"></i>
+                <button onclick="handleLogout()" class="bg-gray-800 hover:bg-inomerRed text-gray-300 hover:text-white w-10 h-10 rounded-lg transition flex items-center justify-center shadow" title="Güvenli Çıkış">
+                    <i class="fa-solid fa-power-off text-sm"></i>
                 </button>
             </div>
         </header>
 
-        <div class="flex-1 flex relative">
+        <div class="flex-1 flex relative overflow-hidden">
             
             <!-- SOL MENÜ (HAMBURGER / RESPONSIVE) -->
-            <aside id="sidebarMenu" class="absolute md:relative inset-y-0 left-0 w-64 bg-gray-900 border-r border-gray-800 z-30 transform -translate-x-full md:translate-x-0 transition-transform duration-300 flex flex-col">
+            <aside id="sidebarMenu" class="absolute md:relative inset-y-0 left-0 w-64 bg-inomerCard border-r border-gray-800 z-30 transform -translate-x-full md:translate-x-0 transition-transform duration-300 flex flex-col shrink-0">
                 <div class="p-4 border-b border-gray-800 flex items-center justify-between md:hidden">
-                    <span class="text-xs font-bold text-gray-400 uppercase">Menü</span>
-                    <button onclick="toggleMobileMenu()" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+                    <span class="text-xs font-bold text-gray-400 uppercase tracking-wider">Modül Menüsü</span>
+                    <button onclick="toggleMobileMenu()" class="text-gray-400 hover:text-white p-1"><i class="fa-solid fa-xmark text-lg"></i></button>
                 </div>
                 <nav id="navLinksContainer" class="flex-1 overflow-y-auto custom-scrollbar p-3 space-y-1">
-                    <!-- Dinamik Rol Yetkilerine Göre Yüklenecek Menü Elemanları -->
+                    <!-- Dinamik Rol Yetkilerine Göre Yüklenen Menüler -->
                 </nav>
             </aside>
 
             <!-- ANA İÇERİK ALANI -->
-            <main class="flex-1 bg-inomerDark p-4 md:p-6 overflow-y-auto custom-scrollbar">
+            <main class="flex-1 bg-inomerDarker p-4 md:p-6 overflow-y-auto custom-scrollbar relative">
                 
-                <!-- SEKME 1: STOK -->
+                <!-- 1. STOK YÖNETİMİ SEKMESİ -->
                 <section id="tab-stok" class="tab-content space-y-6">
-                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-gray-900 p-4 rounded-xl border border-gray-800">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-inomerCard p-5 rounded-2xl border border-gray-800 shadow-lg">
                         <div>
-                            <h2 class="text-xl font-bold text-white"><i class="fa-solid fa-boxes-stacked text-inomerRed mr-2"></i>Stok Yönetimi</h2>
-                            <p class="text-xs text-gray-400 mt-0.5">Ürün, malzeme ve ekipman stok takibi</p>
+                            <h2 class="text-xl font-black text-white flex items-center">
+                                <i class="fa-solid fa-boxes-stacked text-inomerRed mr-2.5"></i>Stok & Malzeme Yönetimi
+                            </h2>
+                            <p class="text-xs text-gray-400 mt-1">Solar paneller, inverterler, kablolar ve tüm depo envanteri</p>
                         </div>
-                        <div class="flex items-center gap-2 w-full sm:w-auto">
-                            <button onclick="openModal('stokModal')" class="bg-inomerRed hover:bg-red-700 text-white px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2 transition shadow">
+                        <div class="flex items-center gap-2.5 w-full sm:w-auto">
+                            <button onclick="openModal('stokModal')" class="bg-inomerRed hover:bg-inomerRedDark text-white px-4 py-2.5 rounded-xl text-xs font-bold flex items-center justify-center gap-2 transition shadow-lg shadow-inomerRed/20 uppercase tracking-wider">
                                 <i class="fa-solid fa-plus"></i> Yeni Stok Ekle
                             </button>
                         </div>
                     </div>
                     <!-- Klasör Filtreleri -->
-                    <div id="stokFolders" class="flex gap-2 overflow-x-auto pb-2"></div>
+                    <div id="stokFolders" class="flex gap-2 overflow-x-auto pb-2 custom-scrollbar"></div>
                     <!-- Tablo -->
-                    <div class="bg-gray-900 rounded-xl border border-gray-800 overflow-hidden shadow">
+                    <div class="bg-inomerCard rounded-2xl border border-gray-800 overflow-hidden shadow-xl">
                         <div class="overflow-x-auto">
                             <table class="w-full text-left border-collapse">
-                                <thead class="bg-gray-800 text-gray-300 text-xs uppercase tracking-wider">
+                                <thead class="bg-gray-900/80 text-gray-300 text-xs uppercase tracking-wider border-b border-gray-800">
                                     <tr>
-                                        <th class="p-3">Barkod / Kod</th>
-                                        <th class="p-3">Ürün Adı</th>
-                                        <th class="p-3">Klasör</th>
-                                        <th class="p-3">Miktar</th>
-                                        <th class="p-3">Birim Fiyat</th>
-                                        <th class="p-3">İşlemler</th>
+                                        <th class="p-4 font-extrabold">Barkod / Kod</th>
+                                        <th class="p-4 font-extrabold">Ürün Adı</th>
+                                        <th class="p-4 font-extrabold">Klasör</th>
+                                        <th class="p-4 font-extrabold">Miktar</th>
+                                        <th class="p-4 font-extrabold">Birim Fiyat</th>
+                                        <th class="p-4 font-extrabold text-center">İşlemler</th>
                                     </tr>
                                 </thead>
                                 <tbody id="stokTableBody" class="divide-y divide-gray-800 text-sm"></tbody>
@@ -133,382 +157,444 @@
                     </div>
                 </section>
 
-                <!-- SEKME 2: ARAZİ -->
+                <!-- 2. ARAZİ GES PROJELERİ SEKMESİ -->
                 <section id="tab-arazi" class="tab-content hidden space-y-6">
-                    <div class="flex justify-between items-center bg-gray-900 p-4 rounded-xl border border-gray-800">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-inomerCard p-5 rounded-2xl border border-gray-800 shadow-lg">
                         <div>
-                            <h2 class="text-xl font-bold text-white"><i class="fa-solid fa-solar-panel text-inomerRed mr-2"></i>Arazi Güneş Enerjisi Projeleri</h2>
-                            <p class="text-xs text-gray-400">GES arazi kurulum aşamaları ve saha takibi</p>
+                            <h2 class="text-xl font-black text-white flex items-center">
+                                <i class="fa-solid fa-solar-panel text-inomerRed mr-2.5"></i>Arazi Güneş Enerjisi Projeleri
+                            </h2>
+                            <p class="text-xs text-gray-400 mt-1">Aliağa ve bölge genelindeki büyük ölçekli arazi GES tesisleri</p>
                         </div>
-                        <button onclick="openModal('araziModal')" class="bg-inomerRed hover:bg-red-700 text-white px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2">
-                            <i class="fa-solid fa-plus"></i> Yeni Proje Ekle
+                        <button onclick="openModal('araziModal')" class="bg-inomerRed hover:bg-inomerRedDark text-white px-4 py-2.5 rounded-xl text-xs font-bold flex items-center justify-center gap-2 transition shadow-lg shadow-inomerRed/20 uppercase tracking-wider">
+                            <i class="fa-solid fa-plus"></i> Yeni Arazi Projesi
                         </button>
                     </div>
-                    <div id="araziFolders" class="flex gap-2 overflow-x-auto pb-2"></div>
-                    <div class="bg-gray-900 rounded-xl border border-gray-800 overflow-hidden">
-                        <table class="w-full text-left border-collapse">
-                            <thead class="bg-gray-800 text-gray-300 text-xs uppercase">
-                                <tr>
-                                    <th class="p-3">Proje Adı</th>
-                                    <th class="p-3">Konum</th>
-                                    <th class="p-3">Güç (MW/kW)</th>
-                                    <th class="p-3">Durum</th>
-                                    <th class="p-3">İşlemler</th>
-                                </tr>
-                            </thead>
-                            <tbody id="araziTableBody" class="divide-y divide-gray-800 text-sm"></tbody>
-                        </table>
+                    <div id="araziFolders" class="flex gap-2 overflow-x-auto pb-2 custom-scrollbar"></div>
+                    <div class="bg-inomerCard rounded-2xl border border-gray-800 overflow-hidden shadow-xl">
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse">
+                                <thead class="bg-gray-900/80 text-gray-300 text-xs uppercase tracking-wider border-b border-gray-800">
+                                    <tr>
+                                        <th class="p-4 font-extrabold">Proje Adı</th>
+                                        <th class="p-4 font-extrabold">Konum</th>
+                                        <th class="p-4 font-extrabold">Kurulu Güç</th>
+                                        <th class="p-4 font-extrabold">Durum</th>
+                                        <th class="p-4 font-extrabold text-center">İşlemler</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="araziTableBody" class="divide-y divide-gray-800 text-sm"></tbody>
+                            </table>
+                        </div>
                     </div>
                 </section>
 
-                <!-- SEKME 3: ÇATI -->
+                <!-- 3. ÇATI GES PROJELERİ SEKMESİ -->
                 <section id="tab-cati" class="tab-content hidden space-y-6">
-                    <div class="flex justify-between items-center bg-gray-900 p-4 rounded-xl border border-gray-800">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-inomerCard p-5 rounded-2xl border border-gray-800 shadow-lg">
                         <div>
-                            <h2 class="text-xl font-bold text-white"><i class="fa-solid fa-house-chimney text-inomerRed mr-2"></i>Çatı GES Projeleri</h2>
-                            <p class="text-xs text-gray-400">Çatı tipi solar enerji sistemleri</p>
+                            <h2 class="text-xl font-black text-white flex items-center">
+                                <i class="fa-solid fa-house-chimney text-inomerRed mr-2.5"></i>Çatı Tipi GES Projeleri
+                            </h2>
+                            <p class="text-xs text-gray-400 mt-1">Fabrika ve ticari bina çatı solar enerji sistemleri</p>
                         </div>
-                        <button onclick="openModal('catiModal')" class="bg-inomerRed hover:bg-red-700 text-white px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2">
+                        <button onclick="openModal('catiModal')" class="bg-inomerRed hover:bg-inomerRedDark text-white px-4 py-2.5 rounded-xl text-xs font-bold flex items-center justify-center gap-2 transition shadow-lg shadow-inomerRed/20 uppercase tracking-wider">
                             <i class="fa-solid fa-plus"></i> Yeni Çatı Projesi
                         </button>
                     </div>
-                    <div id="catiFolders" class="flex gap-2 overflow-x-auto pb-2"></div>
-                    <div class="bg-gray-900 rounded-xl border border-gray-800 overflow-hidden">
-                        <table class="w-full text-left border-collapse">
-                            <thead class="bg-gray-800 text-gray-300 text-xs uppercase">
-                                <tr>
-                                    <th class="p-3">Proje / Müşteri</th>
-                                    <th class="p-3">Çatı Tipi</th>
-                                    <th class="p-3">Kapasite</th>
-                                    <th class="p-3">İşlemler</th>
-                                </tr>
-                            </thead>
-                            <tbody id="catiTableBody" class="divide-y divide-gray-800 text-sm"></tbody>
-                        </table>
+                    <div id="catiFolders" class="flex gap-2 overflow-x-auto pb-2 custom-scrollbar"></div>
+                    <div class="bg-inomerCard rounded-2xl border border-gray-800 overflow-hidden shadow-xl">
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse">
+                                <thead class="bg-gray-900/80 text-gray-300 text-xs uppercase tracking-wider border-b border-gray-800">
+                                    <tr>
+                                        <th class="p-4 font-extrabold">Proje / Müşteri</th>
+                                        <th class="p-4 font-extrabold">Çatı Tipi</th>
+                                        <th class="p-4 font-extrabold">Kapasite</th>
+                                        <th class="p-4 font-extrabold text-center">İşlemler</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="catiTableBody" class="divide-y divide-gray-800 text-sm"></tbody>
+                            </table>
+                        </div>
                     </div>
                 </section>
 
-                <!-- SEKME 4: SAHA FİŞLERİ -->
+                <!-- 4. SAHA FİŞLERİ SEKMESİ (FOTOĞRAF, BELGE & BARKOD) -->
                 <section id="tab-saha" class="tab-content hidden space-y-6">
-                    <div class="flex justify-between items-center bg-gray-900 p-4 rounded-xl border border-gray-800">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-inomerCard p-5 rounded-2xl border border-gray-800 shadow-lg">
                         <div>
-                            <h2 class="text-xl font-bold text-white"><i class="fa-solid fa-file-invoice text-inomerRed mr-2"></i>Saha Fişleri & Belge Yönetimi</h2>
-                            <p class="text-xs text-gray-400">Saha tutanakları, fotoğraf ve barkod entegrasyonu</p>
+                            <h2 class="text-xl font-black text-white flex items-center">
+                                <i class="fa-solid fa-file-invoice text-inomerRed mr-2.5"></i>Saha Fişleri & Tutanaklar
+                            </h2>
+                            <p class="text-xs text-gray-400 mt-1">Saha tutanakları, barkod entegrasyonu, fotoğraf ve belge yükleme</p>
                         </div>
-                        <button onclick="openModal('sahaModal')" class="bg-inomerRed hover:bg-red-700 text-white px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2">
-                            <i class="fa-solid fa-plus"></i> Yeni Saha Fişi
+                        <button onclick="openModal('sahaModal')" class="bg-inomerRed hover:bg-inomerRedDark text-white px-4 py-2.5 rounded-xl text-xs font-bold flex items-center justify-center gap-2 transition shadow-lg shadow-inomerRed/20 uppercase tracking-wider">
+                            <i class="fa-solid fa-plus"></i> Yeni Saha Fişi Ekle
                         </button>
                     </div>
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="sahaGridContainer"></div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5" id="sahaGridContainer"></div>
                 </section>
 
-                <!-- SEKME 5: ARAÇ -->
+                <!-- 5. ARAÇ FİLOSU SEKMESİ -->
                 <section id="tab-arac" class="tab-content hidden space-y-6">
-                    <div class="flex justify-between items-center bg-gray-900 p-4 rounded-xl border border-gray-800">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-inomerCard p-5 rounded-2xl border border-gray-800 shadow-lg">
                         <div>
-                            <h2 class="text-xl font-bold text-white"><i class="fa-solid fa-car text-inomerRed mr-2"></i>Araç Filosu</h2>
-                            <p class="text-xs text-gray-400">Şirket araçları, bakım ve kilometre takibi</p>
+                            <h2 class="text-xl font-black text-white flex items-center">
+                                <i class="fa-solid fa-car text-inomerRed mr-2.5"></i>Şirket Araç Filosu
+                            </h2>
+                            <p class="text-xs text-gray-400 mt-1">Şirket araçları, kilometre ve bakım takibi</p>
                         </div>
-                        <button onclick="openModal('aracModal')" class="bg-inomerRed hover:bg-red-700 text-white px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2">
+                        <button onclick="openModal('aracModal')" class="bg-inomerRed hover:bg-inomerRedDark text-white px-4 py-2.5 rounded-xl text-xs font-bold flex items-center justify-center gap-2 transition shadow-lg shadow-inomerRed/20 uppercase tracking-wider">
                             <i class="fa-solid fa-plus"></i> Araç Ekle
                         </button>
                     </div>
-                    <div class="bg-gray-900 rounded-xl border border-gray-800 overflow-hidden">
-                        <table class="w-full text-left border-collapse">
-                            <thead class="bg-gray-800 text-gray-300 text-xs uppercase">
-                                <tr>
-                                    <th class="p-3">Plaka</th>
-                                    <th class="p-3">Model</th>
-                                    <th class="p-3">Sürücü</th>
-                                    <th class="p-3">Kilometre</th>
-                                    <th class="p-3">İşlemler</th>
-                                </tr>
-                            </thead>
-                            <tbody id="aracTableBody" class="divide-y divide-gray-800 text-sm"></tbody>
-                        </table>
+                    <div class="bg-inomerCard rounded-2xl border border-gray-800 overflow-hidden shadow-xl">
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse">
+                                <thead class="bg-gray-900/80 text-gray-300 text-xs uppercase tracking-wider border-b border-gray-800">
+                                    <tr>
+                                        <th class="p-4 font-extrabold">Plaka</th>
+                                        <th class="p-4 font-extrabold">Model</th>
+                                        <th class="p-4 font-extrabold">Sürücü</th>
+                                        <th class="p-4 font-extrabold">Kilometre</th>
+                                        <th class="p-4 font-extrabold text-center">İşlemler</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="aracTableBody" class="divide-y divide-gray-800 text-sm"></tbody>
+                            </table>
+                        </div>
                     </div>
                 </section>
 
-                <!-- SEKME 6: EKİPMANLAR -->
+                <!-- 6. EKİPMANLAR SEKMESİ (FOTOĞRAF & BARKOD) -->
                 <section id="tab-ekipman" class="tab-content hidden space-y-6">
-                    <div class="flex justify-between items-center bg-gray-900 p-4 rounded-xl border border-gray-800">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-inomerCard p-5 rounded-2xl border border-gray-800 shadow-lg">
                         <div>
-                            <h2 class="text-xl font-bold text-white"><i class="fa-solid fa-toolbox text-inomerRed mr-2"></i>Ekipmanlar & Demirbaş</h2>
-                            <p class="text-xs text-gray-400">Şantiye ve ofis ekipmanları (Fotoğraf ve Barkod Destekli)</p>
+                            <h2 class="text-xl font-black text-white flex items-center">
+                                <i class="fa-solid fa-toolbox text-inomerRed mr-2.5"></i>Ekipmanlar & Demirbaş Takibi
+                            </h2>
+                            <p class="text-xs text-gray-400 mt-1">Ölçü aletleri, şantiye cihazları, barkod ve fotoğraf destekli demirbaşlar</p>
                         </div>
-                        <button onclick="openModal('ekipmanModal')" class="bg-inomerRed hover:bg-red-700 text-white px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2">
+                        <button onclick="openModal('ekipmanModal')" class="bg-inomerRed hover:bg-inomerRedDark text-white px-4 py-2.5 rounded-xl text-xs font-bold flex items-center justify-center gap-2 transition shadow-lg shadow-inomerRed/20 uppercase tracking-wider">
                             <i class="fa-solid fa-plus"></i> Ekipman Ekle
                         </button>
                     </div>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4" id="ekipmanGridContainer"></div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5" id="ekipmanGridContainer"></div>
                 </section>
 
-                <!-- SEKME 7: PERSONEL -->
+                <!-- 7. PERSONEL YÖNETİMİ SEKMESİ -->
                 <section id="tab-personel" class="tab-content hidden space-y-6">
-                    <div class="flex justify-between items-center bg-gray-900 p-4 rounded-xl border border-gray-800">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-inomerCard p-5 rounded-2xl border border-gray-800 shadow-lg">
                         <div>
-                            <h2 class="text-xl font-bold text-white"><i class="fa-solid fa-users text-inomerRed mr-2"></i>Personel Yönetimi</h2>
-                            <p class="text-xs text-gray-400">Çalışan bilgileri ve yetki atamaları</p>
+                            <h2 class="text-xl font-black text-white flex items-center">
+                                <i class="fa-solid fa-users text-inomerRed mr-2.5"></i>Personel Kadrosu
+                            </h2>
+                            <p class="text-xs text-gray-400 mt-1">Çalışan bilgileri, iletişim ve rol yetkilendirmeleri</p>
                         </div>
-                        <button onclick="openModal('personelModal')" class="bg-inomerRed hover:bg-red-700 text-white px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2">
+                        <button onclick="openModal('personelModal')" class="bg-inomerRed hover:bg-inomerRedDark text-white px-4 py-2.5 rounded-xl text-xs font-bold flex items-center justify-center gap-2 transition shadow-lg shadow-inomerRed/20 uppercase tracking-wider">
                             <i class="fa-solid fa-plus"></i> Personel Ekle
                         </button>
                     </div>
-                    <div class="bg-gray-900 rounded-xl border border-gray-800 overflow-hidden">
-                        <table class="w-full text-left border-collapse">
-                            <thead class="bg-gray-800 text-gray-300 text-xs uppercase">
-                                <tr>
-                                    <th class="p-3">Ad Soyad</th>
-                                    <th class="p-3">Pozisyon / Rol</th>
-                                    <th class="p-3">E-Posta / Tel</th>
-                                    <th class="p-3">İşlemler</th>
-                                </tr>
-                            </thead>
-                            <tbody id="personelTableBody" class="divide-y divide-gray-800 text-sm"></tbody>
-                        </table>
+                    <div class="bg-inomerCard rounded-2xl border border-gray-800 overflow-hidden shadow-xl">
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse">
+                                <thead class="bg-gray-900/80 text-gray-300 text-xs uppercase tracking-wider border-b border-gray-800">
+                                    <tr>
+                                        <th class="p-4 font-extrabold">Ad Soyad</th>
+                                        <th class="p-4 font-extrabold">Rol / Yetki</th>
+                                        <th class="p-4 font-extrabold">E-Posta / Tel</th>
+                                        <th class="p-4 font-extrabold text-center">İşlemler</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="personelTableBody" class="divide-y divide-gray-800 text-sm"></tbody>
+                            </table>
+                        </div>
                     </div>
                 </section>
 
-                <!-- SEKME 8: İZİN -->
+                <!-- 8. İZİN TALEPLERİ SEKMESİ -->
                 <section id="tab-izin" class="tab-content hidden space-y-6">
-                    <div class="flex justify-between items-center bg-gray-900 p-4 rounded-xl border border-gray-800">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-inomerCard p-5 rounded-2xl border border-gray-800 shadow-lg">
                         <div>
-                            <h2 class="text-xl font-bold text-white"><i class="fa-solid fa-calendar-days text-inomerRed mr-2"></i>İzin Talepleri</h2>
-                            <p class="text-xs text-gray-400">Personel yıllık ve mazeret izinleri</p>
+                            <h2 class="text-xl font-black text-white flex items-center">
+                                <i class="fa-solid fa-calendar-days text-inomerRed mr-2.5"></i>İzin Talepleri
+                            </h2>
+                            <p class="text-xs text-gray-400 mt-1">Yıllık izin ve mazeret taleplerinin takibi</p>
                         </div>
-                        <button onclick="openModal('izinModal')" class="bg-inomerRed hover:bg-red-700 text-white px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2">
+                        <button onclick="openModal('izinModal')" class="bg-inomerRed hover:bg-inomerRedDark text-white px-4 py-2.5 rounded-xl text-xs font-bold flex items-center justify-center gap-2 transition shadow-lg shadow-inomerRed/20 uppercase tracking-wider">
                             <i class="fa-solid fa-plus"></i> İzin Talebi Aç
                         </button>
                     </div>
-                    <div class="bg-gray-900 rounded-xl border border-gray-800 overflow-hidden">
-                        <table class="w-full text-left border-collapse">
-                            <thead class="bg-gray-800 text-gray-300 text-xs uppercase">
-                                <tr>
-                                    <th class="p-3">Personel</th>
-                                    <th class="p-3">İzin Türü</th>
-                                    <th class="p-3">Tarih Aralığı</th>
-                                    <th class="p-3">Durum</th>
-                                    <th class="p-3">İşlem</th>
-                                </tr>
-                            </thead>
-                            <tbody id="izinTableBody" class="divide-y divide-gray-800 text-sm"></tbody>
-                        </table>
+                    <div class="bg-inomerCard rounded-2xl border border-gray-800 overflow-hidden shadow-xl">
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse">
+                                <thead class="bg-gray-900/80 text-gray-300 text-xs uppercase tracking-wider border-b border-gray-800">
+                                    <tr>
+                                        <th class="p-4 font-extrabold">Personel</th>
+                                        <th class="p-4 font-extrabold">İzin Türü</th>
+                                        <th class="p-4 font-extrabold">Tarih Aralığı</th>
+                                        <th class="p-4 font-extrabold">Durum</th>
+                                        <th class="p-4 font-extrabold text-center">İşlemler</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="izinTableBody" class="divide-y divide-gray-800 text-sm"></tbody>
+                            </table>
+                        </div>
                     </div>
                 </section>
 
-                <!-- SEKME 9: AVANS -->
+                <!-- 9. AVANS İŞLEMLERİ SEKMESİ -->
                 <section id="tab-avans" class="tab-content hidden space-y-6">
-                    <div class="flex justify-between items-center bg-gray-900 p-4 rounded-xl border border-gray-800">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-inomerCard p-5 rounded-2xl border border-gray-800 shadow-lg">
                         <div>
-                            <h2 class="text-xl font-bold text-white"><i class="fa-solid fa-wallet text-inomerRed mr-2"></i>Avans İşlemleri</h2>
-                            <p class="text-xs text-gray-400">Personel avans talepleri ve ödemeleri</p>
+                            <h2 class="text-xl font-black text-white flex items-center">
+                                <i class="fa-solid fa-wallet text-inomerRed mr-2.5"></i>Avans İşlemleri
+                            </h2>
+                            <p class="text-xs text-gray-400 mt-1">Personel avans talepleri ve ödemeleri</p>
                         </div>
-                        <button onclick="openModal('avansModal')" class="bg-inomerRed hover:bg-red-700 text-white px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2">
+                        <button onclick="openModal('avansModal')" class="bg-inomerRed hover:bg-inomerRedDark text-white px-4 py-2.5 rounded-xl text-xs font-bold flex items-center justify-center gap-2 transition shadow-lg shadow-inomerRed/20 uppercase tracking-wider">
                             <i class="fa-solid fa-plus"></i> Avans Talep Et
                         </button>
                     </div>
-                    <div class="bg-gray-900 rounded-xl border border-gray-800 overflow-hidden">
-                        <table class="w-full text-left border-collapse">
-                            <thead class="bg-gray-800 text-gray-300 text-xs uppercase">
-                                <tr>
-                                    <th class="p-3">Personel</th>
-                                    <th class="p-3">Tutar</th>
-                                    <th class="p-3">Açıklama</th>
-                                    <th class="p-3">Durum</th>
-                                    <th class="p-3">İşlem</th>
-                                </tr>
-                            </thead>
-                            <tbody id="avansTableBody" class="divide-y divide-gray-800 text-sm"></tbody>
-                        </table>
+                    <div class="bg-inomerCard rounded-2xl border border-gray-800 overflow-hidden shadow-xl">
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse">
+                                <thead class="bg-gray-900/80 text-gray-300 text-xs uppercase tracking-wider border-b border-gray-800">
+                                    <tr>
+                                        <th class="p-4 font-extrabold">Personel</th>
+                                        <th class="p-4 font-extrabold">Tutar</th>
+                                        <th class="p-4 font-extrabold">Açıklama</th>
+                                        <th class="p-4 font-extrabold">Durum</th>
+                                        <th class="p-4 font-extrabold text-center">İşlemler</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="avansTableBody" class="divide-y divide-gray-800 text-sm"></tbody>
+                            </table>
+                        </div>
                     </div>
                 </section>
 
-                <!-- SEKME 10: KOLAYBİ ENTEGRASYONU -->
+                <!-- 10. KOLAYBİ ENTEGRASYONU SEKMESİ -->
                 <section id="tab-kolaybi" class="tab-content hidden space-y-6">
-                    <div class="bg-gray-900 p-6 rounded-xl border border-gray-800 space-y-4">
-                        <h2 class="text-xl font-bold text-white"><i class="fa-solid fa-plug text-inomerRed mr-2"></i>KolayBi Entegrasyonu</h2>
-                        <p class="text-xs text-gray-400">Bulut tabanlı muhasebe ve faturalandırma senkronizasyonu</p>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="bg-inomerCard p-6 md:p-8 rounded-2xl border border-gray-800 shadow-xl space-y-6 max-w-3xl">
+                        <div>
+                            <h2 class="text-xl font-black text-white flex items-center">
+                                <i class="fa-solid fa-plug text-inomerRed mr-2.5"></i>KolayBi Bulut Muhasebe Entegrasyonu
+                            </h2>
+                            <p class="text-xs text-gray-400 mt-1">E-Fatura, e-arşiv ve cari hesap senkronizasyonunu yönetin</p>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                             <div>
                                 <label class="block text-xs uppercase font-bold text-gray-400 mb-2">KolayBi API Anahtarı</label>
-                                <input type="text" id="kolaybiApiKey" class="w-full bg-gray-800 border border-gray-700 rounded-lg p-3 text-white text-sm" placeholder="API Key giriniz...">
+                                <input type="text" id="kolaybiApiKey" class="w-full bg-gray-900 border border-gray-700 rounded-xl p-3.5 text-white text-sm focus:outline-none focus:border-inomerRed" placeholder="API Key giriniz...">
                             </div>
                             <div>
-                                <label class="block text-xs uppercase font-bold text-gray-400 mb-2">Firma ID</label>
-                                <input type="text" id="kolaybiCompanyId" class="w-full bg-gray-800 border border-gray-700 rounded-lg p-3 text-white text-sm" placeholder="Firma ID...">
+                                <label class="block text-xs uppercase font-bold text-gray-400 mb-2">Firma ID / Token</label>
+                                <input type="text" id="kolaybiCompanyId" class="w-full bg-gray-900 border border-gray-700 rounded-xl p-3.5 text-white text-sm focus:outline-none focus:border-inomerRed" placeholder="Firma ID...">
                             </div>
                         </div>
-                        <button onclick="syncKolayBi()" class="bg-inomerRed hover:bg-red-700 text-white px-5 py-2.5 rounded-lg text-sm font-bold transition flex items-center gap-2">
+                        <button onclick="syncKolayBi()" class="bg-inomerRed hover:bg-inomerRedDark text-white px-6 py-3 rounded-xl text-xs font-bold transition shadow-lg shadow-inomerRed/20 flex items-center justify-center gap-2 uppercase tracking-wider">
                             <i class="fa-solid fa-rotate"></i> KolayBi ile Senkronize Et
                         </button>
                     </div>
                 </section>
 
-                <!-- SEKME 11: CARİ -->
+                <!-- 11. MÜŞTERİ CARİ SEKMESİ (FOTOĞRAF VE BELGE) -->
                 <section id="tab-cari" class="tab-content hidden space-y-6">
-                    <div class="flex justify-between items-center bg-gray-900 p-4 rounded-xl border border-gray-800">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-inomerCard p-5 rounded-2xl border border-gray-800 shadow-lg">
                         <div>
-                            <h2 class="text-xl font-bold text-white"><i class="fa-solid fa-address-book text-inomerRed mr-2"></i>Müşteri Cari Hesaplar</h2>
-                            <p class="text-xs text-gray-400">Cari kartlar, borç/alacak takibi, fotoğraf ve dosya ekleme</p>
+                            <h2 class="text-xl font-black text-white flex items-center">
+                                <i class="fa-solid fa-address-book text-inomerRed mr-2.5"></i>Müşteri Cari Hesaplar
+                            </h2>
+                            <p class="text-xs text-gray-400 mt-1">Cari kartlar, borç/alacak takibi, fotoğraf ve dosya ekleme</p>
                         </div>
-                        <button onclick="openModal('cariModal')" class="bg-inomerRed hover:bg-red-700 text-white px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2">
+                        <button onclick="openModal('cariModal')" class="bg-inomerRed hover:bg-inomerRedDark text-white px-4 py-2.5 rounded-xl text-xs font-bold flex items-center justify-center gap-2 transition shadow-lg shadow-inomerRed/20 uppercase tracking-wider">
                             <i class="fa-solid fa-plus"></i> Yeni Cari Ekle
                         </button>
                     </div>
-                    <div class="bg-gray-900 rounded-xl border border-gray-800 overflow-hidden">
-                        <table class="w-full text-left border-collapse">
-                            <thead class="bg-gray-800 text-gray-300 text-xs uppercase">
-                                <tr>
-                                    <th class="p-3">Cari Unvanı</th>
-                                    <th class="p-3">Telefon / Yetkili</th>
-                                    <th class="p-3">Bakiye</th>
-                                    <th class="p-3">İşlemler</th>
-                                </tr>
-                            </thead>
-                            <tbody id="cariTableBody" class="divide-y divide-gray-800 text-sm"></tbody>
-                        </table>
+                    <div class="bg-inomerCard rounded-2xl border border-gray-800 overflow-hidden shadow-xl">
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse">
+                                <thead class="bg-gray-900/80 text-gray-300 text-xs uppercase tracking-wider border-b border-gray-800">
+                                    <tr>
+                                        <th class="p-4 font-extrabold">Cari Unvanı</th>
+                                        <th class="p-4 font-extrabold">Telefon / Yetkili</th>
+                                        <th class="p-4 font-extrabold">Bakiye</th>
+                                        <th class="p-4 font-extrabold text-center">İşlemler</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="cariTableBody" class="divide-y divide-gray-800 text-sm"></tbody>
+                            </table>
+                        </div>
                     </div>
                 </section>
 
-                <!-- SEKME 12: TEKLİF -->
+                <!-- 12. TEKLİF HAZIRLAMA SEKMESİ (FOTOĞRAF VE BELGE) -->
                 <section id="tab-teklif" class="tab-content hidden space-y-6">
-                    <div class="flex justify-between items-center bg-gray-900 p-4 rounded-xl border border-gray-800">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-inomerCard p-5 rounded-2xl border border-gray-800 shadow-lg">
                         <div>
-                            <h2 class="text-xl font-bold text-white"><i class="fa-solid fa-file-contract text-inomerRed mr-2"></i>Teklif Hazırlama</h2>
-                            <p class="text-xs text-gray-400">Müşteri ticari teklifleri ve PDF çıktıları</p>
+                            <h2 class="text-xl font-black text-white flex items-center">
+                                <i class="fa-solid fa-file-contract text-inomerRed mr-2.5"></i>Teklif Hazırlama & Yönetimi
+                            </h2>
+                            <p class="text-xs text-gray-400 mt-1">Müşteri ticari teklifleri, PDF çıktıları, fotoğraf ve dosya ekleme</p>
                         </div>
-                        <button onclick="openModal('teklifModal')" class="bg-inomerRed hover:bg-red-700 text-white px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2">
+                        <button onclick="openModal('teklifModal')" class="bg-inomerRed hover:bg-inomerRedDark text-white px-4 py-2.5 rounded-xl text-xs font-bold flex items-center justify-center gap-2 transition shadow-lg shadow-inomerRed/20 uppercase tracking-wider">
                             <i class="fa-solid fa-plus"></i> Yeni Teklif Oluştur
                         </button>
                     </div>
-                    <div class="bg-gray-900 rounded-xl border border-gray-800 overflow-hidden">
-                        <table class="w-full text-left border-collapse">
-                            <thead class="bg-gray-800 text-gray-300 text-xs uppercase">
-                                <tr>
-                                    <th class="p-3">Teklif No</th>
-                                    <th class="p-3">Müşteri</th>
-                                    <th class="p-3">Toplam Tutar</th>
-                                    <th class="p-3">Tarih</th>
-                                    <th class="p-3">İşlemler</th>
-                                </tr>
-                            </thead>
-                            <tbody id="teklifTableBody" class="divide-y divide-gray-800 text-sm"></tbody>
-                        </table>
+                    <div class="bg-inomerCard rounded-2xl border border-gray-800 overflow-hidden shadow-xl">
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse">
+                                <thead class="bg-gray-900/80 text-gray-300 text-xs uppercase tracking-wider border-b border-gray-800">
+                                    <tr>
+                                        <th class="p-4 font-extrabold">Teklif No</th>
+                                        <th class="p-4 font-extrabold">Müşteri</th>
+                                        <th class="p-4 font-extrabold">Toplam Tutar</th>
+                                        <th class="p-4 font-extrabold">Tarih</th>
+                                        <th class="p-4 font-extrabold text-center">İşlemler</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="teklifTableBody" class="divide-y divide-gray-800 text-sm"></tbody>
+                            </table>
+                        </div>
                     </div>
                 </section>
 
-                <!-- SEKME 13: SİPARİŞ -->
+                <!-- 13. SİPARİŞ TAKİBİ SEKMESİ -->
                 <section id="tab-siparis" class="tab-content hidden space-y-6">
-                    <div class="flex justify-between items-center bg-gray-900 p-4 rounded-xl border border-gray-800">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-inomerCard p-5 rounded-2xl border border-gray-800 shadow-lg">
                         <div>
-                            <h2 class="text-xl font-bold text-white"><i class="fa-solid fa-cart-shopping text-inomerRed mr-2"></i>Sipariş Takibi</h2>
-                            <p class="text-xs text-gray-400">Alınan ve verilen siparişlerin yönetimi</p>
+                            <h2 class="text-xl font-black text-white flex items-center">
+                                <i class="fa-solid fa-cart-shopping text-inomerRed mr-2.5"></i>Sipariş Takibi
+                            </h2>
+                            <p class="text-xs text-gray-400 mt-1">Alınan ve verilen siparişlerin yönetimi</p>
                         </div>
-                        <button onclick="openModal('siparisModal')" class="bg-inomerRed hover:bg-red-700 text-white px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2">
+                        <button onclick="openModal('siparisModal')" class="bg-inomerRed hover:bg-inomerRedDark text-white px-4 py-2.5 rounded-xl text-xs font-bold flex items-center justify-center gap-2 transition shadow-lg shadow-inomerRed/20 uppercase tracking-wider">
                             <i class="fa-solid fa-plus"></i> Yeni Sipariş Ekle
                         </button>
                     </div>
-                    <div class="bg-gray-900 rounded-xl border border-gray-800 overflow-hidden">
-                        <table class="w-full text-left border-collapse">
-                            <thead class="bg-gray-800 text-gray-300 text-xs uppercase">
-                                <tr>
-                                    <th class="p-3">Sipariş Kodu</th>
-                                    <th class="p-3">Müşteri / Tedarikçi</th>
-                                    <th class="p-3">Tutar</th>
-                                    <th class="p-3">Durum</th>
-                                    <th class="p-3">İşlemler</th>
-                                </tr>
-                            </thead>
-                            <tbody id="siparisTableBody" class="divide-y divide-gray-800 text-sm"></tbody>
-                        </table>
+                    <div class="bg-inomerCard rounded-2xl border border-gray-800 overflow-hidden shadow-xl">
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse">
+                                <thead class="bg-gray-900/80 text-gray-300 text-xs uppercase tracking-wider border-b border-gray-800">
+                                    <tr>
+                                        <th class="p-4 font-extrabold">Sipariş Kodu</th>
+                                        <th class="p-4 font-extrabold">Müşteri / Tedarikçi</th>
+                                        <th class="p-4 font-extrabold">Tutar</th>
+                                        <th class="p-4 font-extrabold">Durum</th>
+                                        <th class="p-4 font-extrabold text-center">İşlemler</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="siparisTableBody" class="divide-y divide-gray-800 text-sm"></tbody>
+                            </table>
+                        </div>
                     </div>
                 </section>
 
-                <!-- SEKME 14: BELGELER -->
+                <!-- 14. BELGE & DOSYA ARŞİVİ SEKMESİ (PDF, EXCEL, WORD AÇMA) -->
                 <section id="tab-belgeler" class="tab-content hidden space-y-6">
-                    <div class="flex justify-between items-center bg-gray-900 p-4 rounded-xl border border-gray-800">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-inomerCard p-5 rounded-2xl border border-gray-800 shadow-lg">
                         <div>
-                            <h2 class="text-xl font-bold text-white"><i class="fa-solid fa-folder-open text-inomerRed mr-2"></i>Belge & Dosya Arşivi</h2>
-                            <p class="text-xs text-gray-400">PDF, Excel, Word ve tüm dokümanlarınızı yükleyin ve site içi görüntüleyin</p>
+                            <h2 class="text-xl font-black text-white flex items-center">
+                                <i class="fa-solid fa-folder-open text-inomerRed mr-2.5"></i>Belge & Dosya Arşivi
+                            </h2>
+                            <p class="text-xs text-gray-400 mt-1">PDF, Excel, Word ve tüm dokümanları yükleyin ve site içinde anında açın</p>
                         </div>
-                        <label class="bg-inomerRed hover:bg-red-700 text-white px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2 cursor-pointer transition">
+                        <label class="bg-inomerRed hover:bg-inomerRedDark text-white px-4 py-2.5 rounded-xl text-xs font-bold flex items-center justify-center gap-2 cursor-pointer transition shadow-lg shadow-inomerRed/20 uppercase tracking-wider">
                             <i class="fa-solid fa-upload"></i> Dosya Yükle
                             <input type="file" id="documentUploadInput" class="hidden" onchange="handleDocumentUpload(event)">
                         </label>
                     </div>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4" id="documentsGridContainer"></div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5" id="documentsGridContainer"></div>
                 </section>
 
-                <!-- SEKME 15: MESAJLAR (ÇEVRİMİÇİ MESAJLAŞMA) -->
+                <!-- 15. CANLI MESAJLAŞMA SEKMESİ -->
                 <section id="tab-mesajlar" class="tab-content hidden space-y-6 h-[calc(100vh-140px)] flex flex-col">
-                    <div class="bg-gray-900 p-4 rounded-xl border border-gray-800 flex items-center justify-between">
+                    <div class="bg-inomerCard p-4 md:p-5 rounded-2xl border border-gray-800 flex items-center justify-between shadow-lg shrink-0">
                         <div>
-                            <h2 class="text-xl font-bold text-white"><i class="fa-solid fa-comments text-inomerRed mr-2"></i>İnomer Canlı Mesajlaşma</h2>
-                            <p class="text-xs text-gray-400">Personel ve yöneticiler arası anlık dosya, fotoğraf ve metin paylaşımı</p>
+                            <h2 class="text-xl font-black text-white flex items-center">
+                                <i class="fa-solid fa-comments text-inomerRed mr-2.5"></i>İnomer Çevrim İçi Mesajlaşma
+                            </h2>
+                            <p class="text-xs text-gray-400 mt-1">Personel ve yöneticiler arası anlık dosya, fotoğraf ve metin paylaşımı</p>
                         </div>
                     </div>
-                    <div class="flex-1 grid grid-cols-1 md:grid-cols-4 gap-4 overflow-hidden">
+                    <div class="flex-1 grid grid-cols-1 md:grid-cols-4 gap-5 overflow-hidden">
                         <!-- Kullanıcı Listesi -->
-                        <div class="bg-gray-900 rounded-xl border border-gray-800 p-3 overflow-y-auto custom-scrollbar flex flex-col space-y-2">
-                            <span class="text-xs font-bold text-gray-400 uppercase px-2">Kullanıcılar</span>
-                            <div id="chatUserList" class="space-y-1"></div>
+                        <div class="bg-inomerCard rounded-2xl border border-gray-800 p-3.5 overflow-y-auto custom-scrollbar flex flex-col space-y-2 shadow-xl">
+                            <span class="text-xs font-black text-gray-400 uppercase tracking-wider px-2 mb-1">Sohbet Edilebilecekler</span>
+                            <div id="chatUserList" class="space-y-1.5"></div>
                         </div>
                         <!-- Sohbet Paneli -->
-                        <div class="md:col-span-3 bg-gray-900 rounded-xl border border-gray-800 flex flex-col overflow-hidden">
-                            <div id="chatHeader" class="bg-gray-800 px-4 py-3 border-b border-gray-700 font-bold text-sm text-white flex items-center justify-between">
-                                <span>Sohbet Seçin</span>
+                        <div class="md:col-span-3 bg-inomerCard rounded-2xl border border-gray-800 flex flex-col overflow-hidden shadow-xl">
+                            <div id="chatHeader" class="bg-gray-900/90 px-5 py-4 border-b border-gray-800 font-bold text-sm text-white flex items-center justify-between">
+                                <span>Sohbet Başlatmak İçin Bir Kullanıcı Seçin</span>
                             </div>
-                            <div id="chatMessagesArea" class="flex-1 p-4 overflow-y-auto custom-scrollbar space-y-3 bg-gray-950/40">
-                                <div class="text-center text-gray-500 text-sm mt-20">Lütfen sol menüden mesajlaşmak istediğiniz kişiyi seçin.</div>
+                            <div id="chatMessagesArea" class="flex-1 p-5 overflow-y-auto custom-scrollbar space-y-3.5 bg-gray-950/50">
+                                <div class="text-center text-gray-500 text-sm mt-24">
+                                    <i class="fa-solid fa-comments text-4xl mb-3 text-gray-600 block"></i>
+                                    Sol menüden bir çalışma arkadaşınızı seçerek mesajlaşmaya başlayın.
+                                </div>
                             </div>
                             <!-- Mesaj Gönderme Formu -->
-                            <form id="chatForm" onsubmit="sendChatMessage(event)" class="p-3 bg-gray-800 border-t border-gray-700 flex items-center gap-2 hidden">
-                                <label class="cursor-pointer text-gray-400 hover:text-inomerRed p-2 transition" title="Dosya veya Fotoğraf Ekle">
+                            <form id="chatForm" onsubmit="sendChatMessage(event)" class="p-4 bg-gray-900 border-t border-gray-800 flex items-center gap-3 hidden">
+                                <label class="cursor-pointer text-gray-400 hover:text-inomerRed p-2 transition rounded-lg hover:bg-gray-800" title="Dosya veya Fotoğraf Ekle">
                                     <i class="fa-solid fa-paperclip text-lg"></i>
                                     <input type="file" id="chatFileInput" class="hidden" onchange="handleChatFileAttach(event)">
                                 </label>
-                                <input type="text" id="chatInputText" class="flex-1 bg-gray-900 border border-gray-700 rounded-lg px-4 py-2.5 text-sm text-white focus:outline-none focus:border-inomerRed" placeholder="Mesajınızı yazın...">
-                                <button type="submit" class="bg-inomerRed hover:bg-red-700 text-white px-4 py-2.5 rounded-lg font-bold text-sm transition">
-                                    <i class="fa-solid fa-paper-plane"></i>
+                                <input type="text" id="chatInputText" class="flex-1 bg-gray-950 border border-gray-700 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-inomerRed" placeholder="Mesajınızı yazın...">
+                                <button type="submit" class="bg-inomerRed hover:bg-inomerRedDark text-white px-5 py-3 rounded-xl font-bold text-sm transition shadow-md shadow-inomerRed/20">
+                                    <i class="fa-solid fa-paper-plane mr-1"></i> Gönder
                                 </button>
                             </form>
                         </div>
                     </div>
                 </section>
 
-                <!-- SEKME 16: RAPORLAR (OTOMATİK Z RAPORU & KLASÖROLEME) -->
+                <!-- 16. RAPORLAR SEKMESİ (OTOMATİK Z RAPORU & AĞUSTOS KLASÖRLEME) -->
                 <section id="tab-raporlar" class="tab-content hidden space-y-6">
-                    <div class="bg-gray-900 p-6 rounded-xl border border-gray-800 space-y-4">
-                        <div class="flex justify-between items-center">
+                    <div class="bg-inomerCard p-6 md:p-8 rounded-2xl border border-gray-800 shadow-xl space-y-6">
+                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                             <div>
-                               <h2 class="text-xl font-bold text-white"><i class="fa-solid fa-chart-line text-inomerRed mr-2"></i>Otomatik Z Raporu & Günlük Arşiv</h2>
-                               <p class="text-xs text-gray-400">POST Cihazı / Günlük Kapanış Raporları ve Otomatik Klasörleme (Ağustos 2026)</p>
+                               <h2 class="text-xl font-black text-white flex items-center">
+                                   <i class="fa-solid fa-chart-line text-inomerRed mr-2.5"></i>Otomatik Z Raporu & Arşivleme Sistemi
+                               </h2>
+                               <p class="text-xs text-gray-400 mt-1">POST cihazı günlük kapanış Z raporları, Ağustos 2026 klasör yapısı ve otomatik kayıt</p>
                             </div>
-                            <button onclick="generateAndSaveZReport()" class="bg-inomerRed hover:bg-red-700 text-white px-4 py-2.5 rounded-lg text-sm font-bold flex items-center gap-2 transition">
-                                <i class="fa-solid fa-file-arrow-down"></i> Manuel Z Raporu Al & Arşivle
+                            <button onclick="generateAndSaveZReport()" class="bg-inomerRed hover:bg-inomerRedDark text-white px-5 py-3 rounded-xl text-xs font-bold flex items-center gap-2 transition shadow-lg shadow-inomerRed/20 uppercase tracking-wider">
+                                <i class="fa-solid fa-file-arrow-down"></i> Şimdi Z Raporu Al & Arşivle
                             </button>
                         </div>
-                        <div id="zReportFoldersContainer" class="space-y-3 mt-4">
-                            <!-- Otomatik oluşturulan klasörler -->
+                        
+                        <div class="bg-gray-900/60 p-4 rounded-xl border border-gray-800 text-xs text-gray-300 space-y-2">
+                            <div class="font-bold text-white flex items-center"><i class="fa-solid fa-circle-info text-inomerRed mr-2"></i>Otomatik Sistem Bilgisi:</div>
+                            <p>Sistem, her gün sonu veya manuel tetikleme ile POST cihazı verilerini derler. Bulunduğumuz <strong>Ağustos 2026</strong> dönemi için özel klasör oluşturulur ve günün tarihiyle otomatik olarak arşive kaydedilir.</p>
+                        </div>
+
+                        <div id="zReportFoldersContainer" class="space-y-4 mt-4">
+                            <!-- Dinamik Klasör ve Rapor Listesi -->
                         </div>
                     </div>
                 </section>
 
-                <!-- SEKME 17: AYARLAR (ROL VE YETKİ KISITLAMA) -->
+                <!-- 17. AYARLAR SEKMESİ (ROL & EKRAN KISITLAMA) -->
                 <section id="tab-ayarlar" class="tab-content hidden space-y-6">
-                    <div class="bg-gray-900 p-6 rounded-xl border border-gray-800 space-y-6">
+                    <div class="bg-inomerCard p-6 md:p-8 rounded-2xl border border-gray-800 shadow-xl space-y-6">
                         <div>
-                            <h2 class="text-xl font-bold text-white"><i class="fa-solid fa-gear text-inomerRed mr-2"></i>Kullanıcı Yetkilendirme & Arayüz Kısıtlama Ayarları</h2>
-                            <p class="text-xs text-gray-400">Satış elemanı, teknik personel veya admin yetkilerini detaylıca belirleyin</p>
+                            <h2 class="text-xl font-black text-white flex items-center">
+                                <i class="fa-solid fa-gear text-inomerRed mr-2.5"></i>Kullanıcı Yetkilendirme & Arayüz Kısıtlama Paneli
+                            </h2>
+                            <p class="text-xs text-gray-400 mt-1">Satış elemanı, teknik personel veya admin yetkilerini ve görebilecekleri ekranları yapılandırın</p>
                         </div>
                         <div class="overflow-x-auto">
                             <table class="w-full text-left border-collapse">
-                                <thead class="bg-gray-800 text-gray-300 text-xs uppercase">
+                                <thead class="bg-gray-900/80 text-gray-300 text-xs uppercase tracking-wider border-b border-gray-800">
                                     <tr>
-                                        <th class="p-3">Kullanıcı Adı / E-Posta</th>
-                                        <th class="p-3">Rol / Yetki</th>
-                                        <th class="p-3">Şifre</th>
-                                        <th class="p-3">İşlemler</th>
+                                        <th class="p-4 font-extrabold">Kullanıcı Adı / E-Posta</th>
+                                        <th class="p-4 font-extrabold">Rol / Yetki Seviyesi</th>
+                                        <th class="p-4 font-extrabold">Şifre</th>
+                                        <th class="p-4 font-extrabold">Erişilebilen Modüller</th>
+                                        <th class="p-4 font-extrabold text-center">İşlem</th>
                                     </tr>
                                 </thead>
                                 <tbody id="userPermissionsTable" class="divide-y divide-gray-800 text-sm"></tbody>
@@ -521,70 +607,89 @@
         </div>
     </div>
 
-    <!-- DOSYA GÖRÜNTÜLEME MODALI (PDF, EXCEL, WORD, FOTOĞRAF) -->
-    <div id="fileViewerModal" class="fixed inset-0 bg-black/80 z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-gray-900 border border-gray-700 rounded-2xl w-full max-w-4xl h-[85vh] flex flex-col overflow-hidden shadow-2xl">
-            <div class="bg-gray-800 px-4 py-3 flex items-center justify-between border-b border-gray-700">
-                <h3 id="viewerModalTitle" class="font-bold text-white text-sm truncate">Belge Görüntüleyici</h3>
-                <button onclick="closeFileViewer()" class="text-gray-400 hover:text-white text-lg"><i class="fa-solid fa-xmark"></i></button>
+    <!-- ================= DOSYA GÖRÜNTÜLEME MODALI (PDF, EXCEL, WORD, FOTOĞRAF) ================= -->
+    <div id="fileViewerModal" class="fixed inset-0 bg-black/85 z-50 hidden flex items-center justify-center p-4 backdrop-blur-sm">
+        <div class="bg-inomerCard border border-gray-700 rounded-2xl w-full max-w-5xl h-[88vh] flex flex-col overflow-hidden shadow-2xl">
+            <div class="bg-gray-900 px-5 py-4 flex items-center justify-between border-b border-gray-800">
+                <h3 id="viewerModalTitle" class="font-bold text-white text-sm truncate flex items-center">
+                    <i class="fa-solid fa-file-lines text-inomerRed mr-2"></i>Belge Önizleme
+                </h3>
+                <button onclick="closeFileViewer()" class="text-gray-400 hover:text-white text-lg w-8 h-8 rounded-lg flex items-center justify-center hover:bg-gray-800 transition"><i class="fa-solid fa-xmark"></i></button>
             </div>
-            <div class="flex-1 bg-gray-950 p-4 flex items-center justify-center overflow-auto" id="viewerModalContent">
-                <!-- İçerik Dinamik Yüklenir -->
+            <div class="flex-1 bg-gray-950 p-6 flex items-center justify-center overflow-auto" id="viewerModalContent">
+                <!-- Dinamik Önizleme İçeriği -->
             </div>
         </div>
     </div>
 
-    <!-- GENEL MODAL ALANI -->
-    <div id="genericModal" class="fixed inset-0 bg-black/80 z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-gray-900 border border-gray-700 rounded-2xl w-full max-w-lg overflow-hidden shadow-2xl">
-            <div class="bg-gray-800 px-4 py-3 flex items-center justify-between border-b border-gray-700">
+    <!-- ================= GENEL MODAL ALANI ================= -->
+    <div id="genericModal" class="fixed inset-0 bg-black/85 z-50 hidden flex items-center justify-center p-4 backdrop-blur-sm">
+        <div class="bg-inomerCard border border-gray-700 rounded-2xl w-full max-w-xl overflow-hidden shadow-2xl">
+            <div class="bg-gray-900 px-5 py-4 flex items-center justify-between border-b border-gray-800">
                 <h3 id="modalTitle" class="font-bold text-white text-sm">Kayıt İşlemi</h3>
-                <button onclick="closeModal()" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+                <button onclick="closeModal()" class="text-gray-400 hover:text-white w-8 h-8 rounded-lg flex items-center justify-center hover:bg-gray-800 transition"><i class="fa-solid fa-xmark"></i></button>
             </div>
             <div class="p-6" id="modalBody"></div>
         </div>
     </div>
 
-    <!-- JAVASCRIPT UYGULAMA MANTIĞI -->
+    <!-- ================= JAVASCRIPT UYGULAMA MOTORU ================= -->
     <script>
-        // Veritabanı ve Bellek Durumu
+        // Veritabanı ve Bellek Yapısı
         let db = {
             currentUser: null,
             aktifKlasorler: { stok: 'Genel', arazi: 'Tümü', cati: 'Tümü' },
             stok: [
-                { id: 1, kod: 'STK-001', ad: '585W TOPCon Solar Panel', klasor: 'Paneller', miktar: 140, fiyat: 180 },
-                { id: 2, kod: 'STK-002', ad: '11 kW Inverter', klasor: 'Inverterler', miktar: 10, fiyat: 1250 }
+                { id: 1, kod: 'STK-001', ad: '585W TOPCon Solar Panel (Daxler)', klasor: 'Paneller', miktar: 140, fiyat: 180 },
+                { id: 2, kod: 'STK-002', ad: '11 kW Lexron Inverter', klasor: 'Inverterler', miktar: 10, fiyat: 1250 },
+                { id: 3, kod: 'STK-003', ad: '35 mm² NYAF Bakır Kablo', klasor: 'Kablolar', miktar: 500, fiyat: 12 }
             ],
             arazi: [
-                { id: 1, ad: 'Aliağa GES Arazi 1', konum: 'Aliağa / İzmir', guc: '1.2 MW', durum: 'Devam Ediyor' }
+                { id: 1, ad: 'Aliağa Organize GES Arazi 1', konum: 'Aliağa / İzmir', guc: '1.2 MW', durum: 'Devam Ediyor' }
             ],
             cati: [
-                { id: 1, ad: 'Fabrika Çatı GES', tip: 'Sandviç Panel', kapasite: '250 kW' }
+                { id: 1, ad: 'Aliağa Metal Fabrikası Çatı GES', tip: 'Sandviç Panel', kapasite: '250 kW' }
             ],
-            saha: [],
+            saha: [
+                { id: 1, baslik: 'Trafo Merkezi Saha Tutanağı', barkod: '869000123456', aciklama: 'Ana pano testleri ve kablolama kontrolü tamamlandı.', foto: '', tarih: '25.08.2026' }
+            ],
             arac: [
-                { id: 1, plaka: '35 İNM 01', model: 'Ford Transit', surucu: 'Hasan Buğra', km: 45200 }
+                { id: 1, plaka: '35 İNM 01', model: 'Ford Transit 350L', surucu: 'Hasan Buğra Yıldırım', km: 45200 }
             ],
             ekipman: [
-                { id: 1, ad: 'Fluke Multimetre', kod: 'PAR-8821', foto: '', barkod: '869000123' }
+                { id: 1, ad: 'Fluke 87V Endüstriyel Multimetre', kod: 'EQP-01', foto: '', barkod: '987654321012' }
             ],
             personel: [
                 { id: 1, ad: 'Hasan Buğra Yıldırım', rol: 'admin', email: 'admin@inomer.com', pass: '12345', tel: '05550000000' },
                 { id: 2, ad: 'Ahmet Satış', rol: 'satis', email: 'satis@inomer.com', pass: '12345', tel: '05551111111' },
                 { id: 3, ad: 'Mehmet Teknik', rol: 'teknik', email: 'teknik@inomer.com', pass: '12345', tel: '05552222222' }
             ],
-            izin: [],
-            avans: [],
+            izin: [
+                { id: 1, personel: 'Ahmet Satış', tur: 'Yıllık İzin', tarih: '01.09.2026 - 05.09.2026', durum: 'Onaylandı' }
+            ],
+            avans: [
+                { id: 1, personel: 'Mehmet Teknik', tutar: 5000, aciklama: 'Şantiye konaklama avansı', durum: 'Onaylandı' }
+            ],
             cari: [
-                { id: 1, unvan: 'İzmir Enerji Ltd.', tel: '02320000000', bakiye: 15400, dosya: null }
+                { id: 1, unvan: 'İzmir Enerji San. Tic. Ltd. Şti.', tel: '02320000000', bakiye: 15400, dosya: null }
             ],
-            teklif: [],
-            siparis: [],
-            belgeler: [],
+            teklif: [
+                { id: 1, no: 'TKL-2026-001', musteri: 'İzmir Enerji Ltd.', tutar: 85000, tarih: '25.08.2026', dosya: null }
+            ],
+            siparis: [
+                { id: 1, kod: 'SPR-9981', cari: 'Daxler Solar A.Ş.', tutar: 25200, durum: 'Kargoda' }
+            ],
+            belgeler: [
+                { id: 1, name: 'Inomer_Saha_Kurulum_Rehberi.pdf', type: 'application/pdf', url: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf' }
+            ],
             mesajlar: [
-                { id: 1, gonderen: 'admin@inomer.com', alici: 'satis@inomer.com', text: 'Satış raporlarını kontrol eder misin?', tarih: '26.08.2026 10:15', dosya: null }
+                { id: 1, gonderen: 'admin@inomer.com', alici: 'satis@inomer.com', text: 'Ahmet Bey, bugünkü teklifleri KolayBi sistemine aktardınız mı?', tarih: '25.08.2026 11:30', dosya: null }
             ],
-            raporlarZ: {}
+            raporlarZ: {
+                'Ağustos 2026': [
+                    { tarih: '25.08.2026', toplamSatis: '₺142,500.00', nakit: '₺45,000.00', krediKarti: '₺97,500.00', islemAdedi: 38 }
+                ]
+            }
         };
 
         const tumSekmeler = [
@@ -607,7 +712,7 @@
             { id: 'ayarlar', isim: 'Yetki Ayarları', ikon: 'fa-gear', roller: ['admin'] }
         ];
 
-        // GİRİŞ KONTROLÜ
+        // GİRİŞ İŞLEMLERİ
         function handleLogin(e) {
             e.preventDefault();
             const email = document.getElementById('loginEmail').value.trim();
@@ -623,7 +728,7 @@
                 initApp();
             } else {
                 const err = document.getElementById('loginError');
-                err.innerText = 'Hatalı e-posta veya şifre!';
+                err.innerText = 'E-posta veya şifre hatalı! Lütfen kontrol ediniz.';
                 err.classList.remove('hidden');
             }
         }
@@ -644,7 +749,7 @@
         function initApp() {
             renderSidebar();
             renderAll();
-            // Varsayılan ilk yetkili sekmeyi aç
+            // Rol kısıtlamasına göre kullanıcının erişebileceği ilk sekmeyi aç
             const izinliSekmeler = tumSekmeler.filter(s => s.roller.includes(db.currentUser.rol));
             if(izinliSekmeler.length > 0) {
                 switchTab(izinliSekmeler[0].id);
@@ -659,8 +764,8 @@
             tumSekmeler.forEach(sekme => {
                 if(sekme.roller.includes(userRole)) {
                     container.innerHTML += `
-                        <button onclick="switchTab('${sekme.id}')" id="nav-btn-${sekme.id}" class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium text-gray-300 hover:bg-inomerRed hover:text-white transition group">
-                            <i class="fa-solid ${sekme.ikon} w-5 text-inomerRed group-hover:text-white"></i>
+                        <button onclick="switchTab('${sekme.id}')" id="nav-btn-${sekme.id}" class="w-full flex items-center space-x-3 px-3.5 py-3 rounded-xl text-sm font-bold text-gray-300 hover:bg-inomerRed hover:text-white transition group">
+                            <i class="fa-solid ${sekme.ikon} w-5 text-inomerRed group-hover:text-white text-base"></i>
                             <span>${sekme.isim}</span>
                         </button>
                     `;
@@ -670,16 +775,15 @@
 
         function switchTab(tabId) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-            document.getElementById(`tab-${tabId}`).classList.remove('hidden');
+            const targetTab = document.getElementById(`tab-${tabId}`);
+            if(targetTab) targetTab.classList.remove('hidden');
             
-            // Sidebar aktif buton rengi
-            document.querySelectorAll('#navLinksContainer button').forEach(b => b.classList.remove('bg-inomerRed', 'text-white'));
+            document.querySelectorAll('#navLinksContainer button').forEach(b => b.classList.remove('bg-inomerRed', 'text-white', 'shadow-lg'));
             const activeBtn = document.getElementById(`nav-btn-${tabId}`);
             if(activeBtn) {
-                activeBtn.classList.add('bg-inomerRed', 'text-white');
+                activeBtn.classList.add('bg-inomerRed', 'text-white', 'shadow-lg', 'shadow-inomerRed/30');
             }
 
-            // Mobil menüyü kapat
             if(window.innerWidth < 768) {
                 document.getElementById('sidebarMenu').classList.add('-translate-x-full');
             }
@@ -689,14 +793,14 @@
             if(tabId === 'ayarlar') renderPermissionsTable();
         }
 
-        // KLASÖR VE LİSTELEME RENDER FONKSİYONLARI
+        // KLASÖR VE LİSTELEME FONKSİYONLARI
         function renderFolders(modul) {
             const container = document.getElementById(`${modul}Folders`);
             if(!container) return;
             const klasorler = ['Genel', 'Paneller', 'Inverterler', 'Kablolar'];
             container.innerHTML = klasorler.map(k => `
-                <button onclick="selectFolder('${modul}', '${k}')" class="px-3 py-1.5 rounded-lg text-xs font-bold transition ${db.aktifKlasorler[modul] === k ? 'bg-inomerRed text-white' : 'bg-gray-800 text-gray-400 hover:bg-gray-700'}">
-                    <i class="fa-solid fa-folder mr-1"></i> ${k}
+                <button onclick="selectFolder('${modul}', '${k}')" class="px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 ${db.aktifKlasorler[modul] === k ? 'bg-inomerRed text-white shadow-md shadow-inomerRed/20' : 'bg-gray-900 text-gray-400 hover:bg-gray-800 border border-gray-800'}">
+                    <i class="fa-solid fa-folder"></i> ${k}
                 </button>
             `).join('');
         }
@@ -712,14 +816,14 @@
             const tbody = document.getElementById('stokTableBody');
             const filtreli = db.stok.filter(s => db.aktifKlasorler.stok === 'Genel' || s.klasor === db.aktifKlasorler.stok);
             tbody.innerHTML = filtreli.map(s => `
-                <tr class="hover:bg-gray-800/50 transition">
-                    <td class="p-3 font-mono text-xs text-inomerRed">${s.kod}</td>
-                    <td class="p-3 font-medium text-white">${s.ad}</td>
-                    <td class="p-3 text-gray-400">${s.klasor}</td>
-                    <td class="p-3 font-bold">${s.miktar} Adet</td>
-                    <td class="p-3 text-green-400">$${s.fiyat}</td>
-                    <td class="p-3">
-                        <button onclick="deleteItem('stok', ${s.id})" class="text-red-400 hover:text-red-300 p-1"><i class="fa-solid fa-trash"></i></button>
+                <tr class="hover:bg-gray-800/40 transition">
+                    <td class="p-4 font-mono text-xs text-inomerRed font-bold">${s.kod}</td>
+                    <td class="p-4 font-bold text-white">${s.ad}</td>
+                    <td class="p-4 text-gray-400">${s.klasor}</td>
+                    <td class="p-4 font-extrabold">${s.miktar} Adet</td>
+                    <td class="p-4 text-green-400 font-bold">$${s.fiyat}</td>
+                    <td class="p-4 text-center">
+                        <button onclick="deleteItem('stok', ${s.id})" class="text-red-400 hover:text-red-300 p-2 transition rounded-lg hover:bg-red-950/30" title="Sil"><i class="fa-solid fa-trash"></i></button>
                     </td>
                 </tr>
             `).join('');
@@ -728,12 +832,12 @@
         function renderArazi() {
             const tbody = document.getElementById('araziTableBody');
             tbody.innerHTML = db.arazi.map(a => `
-                <tr class="hover:bg-gray-800/50 transition">
-                    <td class="p-3 font-medium text-white">${a.ad}</td>
-                    <td class="p-3 text-gray-400">${a.konum}</td>
-                    <td class="p-3 text-inomerRed font-bold">${a.guc}</td>
-                    <td class="p-3"><span class="bg-yellow-500/20 text-yellow-400 text-xs px-2 py-1 rounded">${a.durum}</span></td>
-                    <td class="p-3"><button onclick="deleteItem('arazi', ${a.id})" class="text-red-400"><i class="fa-solid fa-trash"></i></button></td>
+                <tr class="hover:bg-gray-800/40 transition">
+                    <td class="p-4 font-bold text-white">${a.ad}</td>
+                    <td class="p-4 text-gray-400">${a.konum}</td>
+                    <td class="p-4 text-inomerRed font-extrabold">${a.guc}</td>
+                    <td class="p-4"><span class="bg-yellow-500/20 text-yellow-400 text-xs px-2.5 py-1 rounded-lg font-semibold border border-yellow-500/30">${a.durum}</span></td>
+                    <td class="p-4 text-center"><button onclick="deleteItem('arazi', ${a.id})" class="text-red-400 p-2 rounded-lg hover:bg-red-950/30"><i class="fa-solid fa-trash"></i></button></td>
                 </tr>
             `).join('');
         }
@@ -741,11 +845,11 @@
         function renderCati() {
             const tbody = document.getElementById('catiTableBody');
             tbody.innerHTML = db.cati.map(c => `
-                <tr class="hover:bg-gray-800/50 transition">
-                    <td class="p-3 font-medium text-white">${c.ad}</td>
-                    <td class="p-3 text-gray-400">${c.tip}</td>
-                    <td class="p-3 text-inomerRed font-bold">${c.kapasite}</td>
-                    <td class="p-3"><button onclick="deleteItem('cati', ${c.id})" class="text-red-400"><i class="fa-solid fa-trash"></i></button></td>
+                <tr class="hover:bg-gray-800/40 transition">
+                    <td class="p-4 font-bold text-white">${c.ad}</td>
+                    <td class="p-4 text-gray-400">${c.tip}</td>
+                    <td class="p-4 text-inomerRed font-extrabold">${c.kapasite}</td>
+                    <td class="p-4 text-center"><button onclick="deleteItem('cati', ${c.id})" class="text-red-400 p-2 rounded-lg hover:bg-red-950/30"><i class="fa-solid fa-trash"></i></button></td>
                 </tr>
             `).join('');
         }
@@ -753,16 +857,18 @@
         function renderSaha() {
             const container = document.getElementById('sahaGridContainer');
             container.innerHTML = db.saha.map(s => `
-                <div class="bg-gray-900 border border-gray-800 rounded-xl p-4 space-y-3">
-                    <div class="flex justify-between items-start">
-                        <h4 class="font-bold text-white text-sm">${s.baslik}</h4>
-                        <span class="text-xs font-mono text-inomerRed">${s.barkod || 'Barkod Yok'}</span>
+                <div class="bg-inomerCard border border-gray-800 rounded-2xl p-5 space-y-4 shadow-xl flex flex-col justify-between">
+                    <div class="space-y-2">
+                        <div class="flex justify-between items-start">
+                            <h4 class="font-bold text-white text-sm">${s.baslik}</h4>
+                            <span class="text-[11px] font-mono bg-inomerRed/20 text-inomerRed px-2 py-0.5 rounded font-bold">${s.barkod || 'Barkod Yok'}</span>
+                        </div>
+                        <p class="text-xs text-gray-400 leading-relaxed">${s.aciklama}</p>
                     </div>
-                    <p class="text-xs text-gray-400">${s.aciklama}</p>
-                    ${s.foto ? `<img src="${s.foto}" class="w-full h-32 object-cover rounded-lg border border-gray-700">` : ''}
-                    <div class="flex justify-between items-center pt-2">
-                        <span class="text-[10px] text-gray-500">${s.tarih}</span>
-                        <button onclick="deleteItem('saha', ${s.id})" class="text-red-400 text-xs"><i class="fa-solid fa-trash"></i> Sil</button>
+                    ${s.foto ? `<div class="cursor-pointer" onclick="openFileViewer('Saha Fotoğrafı', '${s.foto}', 'image/png')"><img src="${s.foto}" class="w-full h-36 object-cover rounded-xl border border-gray-700 hover:opacity-90 transition"></div>` : ''}
+                    <div class="flex justify-between items-center pt-3 border-t border-gray-800 text-xs">
+                        <span class="text-gray-500 font-medium"><i class="fa-regular fa-clock mr-1"></i>${s.tarih}</span>
+                        <button onclick="deleteItem('saha', ${s.id})" class="text-red-400 hover:text-red-300 font-semibold"><i class="fa-solid fa-trash mr-1"></i> Sil</button>
                     </div>
                 </div>
             `).join('');
@@ -771,12 +877,12 @@
         function renderArac() {
             const tbody = document.getElementById('aracTableBody');
             tbody.innerHTML = db.arac.map(a => `
-                <tr class="hover:bg-gray-800/50 transition">
-                    <td class="p-3 font-mono font-bold text-inomerRed">${a.plaka}</td>
-                    <td class="p-3 text-white">${a.model}</td>
-                    <td class="p-3 text-gray-300">${a.surucu}</td>
-                    <td class="p-3">${a.km} KM</td>
-                    <td class="p-3"><button onclick="deleteItem('arac', ${a.id})" class="text-red-400"><i class="fa-solid fa-trash"></i></button></td>
+                <tr class="hover:bg-gray-800/40 transition">
+                    <td class="p-4 font-mono font-black text-inomerRed">${a.plaka}</td>
+                    <td class="p-4 text-white font-bold">${a.model}</td>
+                    <td class="p-4 text-gray-300">${a.surucu}</td>
+                    <td class="p-4 font-bold">${a.km} KM</td>
+                    <td class="p-4 text-center"><button onclick="deleteItem('arac', ${a.id})" class="text-red-400 p-2 rounded-lg hover:bg-red-950/30"><i class="fa-solid fa-trash"></i></button></td>
                 </tr>
             `).join('');
         }
@@ -784,14 +890,18 @@
         function renderEkipman() {
             const container = document.getElementById('ekipmanGridContainer');
             container.innerHTML = db.ekipman.map(e => `
-                <div class="bg-gray-900 border border-gray-800 rounded-xl p-4 space-y-3">
-                    <div class="flex justify-between items-center">
-                        <h4 class="font-bold text-white text-sm">${e.ad}</h4>
-                        <span class="bg-inomerRed/20 text-inomerRed text-xs px-2 py-0.5 rounded font-mono">${e.kod}</span>
+                <div class="bg-inomerCard border border-gray-800 rounded-2xl p-5 space-y-4 shadow-xl flex flex-col justify-between">
+                    <div class="space-y-2">
+                        <div class="flex justify-between items-center">
+                            <h4 class="font-bold text-white text-sm">${e.ad}</h4>
+                            <span class="bg-inomerRed/20 text-inomerRed text-xs px-2.5 py-1 rounded-lg font-mono font-bold">${e.kod}</span>
+                        </div>
+                        <div class="text-xs text-gray-400">Barkod: <span class="text-white font-mono font-bold">${e.barkod || 'Tanımsız'}</span></div>
                     </div>
-                    <div class="text-xs text-gray-400">Barkod: <span class="text-white font-mono">${e.barkod || 'Tanımsız'}</span></div>
-                    ${e.foto ? `<img src="${e.foto}" class="w-full h-28 object-cover rounded-lg">` : ''}
-                    <button onclick="deleteItem('ekipman', ${e.id})" class="text-red-400 text-xs"><i class="fa-solid fa-trash"></i> Sil</button>
+                    ${e.foto ? `<div class="cursor-pointer" onclick="openFileViewer('${e.ad}', '${e.foto}', 'image/png')"><img src="${e.foto}" class="w-full h-36 object-cover rounded-xl border border-gray-700"></div>` : ''}
+                    <div class="flex justify-end pt-3 border-t border-gray-800">
+                        <button onclick="deleteItem('ekipman', ${e.id})" class="text-red-400 hover:text-red-300 text-xs font-semibold"><i class="fa-solid fa-trash mr-1"></i> Sil</button>
+                    </div>
                 </div>
             `).join('');
         }
@@ -799,11 +909,11 @@
         function renderPersonel() {
             const tbody = document.getElementById('personelTableBody');
             tbody.innerHTML = db.personel.map(p => `
-                <tr class="hover:bg-gray-800/50 transition">
-                    <td class="p-3 font-medium text-white">${p.ad}</td>
-                    <td class="p-3"><span class="bg-inomerRed text-white text-xs px-2 py-0.5 rounded uppercase">${p.rol}</span></td>
-                    <td class="p-3 text-gray-300 text-xs">${p.email} / ${p.tel}</td>
-                    <td class="p-3"><button onclick="deleteItem('personel', ${p.id})" class="text-red-400"><i class="fa-solid fa-trash"></i></button></td>
+                <tr class="hover:bg-gray-800/40 transition">
+                    <td class="p-4 font-bold text-white">${p.ad}</td>
+                    <td class="p-4"><span class="bg-inomerRed text-white text-xs px-2.5 py-1 rounded-lg uppercase font-black tracking-wider">${p.rol}</span></td>
+                    <td class="p-4 text-gray-300 text-xs">${p.email} / <span class="text-gray-400">${p.tel}</span></td>
+                    <td class="p-4 text-center"><button onclick="deleteItem('personel', ${p.id})" class="text-red-400 p-2 rounded-lg hover:bg-red-950/30"><i class="fa-solid fa-trash"></i></button></td>
                 </tr>
             `).join('');
         }
@@ -811,12 +921,12 @@
         function renderIzin() {
             const tbody = document.getElementById('izinTableBody');
             tbody.innerHTML = db.izin.map(i => `
-                <tr class="hover:bg-gray-800/50 transition">
-                    <td class="p-3 text-white">${i.personel}</td>
-                    <td class="p-3 text-gray-300">${i.tur}</td>
-                    <td class="p-3 text-xs text-gray-400">${i.tarih}</td>
-                    <td class="p-3"><span class="bg-yellow-500/20 text-yellow-400 text-xs px-2 py-1 rounded">${i.durum}</span></td>
-                    <td class="p-3"><button onclick="deleteItem('izin', ${i.id})" class="text-red-400"><i class="fa-solid fa-trash"></i></button></td>
+                <tr class="hover:bg-gray-800/40 transition">
+                    <td class="p-4 font-bold text-white">${i.personel}</td>
+                    <td class="p-4 text-gray-300">${i.tur}</td>
+                    <td class="p-4 text-xs text-gray-400 font-mono">${i.tarih}</td>
+                    <td class="p-4"><span class="bg-green-500/20 text-green-400 text-xs px-2.5 py-1 rounded-lg font-semibold border border-green-500/30">${i.durum}</span></td>
+                    <td class="p-4 text-center"><button onclick="deleteItem('izin', ${i.id})" class="text-red-400 p-2 rounded-lg hover:bg-red-950/30"><i class="fa-solid fa-trash"></i></button></td>
                 </tr>
             `).join('');
         }
@@ -824,12 +934,12 @@
         function renderAvans() {
             const tbody = document.getElementById('avansTableBody');
             tbody.innerHTML = db.avans.map(a => `
-                <tr class="hover:bg-gray-800/50 transition">
-                    <td class="p-3 text-white">${a.personel}</td>
-                    <td class="p-3 font-bold text-green-400">₺${a.tutar}</td>
-                    <td class="p-3 text-gray-400 text-xs">${a.aciklama}</td>
-                    <td class="p-3"><span class="bg-yellow-500/20 text-yellow-400 text-xs px-2 py-1 rounded">${a.durum}</span></td>
-                    <td class="p-3"><button onclick="deleteItem('avans', ${a.id})" class="text-red-400"><i class="fa-solid fa-trash"></i></button></td>
+                <tr class="hover:bg-gray-800/40 transition">
+                    <td class="p-4 font-bold text-white">${a.personel}</td>
+                    <td class="p-4 font-black text-green-400">₺${a.tutar.toLocaleString('tr-TR')}</td>
+                    <td class="p-4 text-gray-400 text-xs">${a.aciklama}</td>
+                    <td class="p-4"><span class="bg-green-500/20 text-green-400 text-xs px-2.5 py-1 rounded-lg font-semibold border border-green-500/30">${a.durum}</span></td>
+                    <td class="p-4 text-center"><button onclick="deleteItem('avans', ${a.id})" class="text-red-400 p-2 rounded-lg hover:bg-red-950/30"><i class="fa-solid fa-trash"></i></button></td>
                 </tr>
             `).join('');
         }
@@ -837,13 +947,13 @@
         function renderCari() {
             const tbody = document.getElementById('cariTableBody');
             tbody.innerHTML = db.cari.map(c => `
-                <tr class="hover:bg-gray-800/50 transition">
-                    <td class="p-3 font-medium text-white">${c.unvan}</td>
-                    <td class="p-3 text-gray-400">${c.tel}</td>
-                    <td class="p-3 font-bold text-green-400">₺${c.bakiye}</td>
-                    <td class="p-3 flex items-center gap-2">
-                        ${c.dosya ? `<button onclick="openFileViewer('${c.dosya.name}', '${c.dosya.url}', '${c.dosya.type}')" class="text-inomerSilver hover:text-white"><i class="fa-solid fa-eye"></i></button>` : ''}
-                        <button onclick="deleteItem('cari', ${c.id})" class="text-red-400"><i class="fa-solid fa-trash"></i></button>
+                <tr class="hover:bg-gray-800/40 transition">
+                    <td class="p-4 font-bold text-white">${c.unvan}</td>
+                    <td class="p-4 text-gray-400">${c.tel}</td>
+                    <td class="p-4 font-black text-green-400">₺${c.bakiye.toLocaleString('tr-TR')}</td>
+                    <td class="p-4 flex items-center justify-center gap-3">
+                        ${c.dosya ? `<button onclick="openFileViewer('${c.dosya.name}', '${c.dosya.url}', '${c.dosya.type}')" class="bg-gray-800 hover:bg-inomerRed text-white p-2 rounded-lg transition" title="Dosyayı Görüntüle"><i class="fa-solid fa-eye"></i></button>` : ''}
+                        <button onclick="deleteItem('cari', ${c.id})" class="text-red-400 p-2 rounded-lg hover:bg-red-950/30"><i class="fa-solid fa-trash"></i></button>
                     </td>
                 </tr>
             `).join('');
@@ -852,12 +962,12 @@
         function renderTeklif() {
             const tbody = document.getElementById('teklifTableBody');
             tbody.innerHTML = db.teklif.map(t => `
-                <tr class="hover:bg-gray-800/50 transition">
-                    <td class="p-3 font-mono text-inomerRed">${t.no}</td>
-                    <td class="p-3 text-white">${t.musteri}</td>
-                    <td class="p-3 font-bold text-green-400">₺${t.tutar}</td>
-                    <td class="p-3 text-xs text-gray-400">${t.tarih}</td>
-                    <td class="p-3"><button onclick="deleteItem('teklif', ${t.id})" class="text-red-400"><i class="fa-solid fa-trash"></i></button></td>
+                <tr class="hover:bg-gray-800/40 transition">
+                    <td class="p-4 font-mono font-bold text-inomerRed">${t.no}</td>
+                    <td class="p-4 font-bold text-white">${t.musteri}</td>
+                    <td class="p-4 font-black text-green-400">₺${t.tutar.toLocaleString('tr-TR')}</td>
+                    <td class="p-4 text-xs text-gray-400 font-mono">${t.tarih}</td>
+                    <td class="p-4 text-center"><button onclick="deleteItem('teklif', ${t.id})" class="text-red-400 p-2 rounded-lg hover:bg-red-950/30"><i class="fa-solid fa-trash"></i></button></td>
                 </tr>
             `).join('');
         }
@@ -865,12 +975,12 @@
         function renderSiparis() {
             const tbody = document.getElementById('siparisTableBody');
             tbody.innerHTML = db.siparis.map(s => `
-                <tr class="hover:bg-gray-800/50 transition">
-                    <td class="p-3 font-mono text-inomerRed">${s.kod}</td>
-                    <td class="p-3 text-white">${s.cari}</td>
-                    <td class="p-3 font-bold text-green-400">₺${s.tutar}</td>
-                    <td class="p-3"><span class="bg-blue-500/20 text-blue-400 text-xs px-2 py-1 rounded">${s.durum}</span></td>
-                    <td class="p-3"><button onclick="deleteItem('siparis', ${s.id})" class="text-red-400"><i class="fa-solid fa-trash"></i></button></td>
+                <tr class="hover:bg-gray-800/40 transition">
+                    <td class="p-4 font-mono font-bold text-inomerRed">${s.kod}</td>
+                    <td class="p-4 font-bold text-white">${s.cari}</td>
+                    <td class="p-4 font-black text-green-400">₺${s.tutar.toLocaleString('tr-TR')}</td>
+                    <td class="p-4"><span class="bg-blue-500/20 text-blue-400 text-xs px-2.5 py-1 rounded-lg font-semibold border border-blue-500/30">${s.durum}</span></td>
+                    <td class="p-4 text-center"><button onclick="deleteItem('siparis', ${s.id})" class="text-red-400 p-2 rounded-lg hover:bg-red-950/30"><i class="fa-solid fa-trash"></i></button></td>
                 </tr>
             `).join('');
         }
@@ -878,27 +988,28 @@
         function renderBelgeler() {
             const container = document.getElementById('documentsGridContainer');
             container.innerHTML = db.belgeler.map(b => `
-                <div class="bg-gray-900 border border-gray-800 rounded-xl p-4 flex flex-col justify-between space-y-3">
-                    <div class="flex items-start space-x-3">
-                        <div class="w-10 h-10 rounded-lg bg-inomerRed/20 text-inomerRed flex items-center justify-center text-lg flex-shrink-0">
+                <div class="bg-inomerCard border border-gray-800 rounded-2xl p-5 flex flex-col justify-between space-y-4 shadow-xl">
+                    <div class="flex items-start space-x-3.5">
+                        <div class="w-12 h-12 rounded-xl bg-inomerRed/20 text-inomerRed flex items-center justify-center text-xl flex-shrink-0 border border-inomerRed/30">
                             <i class="fa-solid ${getFileIcon(b.type)}"></i>
                         </div>
                         <div class="overflow-hidden">
                             <h4 class="font-bold text-white text-sm truncate">${b.name}</h4>
-                            <span class="text-[10px] text-gray-500 uppercase">${b.type || 'Doküman'}</span>
+                            <span class="text-[11px] text-gray-500 uppercase tracking-wider font-semibold">${b.type || 'Doküman Arşivi'}</span>
                         </div>
                     </div>
-                    <div class="flex items-center justify-between pt-2 border-t border-gray-800">
-                        <button onclick="openFileViewer('${b.name}', '${b.url}', '${b.type}')" class="bg-gray-800 hover:bg-inomerRed text-white text-xs px-3 py-1.5 rounded-lg transition flex items-center gap-1.5">
-                            <i class="fa-solid fa-eye"></i> Görüntüle
+                    <div class="flex items-center justify-between pt-3 border-t border-gray-800">
+                        <button onclick="openFileViewer('${b.name}', '${b.url}', '${b.type}')" class="bg-gray-800 hover:bg-inomerRed text-white text-xs px-3.5 py-2 rounded-xl transition flex items-center gap-1.5 font-bold shadow">
+                            <i class="fa-solid fa-eye"></i> Site İçinde Aç
                         </button>
-                        <button onclick="deleteItem('belgeler', ${b.id})" class="text-red-400 text-xs hover:text-red-300"><i class="fa-solid fa-trash"></i></button>
+                        <button onclick="deleteItem('belgeler', ${b.id})" class="text-red-400 text-xs hover:text-red-300 font-semibold p-2"><i class="fa-solid fa-trash"></i></button>
                     </div>
                 </div>
             `).join('');
         }
 
         function getFileIcon(type) {
+            if(!type) return 'fa-file-lines';
             if(type.includes('pdf')) return 'fa-file-pdf';
             if(type.includes('sheet') || type.includes('excel')) return 'fa-file-excel';
             if(type.includes('word') || type.includes('document')) return 'fa-file-word';
@@ -906,7 +1017,7 @@
             return 'fa-file-lines';
         }
 
-        // DOSYA YÜKLEME VE SİTE İÇİ GÖRÜNTÜLEME
+        // DOSYA YÜKLEME VE SİTE İÇİ AÇMA (PDF, EXCEL, WORD, FOTOĞRAF)
         function handleDocumentUpload(e) {
             const file = e.target.files[0];
             if(!file) return;
@@ -924,21 +1035,21 @@
         }
 
         function openFileViewer(name, url, type) {
-            document.getElementById('viewerModalTitle').innerText = name;
+            document.getElementById('viewerModalTitle').innerHTML = `<i class="fa-solid fa-file-lines text-inomerRed mr-2"></i> ${name}`;
             const content = document.getElementById('viewerModalContent');
             content.innerHTML = '';
 
             if(type && type.includes('image')) {
-                content.innerHTML = `<img src="${url}" class="max-w-full max-h-full object-contain rounded-lg">`;
+                content.innerHTML = `<img src="${url}" class="max-w-full max-h-full object-contain rounded-xl shadow-lg">`;
             } else if(type && type.includes('pdf')) {
-                content.innerHTML = `<iframe src="${url}" class="w-full h-full rounded-lg border-0"></iframe>`;
+                content.innerHTML = `<iframe src="${url}" class="w-full h-full rounded-xl border-0 shadow-lg bg-white"></iframe>`;
             } else {
                 content.innerHTML = `
-                    <div class="text-center space-y-4">
-                        <div class="text-5xl text-inomerRed"><i class="fa-solid fa-file-arrow-down"></i></div>
-                        <h4 class="text-white font-bold">${name}</h4>
-                        <p class="text-xs text-gray-400">Bu dosya formatı doğrudan tarayıcıda önizleniyor veya indirebilirsiniz.</p>
-                        <a href="${url}" download="${name}" class="inline-block bg-inomerRed text-white px-4 py-2 rounded-lg text-sm font-bold">Dosyayı İndir</a>
+                    <div class="text-center space-y-4 max-w-md mx-auto p-8 bg-gray-900 rounded-2xl border border-gray-800 shadow-xl">
+                        <div class="text-6xl text-inomerRed"><i class="fa-solid fa-file-arrow-down"></i></div>
+                        <h4 class="text-white font-bold text-lg">${name}</h4>
+                        <p class="text-xs text-gray-400">Bu dosya formatı (Excel/Word vb.) site içinde önizlenmektedir veya doğrudan indirebilirsiniz.</p>
+                        <a href="${url}" download="${name}" class="inline-block bg-inomerRed hover:bg-inomerRedDark text-white px-6 py-3 rounded-xl text-xs font-bold transition shadow-lg shadow-inomerRed/30 uppercase tracking-wider">Dosyayı İndir & Görüntüle</a>
                     </div>
                 `;
             }
@@ -949,7 +1060,7 @@
             document.getElementById('fileViewerModal').classList.add('hidden');
         }
 
-        // CANLI MESAJLAŞMA
+        // CANLI MESAJLAŞMA SİSTEMİ
         let activeChatUser = null;
         let chatTempFile = null;
 
@@ -958,11 +1069,11 @@
             userList.innerHTML = db.personel
                 .filter(p => p.email !== db.currentUser.email)
                 .map(p => `
-                    <button onclick="selectChatUser('${p.email}', '${p.ad}')" class="w-full text-left px-3 py-2.5 rounded-lg hover:bg-gray-800 transition flex items-center space-x-3 group">
-                        <div class="w-8 h-8 rounded-full bg-inomerRed/20 text-inomerRed flex items-center justify-center font-bold text-xs">${p.ad.charAt(0)}</div>
+                    <button onclick="selectChatUser('${p.email}', '${p.ad}')" class="w-full text-left px-3.5 py-3 rounded-xl hover:bg-gray-800/80 transition flex items-center space-x-3 group border border-transparent hover:border-gray-700">
+                        <div class="w-9 h-9 rounded-xl bg-inomerRed/20 text-inomerRed flex items-center justify-center font-bold text-sm border border-inomerRed/30">${p.ad.charAt(0)}</div>
                         <div class="overflow-hidden">
                             <h4 class="text-white text-xs font-bold truncate">${p.ad}</h4>
-                            <span class="text-[10px] text-gray-500 uppercase">${p.rol}</span>
+                            <span class="text-[10px] text-gray-400 uppercase tracking-wider">${p.rol}</span>
                         </div>
                     </button>
                 `).join('');
@@ -970,7 +1081,7 @@
 
         function selectChatUser(email, name) {
             activeChatUser = email;
-            document.getElementById('chatHeader').innerHTML = `<span>Sohbet: ${name}</span>`;
+            document.getElementById('chatHeader').innerHTML = `<span><i class="fa-solid fa-circle text-green-500 text-[10px] mr-2"></i> Sohbet: ${name}</span>`;
             document.getElementById('chatForm').classList.remove('hidden');
             renderChatMessages();
         }
@@ -983,7 +1094,7 @@
             );
 
             if(msgs.length === 0) {
-                area.innerHTML = `<div class="text-center text-gray-500 text-xs mt-10">Henüz mesajlaşma yok. İlk mesajı siz gönderin!</div>`;
+                area.innerHTML = `<div class="text-center text-gray-500 text-xs mt-20">Henüz mesajlaşma bulunmuyor. İlk mesajı siz gönderin!</div>`;
                 return;
             }
 
@@ -991,16 +1102,16 @@
                 const isMe = m.gonderen === db.currentUser.email;
                 return `
                     <div class="flex flex-col ${isMe ? 'items-end' : 'items-start'} space-y-1">
-                        <div class="max-w-xs sm:max-w-md rounded-2xl px-4 py-2.5 text-sm ${isMe ? 'bg-inomerRed text-white rounded-br-none' : 'bg-gray-800 text-gray-200 rounded-bl-none'}">
-                            <p>${m.text}</p>
+                        <div class="max-w-xs sm:max-w-md rounded-2xl px-4.5 py-3 text-sm shadow-md ${isMe ? 'bg-inomerRed text-white rounded-br-none' : 'bg-gray-800 text-gray-200 rounded-bl-none border border-gray-700'}">
+                            <p class="leading-relaxed">${m.text}</p>
                             ${m.dosya ? `
-                                <div class="mt-2 p-2 bg-black/20 rounded-lg flex items-center gap-2">
-                                    <i class="fa-solid fa-paperclip"></i>
-                                    <a href="${m.dosya.url}" download="${m.dosya.name}" class="text-xs underline truncate">${m.dosya.name}</a>
+                                <div class="mt-2.5 p-2.5 bg-black/30 rounded-xl flex items-center gap-2.5 border border-white/10">
+                                    <i class="fa-solid fa-paperclip text-inomerRed"></i>
+                                    <a href="${m.dosya.url}" download="${m.dosya.name}" class="text-xs underline truncate font-bold text-white hover:text-gray-300">${m.dosya.name}</a>
                                 </div>
                             ` : ''}
                         </div>
-                        <span class="text-[10px] text-gray-500 px-1">${m.tarih}</span>
+                        <span class="text-[10px] text-gray-500 px-1 font-medium">${m.tarih}</span>
                     </div>
                 `;
             }).join('');
@@ -1037,55 +1148,70 @@
             renderChatMessages();
         }
 
-        // OTOMATİK Z RAPORU & KLASÖRLEME
+        // OTOMATİK Z RAPORU & AĞUSTOS KLASÖRLEME SİSTEMİ
         function renderZReportSection() {
             const container = document.getElementById('zReportFoldersContainer');
-            // Ağustos 2026 Otomatik Klasör Simülasyonu
-            const bugunTarih = '26.08.2026';
             container.innerHTML = `
-                <div class="bg-gray-800 p-4 rounded-xl border border-gray-700 flex items-center justify-between">
-                    <div class="flex items-center space-x-3">
-                        <div class="text-inomerRed text-2xl"><i class="fa-solid fa-folder-closed"></i></div>
-                        <div>
-                            <h4 class="font-bold text-white text-sm">Ağustos 2026 / Günlük Z Raporu Arşivi</h4>
-                            <p class="text-xs text-gray-400">Son Kayıt Tarihi: ${bugunTarih} - POST Cihazı Otomatik Kapanış</p>
+                <div class="bg-gray-900/90 p-5 rounded-2xl border border-gray-800 space-y-4 shadow-xl">
+                    <div class="flex items-center justify-between border-b border-gray-800 pb-4">
+                        <div class="flex items-center space-x-3.5">
+                            <div class="text-inomerRed text-3xl"><i class="fa-solid fa-folder-open"></i></div>
+                            <div>
+                                <h4 class="font-black text-white text-base">Ağustos 2026 Otomatik Arşiv Klasörü</h4>
+                                <p class="text-xs text-gray-400 mt-0.5">POST Cihazı Günlük Kapanış Verileri ve Z Raporları</p>
+                            </div>
                         </div>
+                        <span class="bg-green-500/20 text-green-400 text-xs px-3 py-1 rounded-lg font-bold border border-green-500/30">Aktif Dönem</span>
                     </div>
-                    <button onclick="generateAndSaveZReport()" class="bg-gray-700 hover:bg-inomerRed text-white px-3 py-1.5 rounded-lg text-xs font-bold transition">
-                        Klasörü İncele
-                    </button>
+                    <div class="space-y-3">
+                        ${db.raporlarZ['Ağustos 2026'].map(r => `
+                            <div class="bg-gray-950 p-4 rounded-xl border border-gray-800 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+                                <div class="space-y-1">
+                                    <div class="text-xs font-bold text-white flex items-center"><i class="fa-regular fa-calendar mr-2 text-inomerRed"></i> Tarih: ${r.tarih} (Günlük Kapanış Z Raporu)</div>
+                                    <div class="text-xs text-gray-400">Nakit: <span class="text-white font-bold">${r.nakit}</span> | Kredi Kartı: <span class="text-white font-bold">${r.krediKarti}</span> | İşlem Adedi: <span class="text-white font-bold">${r.islemAdedi}</span></div>
+                                </div>
+                                <div class="text-right">
+                                    <span class="text-sm font-black text-green-400">${r.toplamSatis}</span>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
                 </div>
             `;
         }
 
         function generateAndSaveZReport() {
-            const zRaporuIcerigi = {
-                tarih: new Date().toLocaleDateString('tr-TR'),
-                toplamSatis: '₺142,500.00',
-                nakit: '₺45,000.00',
-                krediKarti: '₺97,500.00',
-                islemAdedi: 38,
-                cihazSeri: 'INOMER-POS-01'
+            const bugun = new Date().toLocaleDateString('tr-TR');
+            const yeniRapor = {
+                tarih: bugun,
+                toplamSatis: '₺168,400.00',
+                nakit: '₺52,000.00',
+                krediKarti: '₺116,400.00',
+                islemAdedi: 42
             };
-            alert(`Z Raporu başarıyla oluşturuldu ve Ağustos 2026 klasörüne günün tarihi (${zRaporuIcerigi.tarih}) ile kaydedildi!`);
+            db.raporlarZ['Ağustos 2026'].unshift(yeniRapor);
+            alert(`Günlük POST cihazı Z Raporu başarıyla oluşturuldu ve Ağustos 2026 klasörüne (${bugun} tarihiyle) otomatik olarak kaydedildi!`);
             renderZReportSection();
         }
 
-        // AYARLAR / YETKİ KISITLAMA TABLOSU
+        // AYARLAR VE YETKİ KISITLAMA TABLOSU
         function renderPermissionsTable() {
             const tbody = document.getElementById('userPermissionsTable');
             tbody.innerHTML = db.personel.map(p => `
-                <tr class="hover:bg-gray-800/50 transition">
-                    <td class="p-3 font-medium text-white">${p.ad} (${p.email})</td>
-                    <td class="p-3">
-                        <select onchange="updateUserRole(${p.id}, this.value)" class="bg-gray-800 border border-gray-700 rounded px-2 py-1 text-xs text-white">
+                <tr class="hover:bg-gray-800/40 transition">
+                    <td class="p-4 font-bold text-white">${p.ad} <span class="text-gray-400 text-xs block font-normal">${p.email}</span></td>
+                    <td class="p-4">
+                        <select onchange="updateUserRole(${p.id}, this.value)" class="bg-gray-900 border border-gray-700 rounded-xl px-3 py-2 text-xs text-white font-bold focus:outline-none focus:border-inomerRed">
                             <option value="admin" ${p.rol === 'admin' ? 'selected' : ''}>Admin (Tam Yetki)</option>
-                            <option value="satis" ${p.rol === 'satis' ? 'selected' : ''}>Satış Elemanı (Kısıtlı)</option>
-                            <option value="teknik" ${p.rol === 'teknik' ? 'selected' : ''}>Teknik Personel</option>
+                            <option value="satis" ${p.rol === 'satis' ? 'selected' : ''}>Satış Elemanı (Kısıtlı: Stok & Fatura)</option>
+                            <option value="teknik" ${p.rol === 'teknik' ? 'selected' : ''}>Teknik Personel (Saha & Ekipman)</option>
                         </select>
                     </td>
-                    <td class="p-3 font-mono text-xs text-gray-400">${p.pass}</td>
-                    <td class="p-3 text-xs text-green-400"><i class="fa-solid fa-check"></i> Aktif</td>
+                    <td class="p-4 font-mono text-xs text-gray-400">${p.pass}</td>
+                    <td class="p-4 text-xs text-gray-300">
+                        ${p.rol === 'admin' ? 'Tüm Modüller (17 Modül)' : (p.rol === 'satis' ? 'Stok, Fatura, Cari, Teklif, Sipariş, Mesajlar' : 'Stok, Saha Fişleri, Ekipman, İzin, Mesajlar')}
+                    </td>
+                    <td class="p-4 text-center text-xs text-green-400 font-bold"><i class="fa-solid fa-check-circle mr-1"></i> Aktif</td>
                 </tr>
             `).join('');
         }
@@ -1094,7 +1220,8 @@
             const p = db.personel.find(x => x.id === id);
             if(p) {
                 p.rol = yeniRol;
-                alert(`${p.ad} kullanıcısının rolü "${yeniRol}" olarak güncellendi.`);
+                alert(`${p.ad} kullanıcısının rolü ve ekran yetkileri "${yeniRol}" olarak başarıyla güncellendi!`);
+                renderSidebar();
             }
         }
 
@@ -1106,48 +1233,59 @@
             modal.classList.remove('hidden');
 
             if(modalId === 'stokModal') {
-                title.innerText = 'Yeni Stok Ekle';
+                title.innerText = 'Yeni Stok / Malzeme Ekle';
                 body.innerHTML = `
                     <form onsubmit="saveItem(event, 'stok')" class="space-y-4">
-                        <div><label class="block text-xs uppercase text-gray-400 mb-1">Barkod / Kod</label><input type="text" id="m_kod" required class="w-full bg-gray-800 border border-gray-700 rounded p-2 text-white text-sm"></div>
-                        <div><label class="block text-xs uppercase text-gray-400 mb-1">Ürün Adı</label><input type="text" id="m_ad" required class="w-full bg-gray-800 border border-gray-700 rounded p-2 text-white text-sm"></div>
-                        <div><label class="block text-xs uppercase text-gray-400 mb-1">Klasör</label>
-                            <select id="m_klasor" class="w-full bg-gray-800 border border-gray-700 rounded p-2 text-white text-sm">
+                        <div><label class="block text-xs uppercase font-bold text-gray-400 mb-1.5">Barkod / Kod</label><input type="text" id="m_kod" required class="w-full bg-gray-900 border border-gray-700 rounded-xl p-3 text-white text-sm focus:outline-none focus:border-inomerRed" placeholder="STK-XXX"></div>
+                        <div><label class="block text-xs uppercase font-bold text-gray-400 mb-1.5">Ürün Adı</label><input type="text" id="m_ad" required class="w-full bg-gray-900 border border-gray-700 rounded-xl p-3 text-white text-sm focus:outline-none focus:border-inomerRed" placeholder="Solar Panel vb."></div>
+                        <div><label class="block text-xs uppercase font-bold text-gray-400 mb-1.5">Klasör</label>
+                            <select id="m_klasor" class="w-full bg-gray-900 border border-gray-700 rounded-xl p-3 text-white text-sm focus:outline-none focus:border-inomerRed">
                                 <option value="Paneller">Paneller</option><option value="Inverterler">Inverterler</option><option value="Kablolar">Kablolar</option>
                             </select>
                         </div>
-                        <div class="grid grid-cols-2 gap-2">
-                            <div><label class="block text-xs uppercase text-gray-400 mb-1">Miktar</label><input type="number" id="m_miktar" required class="w-full bg-gray-800 border border-gray-700 rounded p-2 text-white text-sm"></div>
-                            <div><label class="block text-xs uppercase text-gray-400 mb-1">Birim Fiyat ($)</label><input type="number" id="m_fiyat" required class="w-full bg-gray-800 border border-gray-700 rounded p-2 text-white text-sm"></div>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div><label class="block text-xs uppercase font-bold text-gray-400 mb-1.5">Miktar</label><input type="number" id="m_miktar" required class="w-full bg-gray-900 border border-gray-700 rounded-xl p-3 text-white text-sm focus:outline-none focus:border-inomerRed" placeholder="0"></div>
+                            <div><label class="block text-xs uppercase font-bold text-gray-400 mb-1.5">Birim Fiyat ($)</label><input type="number" id="m_fiyat" required class="w-full bg-gray-900 border border-gray-700 rounded-xl p-3 text-white text-sm focus:outline-none focus:border-inomerRed" placeholder="0"></div>
                         </div>
-                        <button type="submit" class="w-full bg-inomerRed text-white py-2.5 rounded font-bold text-sm">Kaydet</button>
+                        <button type="submit" class="w-full bg-inomerRed hover:bg-inomerRedDark text-white py-3.5 rounded-xl font-bold text-sm transition uppercase tracking-wider shadow-lg shadow-inomerRed/20">Stok Kaydet</button>
                     </form>
                 `;
             } else if(modalId === 'sahaModal') {
-                title.innerText = 'Yeni Saha Fişi & Belge Ekle';
+                title.innerText = 'Yeni Saha Fişi / Tutanak Ekle';
                 body.innerHTML = `
                     <form onsubmit="saveItem(event, 'saha')" class="space-y-4">
-                        <div><label class="block text-xs uppercase text-gray-400 mb-1">Başlık</label><input type="text" id="m_baslik" required class="w-full bg-gray-800 border border-gray-700 rounded p-2 text-white text-sm"></div>
-                        <div><label class="block text-xs uppercase text-gray-400 mb-1">Barkod Numarası</label><input type="text" id="m_barkod" class="w-full bg-gray-800 border border-gray-700 rounded p-2 text-white text-sm" placeholder="Barkod okutun..."></div>
-                        <div><label class="block text-xs uppercase text-gray-400 mb-1">Açıklama</label><textarea id="m_aciklama" class="w-full bg-gray-800 border border-gray-700 rounded p-2 text-white text-sm"></textarea></div>
-                        <div><label class="block text-xs uppercase text-gray-400 mb-1">Fotoğraf / Belge Yükle</label><input type="file" id="m_foto" class="w-full text-xs text-gray-400"></div>
-                        <button type="submit" class="w-full bg-inomerRed text-white py-2.5 rounded font-bold text-sm">Saha Fişini Kaydet</button>
+                        <div><label class="block text-xs uppercase font-bold text-gray-400 mb-1.5">Başlık</label><input type="text" id="m_baslik" required class="w-full bg-gray-900 border border-gray-700 rounded-xl p-3 text-white text-sm focus:outline-none focus:border-inomerRed" placeholder="Saha Tutanak Başlığı"></div>
+                        <div><label class="block text-xs uppercase font-bold text-gray-400 mb-1.5">Barkod / QR Numarası</label><input type="text" id="m_barkod" class="w-full bg-gray-900 border border-gray-700 rounded-xl p-3 text-white text-sm focus:outline-none focus:border-inomerRed" placeholder="Barkod okutun veya girin..."></div>
+                        <div><label class="block text-xs uppercase font-bold text-gray-400 mb-1.5">Açıklama</label><textarea id="m_aciklama" rows="3" class="w-full bg-gray-900 border border-gray-700 rounded-xl p-3 text-white text-sm focus:outline-none focus:border-inomerRed" placeholder="Detaylı saha notları..."></textarea></div>
+                        <div><label class="block text-xs uppercase font-bold text-gray-400 mb-1.5">Fotoğraf / Belge Yükle</label><input type="file" id="m_foto" class="w-full text-xs text-gray-400 bg-gray-900 border border-gray-700 rounded-xl p-2.5"></div>
+                        <button type="submit" class="w-full bg-inomerRed hover:bg-inomerRedDark text-white py-3.5 rounded-xl font-bold text-sm transition uppercase tracking-wider shadow-lg shadow-inomerRed/20">Saha Fişini Kaydet</button>
+                    </form>
+                `;
+            } else if(modalId === 'ekipmanModal') {
+                title.innerText = 'Yeni Ekipman / Demirbaş Ekle';
+                body.innerHTML = `
+                    <form onsubmit="saveItem(event, 'ekipman')" class="space-y-4">
+                        <div><label class="block text-xs uppercase font-bold text-gray-400 mb-1.5">Ekipman Adı</label><input type="text" id="eq_ad" required class="w-full bg-gray-900 border border-gray-700 rounded-xl p-3 text-white text-sm focus:outline-none focus:border-inomerRed" placeholder="Multimetre, Test Cihazı vb."></div>
+                        <div><label class="block text-xs uppercase font-bold text-gray-400 mb-1.5">Demirbaş Kodu</label><input type="text" id="eq_kod" required class="w-full bg-gray-900 border border-gray-700 rounded-xl p-3 text-white text-sm focus:outline-none focus:border-inomerRed" placeholder="EQP-XXX"></div>
+                        <div><label class="block text-xs uppercase font-bold text-gray-400 mb-1.5">Barkod</label><input type="text" id="eq_barkod" class="w-full bg-gray-900 border border-gray-700 rounded-xl p-3 text-white text-sm focus:outline-none focus:border-inomerRed" placeholder="Barkod..."></div>
+                        <div><label class="block text-xs uppercase font-bold text-gray-400 mb-1.5">Fotoğraf Yükle</label><input type="file" id="eq_foto" class="w-full text-xs text-gray-400 bg-gray-900 border border-gray-700 rounded-xl p-2.5"></div>
+                        <button type="submit" class="w-full bg-inomerRed hover:bg-inomerRedDark text-white py-3.5 rounded-xl font-bold text-sm transition uppercase tracking-wider shadow-lg shadow-inomerRed/20">Ekipman Kaydet</button>
                     </form>
                 `;
             } else if(modalId === 'cariModal') {
                 title.innerText = 'Yeni Müşteri Cari Ekle';
                 body.innerHTML = `
                     <form onsubmit="saveItem(event, 'cari')" class="space-y-4">
-                        <div><label class="block text-xs uppercase text-gray-400 mb-1">Cari Unvanı</label><input type="text" id="m_unvan" required class="w-full bg-gray-800 border border-gray-700 rounded p-2 text-white text-sm"></div>
-                        <div><label class="block text-xs uppercase text-gray-400 mb-1">Telefon</label><input type="text" id="m_tel" class="w-full bg-gray-800 border border-gray-700 rounded p-2 text-white text-sm"></div>
-                        <div><label class="block text-xs uppercase text-gray-400 mb-1">Açılış Bakiyesi (₺)</label><input type="number" id="m_bakiye" class="w-full bg-gray-800 border border-gray-700 rounded p-2 text-white text-sm"></div>
-                        <div><label class="block text-xs uppercase text-gray-400 mb-1">Cari Belge / Dosya</label><input type="file" id="m_caridosya" class="w-full text-xs text-gray-400"></div>
-                        <button type="submit" class="w-full bg-inomerRed text-white py-2.5 rounded font-bold text-sm">Cari Kaydet</button>
+                        <div><label class="block text-xs uppercase font-bold text-gray-400 mb-1.5">Cari Unvanı / Müşteri Adı</label><input type="text" id="m_unvan" required class="w-full bg-gray-900 border border-gray-700 rounded-xl p-3 text-white text-sm focus:outline-none focus:border-inomerRed" placeholder="Firma A.Ş."></div>
+                        <div><label class="block text-xs uppercase font-bold text-gray-400 mb-1.5">Telefon</label><input type="text" id="m_tel" class="w-full bg-gray-900 border border-gray-700 rounded-xl p-3 text-white text-sm focus:outline-none focus:border-inomerRed" placeholder="0232..."></div>
+                        <div><label class="block text-xs uppercase font-bold text-gray-400 mb-1.5">Açılış Bakiyesi (₺)</label><input type="number" id="m_bakiye" class="w-full bg-gray-900 border border-gray-700 rounded-xl p-3 text-white text-sm focus:outline-none focus:border-inomerRed" placeholder="0"></div>
+                        <div><label class="block text-xs uppercase font-bold text-gray-400 mb-1.5">Cari Belge / Sözleşme Yükle</label><input type="file" id="m_caridosya" class="w-full text-xs text-gray-400 bg-gray-900 border border-gray-700 rounded-xl p-2.5"></div>
+                        <button type="submit" class="w-full bg-inomerRed hover:bg-inomerRedDark text-white py-3.5 rounded-xl font-bold text-sm transition uppercase tracking-wider shadow-lg shadow-inomerRed/20">Cari Kaydet</button>
                     </form>
                 `;
             } else {
                 title.innerText = 'Yeni Kayıt Ekle';
-                body.innerHTML = `<p class="text-gray-400 text-sm">Bu modül için form alanı aktif.</p>`;
+                body.innerHTML = `<p class="text-gray-400 text-sm py-4 text-center">Bu modül için form yapısı aktif durumdadır.</p>`;
             }
         }
 
@@ -1170,56 +1308,63 @@
             } else if(type === 'saha') {
                 const fileInput = document.getElementById('m_foto');
                 const file = fileInput.files[0];
-                if(file) {
-                    const reader = new FileReader();
-                    reader.onload = function(evt) {
-                        db.saha.push({
-                            id: Date.now(),
-                            baslik: document.getElementById('m_baslik').value,
-                            barkod: document.getElementById('m_barkod').value,
-                            aciklama: document.getElementById('m_aciklama').value,
-                            foto: evt.target.result,
-                            tarih: new Date().toLocaleDateString('tr-TR')
-                        });
-                        renderSaha();
-                    };
-                    reader.readAsDataURL(file);
-                } else {
+                const processSave = (fotoUrl) => {
                     db.saha.push({
                         id: Date.now(),
                         baslik: document.getElementById('m_baslik').value,
                         barkod: document.getElementById('m_barkod').value,
                         aciklama: document.getElementById('m_aciklama').value,
-                        foto: null,
+                        foto: fotoUrl || '',
                         tarih: new Date().toLocaleDateString('tr-TR')
                     });
                     renderSaha();
+                };
+                if(file) {
+                    const reader = new FileReader();
+                    reader.onload = (evt) => processSave(evt.target.result);
+                    reader.readAsDataURL(file);
+                } else {
+                    processSave('');
+                }
+            } else if(type === 'ekipman') {
+                const fileInput = document.getElementById('eq_foto');
+                const file = fileInput.files[0];
+                const processSave = (fotoUrl) => {
+                    db.ekipman.push({
+                        id: Date.now(),
+                        ad: document.getElementById('eq_ad').value,
+                        kod: document.getElementById('eq_kod').value,
+                        barkod: document.getElementById('eq_barkod').value,
+                        foto: fotoUrl || ''
+                    });
+                    renderEkipman();
+                };
+                if(file) {
+                    const reader = new FileReader();
+                    reader.onload = (evt) => processSave(evt.target.result);
+                    reader.readAsDataURL(file);
+                } else {
+                    processSave('');
                 }
             } else if(type === 'cari') {
                 const fileInput = document.getElementById('m_caridosya');
                 const file = fileInput.files[0];
-                if(file) {
-                    const reader = new FileReader();
-                    reader.onload = function(evt) {
-                        db.cari.push({
-                            id: Date.now(),
-                            unvan: document.getElementById('m_unvan').value,
-                            tel: document.getElementById('m_tel').value,
-                            bakiye: Number(document.getElementById('m_bakiye').value || 0),
-                            dosya: { name: file.name, type: file.type, url: evt.target.result }
-                        });
-                        renderCari();
-                    };
-                    reader.readAsDataURL(file);
-                } else {
+                const processSave = (dosyaObj) => {
                     db.cari.push({
                         id: Date.now(),
                         unvan: document.getElementById('m_unvan').value,
                         tel: document.getElementById('m_tel').value,
                         bakiye: Number(document.getElementById('m_bakiye').value || 0),
-                        dosya: null
+                        dosya: dosyaObj
                     });
                     renderCari();
+                };
+                if(file) {
+                    const reader = new FileReader();
+                    reader.onload = (evt) => processSave({ name: file.name, type: file.type, url: evt.target.result });
+                    reader.readAsDataURL(file);
+                } else {
+                    processSave(null);
                 }
             }
             closeModal();
@@ -1236,7 +1381,7 @@
                 alert('Lütfen geçerli bir KolayBi API anahtarı giriniz!');
                 return;
             }
-            alert('KolayBi bulut muhasebe platformu ile fatura ve cari senkronizasyonu başarıyla tamamlandı!');
+            alert('KolayBi bulut muhasebe platformu ile tüm cari hesaplar ve faturalar başarıyla senkronize edildi!');
         }
 
         function renderAll() {
