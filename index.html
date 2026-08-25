@@ -1313,10 +1313,6 @@ async function fetchKolayBiInvoices() {
         console.error('KolayBi entegrasyon hatası:', error);
         tableBody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: red; padding: 12px;">CORS veya API Anahtarı hatası. Lütfen API anahtarınızı kontrol edin.</td></tr>`;
     }
-} catch (error) {
-        console.error('KolayBi entegrasyon hatası:', error);
-        tableBody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: red; padding: 12px;">CORS veya API Anahtarı hatası. Lütfen API anahtarınızı kontrol edin.</td></tr>`;
-    }
 }
 </script>
 </body>
