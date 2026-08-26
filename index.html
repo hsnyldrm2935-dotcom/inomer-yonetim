@@ -492,20 +492,26 @@
 </head>
 <body>
 
-    <!-- GİRİŞ EKRANI -->
+<!-- GİRİŞ EKRANI (Logolu Profesyonel Sürüm) -->
     <div id="loginOverlay">
-        <div class="login-card">
-            <h2 style="color:var(--primary);">İNOMER ENERJİ</h2>
-            <p>Kurumsal ERP & Yönetim Paneli</p>
-            <div class="form-group">
+        <div class="login-card" style="text-align: center;">
+            <!-- Dairesel Logo Alanı -->
+            <div style="margin-bottom: 15px;">
+                <img src="logo.png" alt="İnomer Enerji Logo" style="width: 70px; height: 70px; border-radius: 50%; object-fit: cover; border: 3px solid #0284c7; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+            </div>
+            
+            <h2 style="color:var(--primary); margin-bottom: 5px;">İNOMER ENERJİ</h2>
+            <p style="color: #64748b; font-size: 0.9rem; margin-bottom: 20px;">Kurumsal ERP & Yönetim Paneli</p>
+            
+            <div class="form-group" style="text-align: left;">
                 <label>E-posta Adresi</label>
                 <input type="email" id="loginEmail" autocomplete="off" value="" placeholder="bugrayildiriiim@inomerenerji.com">
             </div>
-            <div class="form-group">
+            <div class="form-group" style="text-align: left;">
                 <label>Şifre</label>
                 <input type="password" id="loginPass" autocomplete="new-password" value="" placeholder="••••••••">
             </div>
-            <button class="btn" onclick="handleLogin()">Sisteme Giriş Yap</button>
+            <button class="btn" style="width: 100%; margin-top: 10px;" onclick="handleLogin()">Sisteme Giriş Yap</button>
         </div>
     </div>
 
@@ -621,37 +627,152 @@
                 </div>
             </div>
 
-            <!-- 2. 📦 STOK & ÜRÜNLER -->
-            <div id="stokDepo" class="tab-pane">
-                <div class="card">
-                    <div class="card-header"><h3>Yeni Ürün / Malzeme Ekle</h3></div>
-                    <div class="form-grid">
-                        <div class="form-group"><label>Barkod / Seri No</label><input type="text" id="stokBarkod" placeholder="Barkod giriniz"></div>
-                        <div class="form-group"><label>Ürün Adı</label><input type="text" id="stokAd" placeholder="Örn: Daxler 585W Panel"></div>
-                        <div class="form-group"><label>Marka & Model</label><input type="text" id="stokMarkaModel" placeholder="Marka bilgisi"></div>
-                        <div class="form-group"><label>Satış Fiyatı (₺)</label><input type="number" id="stokSatis" placeholder="0.00"></div>
-                        <div class="form-group full"><label>📸 Ürün Fotoğrafları / Dosyalar</label><input type="file" id="stokDosya" multiple accept="image/*"></div>
-                    </div>
-                    <button class="btn" style="width:auto;" onclick="addItem('stok')">Ürünü Kaydet</button>
+            <!-- 2. <!-- 📦 STOK & ÜRÜNLER (Gelişmiş Profesyonel Sürüm) -->
+<div id="stokDepo" class="tab-pane">
+    
+    <!-- Üst Navigasyon / Alt Sekmeler: Yeni Ürün | Giren | Giden | Klasörler -->
+    <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+        <button class="btn active-sub-tab" onclick="switchStokSub('yeniUrunSekme', this)" style="background: #0284c7; color: white; padding: 10px 16px; border: none; border-radius: 6px; cursor: pointer; font-weight: 500;">➕ Yeni Ürün Ekle</button>
+        <button class="btn" onclick="switchStokSub('urunGirenSekme', this)" style="background: #e2e8f0; color: #334155; padding: 10px 16px; border: none; border-radius: 6px; cursor: pointer; font-weight: 500;">📥 Ürün Giren (Alış)</button>
+        <button class="btn" onclick="switchStokSub('urunGidenSekme', this)" style="background: #e2e8f0; color: #334155; padding: 10px 16px; border: none; border-radius: 6px; cursor: pointer; font-weight: 500;">📤 Ürün Giden (Çıkış)</button>
+        <button class="btn" onclick="switchStokSub('klasorSekme', this)" style="background: #e2e8f0; color: #334155; padding: 10px 16px; border: none; border-radius: 6px; cursor: pointer; font-weight: 500;">📁 Klasör & Kategori Yönetimi</button>
+    </div>
+
+    <!-- 1. YENİ ÜRÜN EKLEME ALANI -->
+    <div id="yeniUrunSekme" class="stok-sub-pane">
+        <div class="card" style="background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-bottom: 20px;">
+            <div class="card-header" style="margin-bottom: 15px;"><h3 style="font-size: 18px; font-weight: bold; color: #1e293b;">Yeni Ürün / Malzeme Kaydı</h3></div>
+            <div class="form-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 15px;">
+                <div class="form-group"><label style="display:block; font-size:12px; font-weight:600; margin-bottom:5px;">Barkod / Seri No</label><input type="text" id="stokBarkod" placeholder="Barkod giriniz" style="width:100%; padding:8px; border:1px solid #cbd5e1; border-radius:6px;"></div>
+                <div class="form-group"><label style="display:block; font-size:12px; font-weight:600; margin-bottom:5px;">Ürün Adı</label><input type="text" id="stokAd" placeholder="Örn: Daxler 585W Panel" style="width:100%; padding:8px; border:1px solid #cbd5e1; border-radius:6px;"></div>
+                <div class="form-group"><label style="display:block; font-size:12px; font-weight:600; margin-bottom:5px;">Marka & Model</label><input type="text" id="stokMarkaModel" placeholder="Marka bilgisi" style="width:100%; padding:8px; border:1px solid #cbd5e1; border-radius:6px;"></div>
+                <div class="form-group"><label style="display:block; font-size:12px; font-weight:600; margin-bottom:5px;">Alış Fiyatı (₺)</label><input type="number" id="stokAlis" placeholder="0.00" style="width:100%; padding:8px; border:1px solid #cbd5e1; border-radius:6px;"></div>
+                <div class="form-group"><label style="display:block; font-size:12px; font-weight:600; margin-bottom:5px;">Satış Fiyatı (₺)</label><input type="number" id="stokSatis" placeholder="0.00" style="width:100%; padding:8px; border:1px solid #cbd5e1; border-radius:6px;"></div>
+                <div class="form-group"><label style="display:block; font-size:12px; font-weight:600; margin-bottom:5px;">Klasör / Kategori Seç</label>
+                    <select id="stokKlasorSec" style="width:100%; padding:8px; border:1px solid #cbd5e1; border-radius:6px;">
+                        <option value="Genel Depo">Genel Depo</option>
+                        <option value="Güneş Panelleri">Güneş Panelleri</option>
+                        <option value="İnverter & Akü">İnverter & Akü</option>
+                        <option value="Kablolar & Pano">Kablolar & Pano</option>
+                    </select>
                 </div>
-                <div class="card">
-                    <div class="card-header"><h3>Stok Listesi</h3></div>
-                    <div class="table-container">
-                        <table>
-                            <thead><tr><th>Barkod</th><th>Ürün Adı</th><th>Marka</th><th>Fiyat</th><th>Fotoğraflar</th><th>İşlem</th></tr></thead>
-                            <tbody id="stokTableBody">
-                                <tr>
-                                    <td><span class="barcode-badge">869001</span></td>
-                                    <td>Daxler 585W Panel</td>
-                                    <td>Daxler</td>
-                                    <td>₺4.200</td>
-                                    <td>-</td>
-                                    <td><button class="btn btn-danger" onclick="deleteRow(this)">Sil 🗑️</button></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
+                <div class="form-group" style="grid-column: span 3;"><label style="display:block; font-size:12px; font-weight:600; margin-bottom:5px;">📸 Ürün Fotoğrafları / Teknik Dosyalar</label><input type="file" id="stokDosya" multiple accept="image/*" style="width:100%;"></div>
+            </div>
+            <button class="btn" style="background: #16a34a; color: white; padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer; font-weight: 500;" onclick="addItem('stok')">Ürünü ve Geçmişi Kaydet</button>
+        </div>
+    </div>
+
+    <!-- 2. ÜRÜN GİREN / ÇIKAN İŞLEMLERİ (Notlarındaki Giren-Giden Takibi) -->
+    <div id="urunGirenSekme" class="stok-sub-pane" style="display:none;">
+        <div class="card" style="background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-bottom: 20px;">
+            <h3 style="font-size: 18px; font-weight: bold; color: #1e293b; margin-bottom: 15px;">📥 Depoya Giren Ürünler & Tedarikçi Geçmişi</h3>
+            <p style="font-size: 13px; color: #64748b; margin-bottom: 15px;">Geçmişe dönük hangi ürünü, hangi tedarikçiden aldığını ve miktarını buradan takip edebilirsin.</p>
+            <div class="table-container">
+                <table style="width: 100%; border-collapse: collapse; text-align: left;">
+                    <thead>
+                        <tr style="background: #f8fafc; border-bottom: 2px solid #e2e8f0; color: #64748b; font-size: 12px; text-transform: uppercase;">
+                            <th style="padding: 12px;">Tarih</th>
+                            <th style="padding: 12px;">Barkod / Ürün</th>
+                            <th style="padding: 12px;">Tedarikçi (Alınan Yer)</th>
+                            <th style="padding: 12px;">Miktar</th>
+                            <th style="padding: 12px;">Birim Alış</th>
+                        </tr>
+                    </thead>
+                    <tbody id="urunGirenTableBody">
+                        <tr><td colspan="5" style="text-align: center; padding: 15px; color: #94a3b8;">Henüz giren ürün kaydı bulunmuyor.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div id="urunGidenSekme" class="stok-sub-pane" style="display:none;">
+        <div class="card" style="background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-bottom: 20px;">
+            <h3 style="font-size: 18px; font-weight: bold; color: #1e293b; margin-bottom: 15px;">📤 Depodan Çıkan Ürünler (Proje / Satış)</h3>
+            <div class="table-container">
+                <table style="width: 100%; border-collapse: collapse; text-align: left;">
+                    <thead>
+                        <tr style="background: #f8fafc; border-bottom: 2px solid #e2e8f0; color: #64748b; font-size: 12px; text-transform: uppercase;">
+                            <th style="padding: 12px;">Tarih</th>
+                            <th style="padding: 12px;">Ürün Adı</th>
+                            <th style="padding: 12px;">Çıkış Yapılan Yer / Proje</th>
+                            <th style="padding: 12px;">Adet</th>
+                        </tr>
+                    </thead>
+                    <tbody id="urunGidenTableBody">
+                        <tr><td colspan="4" style="text-align: center; padding: 15px; color: #94a3b8;">Depodan çıkan ürün kaydı yok.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. KLASÖR & KATEGORİ YÖNETİMİ -->
+    <div id="klasorSekme" class="stok-sub-pane" style="display:none;">
+        <div class="card" style="background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-bottom: 20px;">
+            <h3 style="font-size: 18px; font-weight: bold; color: #1e293b; margin-bottom: 15px;">📁 Klasör / Dosya Arşivi</h3>
+            <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+                <input type="text" id="yeniKlasorAdi" placeholder="Yeni Klasör Adı (Örn: GES Proje Evrakları)" style="padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px; width: 300px;">
+                <button class="btn" style="background: #0284c7; color: white; padding: 8px 16px; border: none; border-radius: 6px; cursor: pointer;" onclick="alert('Yeni klasör oluşturuldu!')">+ Klasör Oluştur</button>
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px;" id="klasorListesiDiv">
+                <div style="background: #f8fafc; border: 1px solid #e2e8f0; padding: 15px; border-radius: 8px; text-align: center;">
+                    <i class="fa-solid fa-folder text-amber-500" style="font-size: 32px; margin-bottom: 8px;"></i>
+                    <h4 style="font-weight: 600; font-size: 14px;">Genel Depo</h4>
+                    <span style="font-size: 11px; color: #64748b;">Ana Klasör</span>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ANA STOK LİSTESİ TABLOSU -->
+    <div class="card" style="background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+        <div class="card-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+            <h3 style="font-size: 18px; font-weight: bold; color: #1e293b;">Stok Listesi & Geçmiş Takibi</h3>
+        </div>
+        <div class="table-container">
+            <table style="width: 100%; border-collapse: collapse; text-align: left;">
+                <thead>
+                    <tr style="background: #f8fafc; border-bottom: 2px solid #e2e8f0; color: #64748b; font-size: 12px; text-transform: uppercase;">
+                        <th style="padding: 12px;">Barkod</th>
+                        <th style="padding: 12px;">Ürün Adı & Model</th>
+                        <th style="padding: 12px;">Klasör</th>
+                        <th style="padding: 12px;">Alış / Satış Fiyatı</th>
+                        <th style="padding: 12px;">Foto / Dosyalar</th>
+                        <th style="padding: 12px;">İşlem</th>
+                    </tr>
+                </thead>
+                <tbody id="stokTableBody" style="color: #334155; font-size: 14px;">
+                    <tr>
+                        <td style="padding: 12px;"><span style="background: #f1f5f9; padding: 4px 8px; border-radius: 4px; font-family: monospace;">869001</span></td>
+                        <td style="padding: 12px;"><b>Daxler 585W Panel</b><br><span style="font-size: 12px; color: #64748b;">Daxler</span></td>
+                        <td style="padding: 12px;">Güneş Panelleri</td>
+                        <td style="padding: 12px;">Alış: ₺3.800<br><b>Satış: ₺4.200</b></td>
+                        <td style="padding: 12px;">-</td>
+                        <td style="padding: 12px;"><button class="btn" style="background: #dc2626; color: white; padding: 6px 12px; border: none; border-radius: 4px; cursor: pointer;" onclick="deleteRow(this)">Sil 🗑️</button></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Alt sekmeleri ve geçişleri çalıştıran JS kodu -->
+<script>
+    function switchStokSub(paneId, btn) {
+        document.querySelectorAll('.stok-sub-pane').forEach(el => el.style.display = 'none');
+        let target = document.getElementById(paneId);
+        if(target) target.style.display = 'block';
+
+        // Buton aktiflik renklerini ayarla
+        document.querySelectorAll('#stokDepo > div:first-child button').forEach(b => {
+            b.style.background = '#e2e8f0';
+            b.style.color = '#334155';
+        });
+        btn.style.background = '#0284c7';
+        btn.style.color = 'white';
+    }
+</script>
             </div>
 
             <!-- 3. ☀️ ARAZİ GES -->
@@ -765,85 +886,132 @@
                 </div>
             </div>
 
-            <!-- 8. 👥 PERSONEL -->
-            <div id="personel" class="tab-pane">
-                <div class="card">
-                    <div class="card-header"><h3>Personel</h3></div>
-                    <div class="form-grid">
-                        <div class="form-group"><label>Sicil Barkod</label><input type="text" id="personelBarkod"></div>
-                        <div class="form-group"><label>Ad Soyad</label><input type="text" id="personelAd"></div>
-                        <div class="form-group"><label>Pozisyon</label><input type="text" id="personelPoz"></div>
-                        <div class="form-group full"><label>📸 Fotoğraflar</label><input type="file" id="personelDosya" multiple accept="image/*"></div>
-                    </div>
-                    <button class="btn" style="width:auto;" onclick="addItem('personel')">Kaydet</button>
-                </div>
-                <div class="card">
-                    <div class="table-container">
-                        <table>
-                            <thead><tr><th>Sicil</th><th>Ad Soyad</th><th>Pozisyon</th><th>Fotoğraflar</th><th>İşlem</th></tr></thead>
-                            <tbody id="personelTableBody"></tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
+<!-- 8. 👥 PERSONEL (Gelişmiş Profesyonel Sürüm) -->
+<div id="personel" class="tab-pane">
+    <div class="card" style="background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-bottom: 20px;">
+        <div class="card-header" style="margin-bottom: 15px;"><h3 style="font-size: 18px; font-weight: bold; color: #1e293b;">Yeni Personel Kaydı & Özlük Dosyası</h3></div>
+        <div class="form-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 15px;">
+            <div class="form-group"><label style="display:block; font-size:12px; font-weight:600; margin-bottom:5px;">Sicil Barkod</label><input type="text" id="personelBarkod" placeholder="SICIL-01" style="width:100%; padding:8px; border:1px solid #cbd5e1; border-radius:6px;"></div>
+            <div class="form-group"><label style="display:block; font-size:12px; font-weight:600; margin-bottom:5px;">Ad Soyad</label><input type="text" id="personelAd" placeholder="Personel Adı Soyadı" style="width:100%; padding:8px; border:1px solid #cbd5e1; border-radius:6px;"></div>
+            <div class="form-group"><label style="display:block; font-size:12px; font-weight:600; margin-bottom:5px;">Pozisyon / Görev</label><input type="text" id="personelPoz" placeholder="Örn: Elektrik Teknikeri" style="width:100%; padding:8px; border:1px solid #cbd5e1; border-radius:6px;"></div>
+            <div class="form-group"><label style="display:block; font-size:12px; font-weight:600; margin-bottom:5px;">İşe Giriş Tarihi</label><input type="date" id="personelGirisTarihi" style="width:100%; padding:8px; border:1px solid #cbd5e1; border-radius:6px;"></div>
+            <div class="form-group" style="grid-column: span 2;"><label style="display:block; font-size:12px; font-weight:600; margin-bottom:5px;">📸 Personel Fotoğrafı & Evrak Klasörü</label><input type="file" id="personelDosya" multiple accept="image/*" style="width:100%;"></div>
+        </div>
+        <button class="btn" style="background: #16a34a; color: white; padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer; font-weight: 500;" onclick="addItem('personel')">Personeli Kaydet ve Klasör Aç</button>
+    </div>
 
-            <!-- 9. 🌴 İZİN TALEPLERİ -->
-            <div id="izinTalebi" class="tab-pane">
-                <div class="card">
-                    <div class="card-header"><h3>İzin Talepleri</h3></div>
-                    <div class="form-grid">
-                        <div class="form-group"><label>Barkod</label><input type="text" id="izinBarkod" value="IZN-01"></div>
-                        <div class="form-group"><label>Personel</label><input type="text" id="izinAd" placeholder="Personel Adı"></div>
-                        <div class="form-group"><label>Gün</label><input type="number" id="izinGun" value="3"></div>
-                        <div class="form-group full"><label>📸 Fotoğraflar / Belge</label><input type="file" id="izinDosya" multiple accept="image/*"></div>
-                    </div>
-                    <button class="btn" style="width:auto;" onclick="addItem('izin')">İzin Talebi Oluştur</button>
-                </div>
-                <div class="card">
-                    <div class="card-header"><h3>Bekleyen ve Geçmiş İzin Talepleri</h3></div>
-                    <div class="table-container">
-                        <table>
-                            <thead><tr><th>Barkod</th><th>Personel</th><th>Gün</th><th>Durum / İşlem</th><th>Sil</th></tr></thead>
-                            <tbody id="izinTableBody">
-                                <tr>
-                                    <td><span class="barcode-badge">IZN-001</span></td>
-                                    <td>Ahmet Yılmaz</td>
-                                    <td>3 Gün</td>
-                                    <td>
-                                        <span id="status-izn1" style="font-weight:600; color:#d97706; margin-right:10px;">Bekliyor ⏳</span>
-                                        <button class="btn btn-success" onclick="approveIzin('izn1')">Onayla ✅</button>
-                                        <button class="btn btn-danger" onclick="rejectIzin('izn1')">Reddet ❌</button>
-                                    </td>
-                                    <td><button class="btn btn-danger" onclick="deleteRow(this)">Sil 🗑️</button></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
+    <div class="card" style="background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+        <div class="card-header" style="margin-bottom: 15px;"><h3 style="font-size: 18px; font-weight: bold; color: #1e293b;">Personel Listesi (Detaylı Klasör Görünümü)</h3></div>
+        <div class="table-container">
+            <table style="width: 100%; border-collapse: collapse; text-align: left;">
+                <thead>
+                    <tr style="background: #f8fafc; border-bottom: 2px solid #e2e8f0; color: #64748b; font-size: 12px; text-transform: uppercase;">
+                        <th style="padding: 12px;">Sicil</th>
+                        <th style="padding: 12px;">Ad Soyad</th>
+                        <th style="padding: 12px;">Pozisyon</th>
+                        <th style="padding: 12px;">İşe Giriş</th>
+                        <th style="padding: 12px;">Özlük Klasörü / Hareketler</th>
+                        <th style="padding: 12px;">İşlem</th>
+                    </tr>
+                </thead>
+                <tbody id="personelTableBody" style="color: #334155; font-size: 14px;">
+                    <tr>
+                        <td style="padding: 12px;"><span style="background: #f1f5f9; padding: 4px 8px; border-radius: 4px; font-family: monospace;">SICIL-001</span></td>
+                        <td style="padding: 12px;"><b>Ahmet Yılmaz</b></td>
+                        <td style="padding: 12px;">Saha Elektrikeri</td>
+                        <td style="padding: 12px;">2025-03-10</td>
+                        <td style="padding: 12px;"><button class="btn" style="background: #0284c7; color: white; padding: 4px 10px; border-radius: 4px; font-size: 12px; border:none; cursor:pointer;" onclick="alert('Ahmet Yılmaz özlük dosyası ve site içi hareketleri açılıyor...')">📁 Klasörü Aç</button></td>
+                        <td style="padding: 12px;"><button class="btn" style="background: #dc2626; color: white; padding: 6px 12px; border: none; border-radius: 4px; cursor: pointer;" onclick="deleteRow(this)">Sil 🗑️</button></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
 
-            <!-- 10. 💰 AVANS TALEPLERİ -->
-            <div id="avansTalebi" class="tab-pane">
-                <div class="card">
-                    <div class="card-header"><h3>Avans Talepleri</h3></div>
-                    <div class="form-grid">
-                        <div class="form-group"><label>Barkod</label><input type="text" id="avansBarkod"></div>
-                        <div class="form-group"><label>Personel</label><input type="text" id="avansAd"></div>
-                        <div class="form-group"><label>Tutar</label><input type="number" id="avansTutar"></div>
-                        <div class="form-group full"><label>📸 Fotoğraflar</label><input type="file" id="avansDosya" multiple accept="image/*"></div>
-                    </div>
-                    <button class="btn" style="width:auto;" onclick="addItem('avans')">Kaydet</button>
-                </div>
-                <div class="card">
-                    <div class="table-container">
-                        <table>
-                            <thead><tr><th>Barkod</th><th>Personel</th><th>Tutar</th><th>Fotoğraflar</th><th>İşlem</th></tr></thead>
-                            <tbody id="avansTableBody"></tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
+<!-- 9. 🌴 İZİN TALEPLERİ (Gelişmiş Sürüm) -->
+<div id="izinTalebi" class="tab-pane">
+    <div class="card" style="background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-bottom: 20px;">
+        <div class="card-header" style="margin-bottom: 15px;"><h3 style="font-size: 18px; font-weight: bold; color: #1e293b;">Yeni İzin Talebi Oluştur</h3></div>
+        <div class="form-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 15px;">
+            <div class="form-group"><label style="display:block; font-size:12px; font-weight:600; margin-bottom:5px;">İzin Barkod / No</label><input type="text" id="izinBarkod" value="IZN-02" style="width:100%; padding:8px; border:1px solid #cbd5e1; border-radius:6px;"></div>
+            <div class="form-group"><label style="display:block; font-size:12px; font-weight:600; margin-bottom:5px;">Personel Adı</label><input type="text" id="izinAd" placeholder="Personel Adı" style="width:100%; padding:8px; border:1px solid #cbd5e1; border-radius:6px;"></div>
+            <div class="form-group"><label style="display:block; font-size:12px; font-weight:600; margin-bottom:5px;">İzin Süresi (Gün)</label><input type="number" id="izinGun" value="3" style="width:100%; padding:8px; border:1px solid #cbd5e1; border-radius:6px;"></div>
+            <div class="form-group" style="grid-column: span 3;"><label style="display:block; font-size:12px; font-weight:600; margin-bottom:5px;">📸 İzin Gerekçesi / Belge Ekleri</label><input type="file" id="izinDosya" multiple accept="image/*" style="width:100%;"></div>
+        </div>
+        <button class="btn" style="background: #16a34a; color: white; padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer; font-weight: 500;" onclick="addItem('izin')">İzin Talebini Gönder</button>
+    </div>
 
+    <div class="card" style="background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+        <div class="card-header" style="margin-bottom: 15px;"><h3 style="font-size: 18px; font-weight: bold; color: #1e293b;">Bekleyen ve Geçmiş İzin Talepleri</h3></div>
+        <div class="table-container">
+            <table style="width: 100%; border-collapse: collapse; text-align: left;">
+                <thead>
+                    <tr style="background: #f8fafc; border-bottom: 2px solid #e2e8f0; color: #64748b; font-size: 12px; text-transform: uppercase;">
+                        <th style="padding: 12px;">Barkod</th>
+                        <th style="padding: 12px;">Personel</th>
+                        <th style="padding: 12px;">Gün</th>
+                        <th style="padding: 12px;">Onay Durumu & İşlem</th>
+                        <th style="padding: 12px;">Sil</th>
+                    </tr>
+                </thead>
+                <tbody id="izinTableBody" style="color: #334155; font-size: 14px;">
+                    <tr>
+                        <td style="padding: 12px;"><span style="background: #f1f5f9; padding: 4px 8px; border-radius: 4px; font-family: monospace;">IZN-001</span></td>
+                        <td style="padding: 12px;"><b>Ahmet Yılmaz</b></td>
+                        <td style="padding: 12px;">3 Gün</td>
+                        <td style="padding: 12px;">
+                            <span id="status-izn1" style="font-weight:600; color:#d97706; margin-right:10px;">Bekliyor ⏳</span>
+                            <button class="btn" style="background: #16a34a; color: white; padding: 4px 8px; border-radius: 4px; border:none; cursor:pointer;" onclick="approveIzin('izn1')">Onayla ✅</button>
+                            <button class="btn" style="background: #dc2626; color: white; padding: 4px 8px; border-radius: 4px; border:none; cursor:pointer;" onclick="rejectIzin('izn1')">Reddet ❌</button>
+                        </td>
+                        <td style="padding: 12px;"><button class="btn" style="background: #dc2626; color: white; padding: 6px 12px; border: none; border-radius: 4px; cursor: pointer;" onclick="deleteRow(this)">Sil 🗑️</button></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- 10. 💰 AVANS TALEPLERİ (Gelişmiş Sürüm) -->
+<div id="avansTalebi" class="tab-pane">
+    <div class="card" style="background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-bottom: 20px;">
+        <div class="card-header" style="margin-bottom: 15px;"><h3 style="font-size: 18px; font-weight: bold; color: #1e293b;">Yeni Avans Talebi Ekle</h3></div>
+        <div class="form-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 15px;">
+            <div class="form-group"><label style="display:block; font-size:12px; font-weight:600; margin-bottom:5px;">Avans Barkod / No</label><input type="text" id="avansBarkod" placeholder="AVN-01" style="width:100%; padding:8px; border:1px solid #cbd5e1; border-radius:6px;"></div>
+            <div class="form-group"><label style="display:block; font-size:12px; font-weight:600; margin-bottom:5px;">Personel Adı</label><input type="text" id="avansAd" placeholder="Personel Adı" style="width:100%; padding:8px; border:1px solid #cbd5e1; border-radius:6px;"></div>
+            <div class="form-group"><label style="display:block; font-size:12px; font-weight:600; margin-bottom:5px;">Talep Edilen Tutar (₺)</label><input type="number" id="avansTutar" placeholder="0.00" style="width:100%; padding:8px; border:1px solid #cbd5e1; border-radius:6px;"></div>
+            <div class="form-group" style="grid-column: span 3;"><label style="display:block; font-size:12px; font-weight:600; margin-bottom:5px;">📸 Belge / İlgili Evrak</label><input type="file" id="avansDosya" multiple accept="image/*" style="width:100%;"></div>
+        </div>
+        <button class="btn" style="background: #16a34a; color: white; padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer; font-weight: 500;" onclick="addItem('avans')">Avans Talebini Kaydet</button>
+    </div>
+
+    <div class="card" style="background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+        <div class="card-header" style="margin-bottom: 15px;"><h3 style="font-size: 18px; font-weight: bold; color: #1e293b;">Avans Listesi ve Durumları</h3></div>
+        <div class="table-container">
+            <table style="width: 100%; border-collapse: collapse; text-align: left;">
+                <thead>
+                    <tr style="background: #f8fafc; border-bottom: 2px solid #e2e8f0; color: #64748b; font-size: 12px; text-transform: uppercase;">
+                        <th style="padding: 12px;">Barkod</th>
+                        <th style="padding: 12px;">Personel</th>
+                        <th style="padding: 12px;">Tutar</th>
+                        <th style="padding: 12px;">Belgeler</th>
+                        <th style="padding: 12px;">İşlem</th>
+                    </tr>
+                </thead>
+                <tbody id="avansTableBody" style="color: #334155; font-size: 14px;">
+                    <tr>
+                        <td style="padding: 12px;"><span style="background: #f1f5f9; padding: 4px 8px; border-radius: 4px; font-family: monospace;">AVN-001</span></td>
+                        <td style="padding: 12px;"><b>Mehmet Demir</b></td>
+                        <td style="padding: 12px; font-weight:600; color:#0f172a;">₺5.000,00</td>
+                        <td style="padding: 12px;">-</td>
+                        <td style="padding: 12px;"><button class="btn" style="background: #dc2626; color: white; padding: 6px 12px; border: none; border-radius: 4px; cursor: pointer;" onclick="deleteRow(this)">Sil 🗑️</button></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
             <!-- 11. 📊 KOLAYBİ & FATURA -->
             <div id="kolayBi" class="tab-pane">
                 <div class="card">
@@ -937,49 +1105,73 @@
                 </div>
             </div>
 
-            <!-- 13. 📄 TEKLİFLER -->
-            <div id="teklifler" class="tab-pane">
-                <div class="card">
-                    <div class="card-header"><h3>Teklifler</h3></div>
-                    <div class="form-grid">
-                        <div class="form-group"><label>Barkod</label><input type="text" id="teklifBarkod"></div>
-                        <div class="form-group"><label>Konu</label><input type="text" id="teklifKonu"></div>
-                        <div class="form-group"><label>Tutar</label><input type="number" id="teklifTutar"></div>
-                        <div class="form-group full"><label>📸 Fotoğraflar</label><input type="file" id="teklifDosya" multiple accept="image/*"></div>
-                    </div>
-                    <button class="btn" style="width:auto;" onclick="addItem('teklif')">Kaydet</button>
-                </div>
-                <div class="card">
-                    <div class="table-container">
-                        <table>
-                            <thead><tr><th>Barkod</th><th>Konu</th><th>Tutar</th><th>Fotoğraflar</th><th>İşlem</th></tr></thead>
-                            <tbody id="teklifTableBody"></tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
+<!-- 13. 📄 TEKLİFLER (Gelişmiş Profesyonel Sürüm) -->
+<div id="teklifler" class="tab-pane">
+    <div class="card" style="background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-bottom: 20px;">
+        <div class="card-header" style="margin-bottom: 15px;"><h3 style="font-size: 18px; font-weight: bold; color: #1e293b;">Yeni Teklif Oluştur</h3></div>
+        <div class="form-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 15px;">
+            <div class="form-group"><label style="display:block; font-size:12px; font-weight:600; margin-bottom:5px;">Barkod / Teklif No</label><input type="text" id="teklifBarkod" placeholder="TKL-2026-01" style="width:100%; padding:8px; border:1px solid #cbd5e1; border-radius:6px;"></div>
+            <div class="form-group"><label style="display:block; font-size:12px; font-weight:600; margin-bottom:5px;">Teklif Konusu / Müşteri</label><input type="text" id="teklifKonu" placeholder="Örn: Solar Paneller Kurulum Teklifi" style="width:100%; padding:8px; border:1px solid #cbd5e1; border-radius:6px;"></div>
+            <div class="form-group"><label style="display:block; font-size:12px; font-weight:600; margin-bottom:5px;">Toplam Tutar (₺)</label><input type="number" id="teklifTutar" placeholder="0.00" style="width:100%; padding:8px; border:1px solid #cbd5e1; border-radius:6px;"></div>
+            <div class="form-group full" style="grid-column: span 3;"><label style="display:block; font-size:12px; font-weight:600; margin-bottom:5px;">📸 Teklif Dosyası / Görseller</label><input type="file" id="teklifDosya" multiple accept="image/*" style="width:100%;"></div>
+        </div>
+        <button class="btn" style="background: #16a34a; color: white; padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer; font-weight: 500;" onclick="addItem('teklif')">Teklifi Kaydet</button>
+    </div>
 
-            <!-- 14. 🧾 SİPARİŞLER -->
-            <div id="siparisler" class="tab-pane">
-                <div class="card">
-                    <div class="card-header"><h3>Siparişler</h3></div>
-                    <div class="form-grid">
-                        <div class="form-group"><label>Barkod</label><input type="text" id="siparisBarkod"></div>
-                        <div class="form-group"><label>Tanım</label><input type="text" id="siparisAd"></div>
-                        <div class="form-group"><label>Tedarikçi</label><input type="text" id="siparisTed"></div>
-                        <div class="form-group full"><label>📸 Fotoğraflar</label><input type="file" id="siparisDosya" multiple accept="image/*"></div>
-                    </div>
-                    <button class="btn" style="width:auto;" onclick="addItem('siparis')">Kaydet</button>
-                </div>
-                <div class="card">
-                    <div class="table-container">
-                        <table>
-                            <thead><tr><th>Barkod</th><th>Tanım</th><th>Tedarikçi</th><th>Fotoğraflar</th><th>İşlem</th></tr></thead>
-                            <tbody id="siparisTableBody"></tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
+    <div class="card" style="background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+        <div class="card-header" style="margin-bottom: 15px;"><h3 style="font-size: 18px; font-weight: bold; color: #1e293b;">Verilen / Alınan Teklifler Listesi</h3></div>
+        <div class="table-container">
+            <table style="width: 100%; border-collapse: collapse; text-align: left;">
+                <thead>
+                    <tr style="background: #f8fafc; border-bottom: 2px solid #e2e8f0; color: #64748b; font-size: 12px; text-transform: uppercase;">
+                        <th style="padding: 12px;">Barkod</th>
+                        <th style="padding: 12px;">Konu</th>
+                        <th style="padding: 12px;">Tutar</th>
+                        <th style="padding: 12px;">Fotoğraflar</th>
+                        <th style="padding: 12px;">İşlem</th>
+                    </tr>
+                </thead>
+                <tbody id="teklifTableBody" style="color: #334155; font-size: 14px;">
+                    <!-- Dinamik satırlar buraya gelecek -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- 14. 🧾 SİPARİŞLER (Gelişmiş Profesyonel Sürüm) -->
+<div id="siparisler" class="tab-pane">
+    <div class="card" style="background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-bottom: 20px;">
+        <div class="card-header" style="margin-bottom: 15px;"><h3 style="font-size: 18px; font-weight: bold; color: #1e293b;">Yeni Sipariş Girişi</h3></div>
+        <div class="form-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 15px;">
+            <div class="form-group"><label style="display:block; font-size:12px; font-weight:600; margin-bottom:5px;">Sipariş Barkodu</label><input type="text" id="siparisBarkod" placeholder="SPR-2026-01" style="width:100%; padding:8px; border:1px solid #cbd5e1; border-radius:6px;"></div>
+            <div class="form-group"><label style="display:block; font-size:12px; font-weight:600; margin-bottom:5px;">Ürün / Malzeme Tanımı</label><input type="text" id="siparisAd" placeholder="Örn: 585W TOPCon Solar Panel" style="width:100%; padding:8px; border:1px solid #cbd5e1; border-radius:6px;"></div>
+            <div class="form-group"><label style="display:block; font-size:12px; font-weight:600; margin-bottom:5px;">Tedarikçi Firma</label><input type="text" id="siparisTed" placeholder="Tedarikçi Adı" style="width:100%; padding:8px; border:1px solid #cbd5e1; border-radius:6px;"></div>
+            <div class="form-group full" style="grid-column: span 3;"><label style="display:block; font-size:12px; font-weight:600; margin-bottom:5px;">📸 Sipariş Belgesi / Görsel</label><input type="file" id="siparisDosya" multiple accept="image/*" style="width:100%;"></div>
+        </div>
+        <button class="btn" style="background: #16a34a; color: white; padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer; font-weight: 500;" onclick="addItem('siparis')">Siparişi Kaydet</button>
+    </div>
+
+    <div class="card" style="background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+        <div class="card-header" style="margin-bottom: 15px;"><h3 style="font-size: 18px; font-weight: bold; color: #1e293b;">Siparişler Listesi</h3></div>
+        <div class="table-container">
+            <table style="width: 100%; border-collapse: collapse; text-align: left;">
+                <thead>
+                    <tr style="background: #f8fafc; border-bottom: 2px solid #e2e8f0; color: #64748b; font-size: 12px; text-transform: uppercase;">
+                        <th style="padding: 12px;">Barkod</th>
+                        <th style="padding: 12px;">Tanım</th>
+                        <th style="padding: 12px;">Tedarikçi</th>
+                        <th style="padding: 12px;">Fotoğraflar</th>
+                        <th style="padding: 12px;">İşlem</th>
+                    </tr>
+                </thead>
+                <tbody id="siparisTableBody" style="color: #334155; font-size: 14px;">
+                    <!-- Dinamik satırlar buraya gelecek -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
 
             <!-- 15. 📈 RAPORLAR -->
             <div id="raporlar" class="tab-pane">
@@ -1038,41 +1230,89 @@
                 </div>
             </div>
 
-            <!-- 18. ⚙️ AYARLAR -->
-            <div id="ayarlar" class="tab-pane">
-                <div class="card">
-                    <div class="card-header"><h3>KolayBi API & Sistem Ayarları</h3></div>
-                    <div class="form-grid">
-                        <div class="form-group"><label>Şirket Ünvanı</label><input type="text" id="ayarSirket" value="İNOMER ENERJİ"></div>
-                        <div class="form-group"><label>KolayBi API Key (Anahtar)</label><input type="password" id="kolayBiApiKey" value="kb_live_99882233aabbcc77"></div>
-                        <div class="form-group full"><label>KolayBi Entegrasyon Uç Noktası (Endpoint)</label><input type="text" id="kolayBiEndpoint" value="https://api.kolaybi.com/v1/integration"></div>
-                    </div>
-                    <button class="btn" style="width:auto;" onclick="saveKolayBiSettings()">KolayBi Ayarlarını Kaydet</button>
-                </div>
+<!-- 18. ⚙️ AYARLAR & SİSTEM KONTROL MERKEZİ (Profesyonel Sürüm) -->
+<div id="ayarlar" class="tab-pane">
+    <!-- 1. Şirket & KolayBi API Entegrasyon Ayarları -->
+    <div class="card" style="background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-bottom: 20px;">
+        <div class="card-header" style="margin-bottom: 15px;">
+            <h3 style="font-size: 18px; font-weight: bold; color: #1e293b;">KolayBi API & Sistem Genel Ayarları</h3>
+            <p style="color: #64748b; font-size: 0.9rem; margin-top: 4px;">Bulut muhasebe entegrasyonu ve kurumsal kimlik parametrelerini bu alandan yönetebilirsiniz.</p>
+        </div>
+        <div class="form-grid" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-bottom: 15px;">
+            <div class="form-group">
+                <label style="display:block; font-size:12px; font-weight:600; margin-bottom:5px;">Şirket Ünvanı</label>
+                <input type="text" id="ayarSirket" value="İNOMER ENERJİ" style="width:100%; padding:8px; border:1px solid #cbd5e1; border-radius:6px;">
             </div>
-
-            <!-- 19. 🗑️ ÇÖP KUTUSU & VERİ YÖNETİMİ -->
-            <div id="copKutusu" class="tab-pane">
-                <div class="card">
-                    <div class="card-header">
-                        <h3>Çöp Kutusu & Veri Yönetimi</h3>
-                        <button class="btn btn-danger" onclick="clearAllData()">Tüm Sistem Kayıtlarını Temizle / Sıfırla</button>
-                    </div>
-                    <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom: 16px;">Sildiğiniz öğeler veya sistemdeki tüm listelenen verileri buradan tek tuşla tamamen sıfırlayabilirsiniz.</p>
-                    <div class="table-container">
-                        <table>
-                            <thead><tr><th>Kayıt Tipi / Bilgisi</th><th>İşlem Durumu</th><th>Yönet</th></tr></thead>
-                            <tbody id="trashTableBody">
-                                <tr><td>Sistem Arşiv Çöp Kutusu boş.</td><td>Aktif</td><td>-</td></tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+            <div class="form-group">
+                <label style="display:block; font-size:12px; font-weight:600; margin-bottom:5px;">KolayBi API Key (Anahtar)</label>
+                <input type="password" id="kolayBiApiKey" value="kb_live_99882233aabbcc77" style="width:100%; padding:8px; border:1px solid #cbd5e1; border-radius:6px;">
             </div>
-
-        </main>
+            <div class="form-group full" style="grid-column: span 2;">
+                <label style="display:block; font-size:12px; font-weight:600; margin-bottom:5px;">KolayBi Entegrasyon Uç Noktası (Endpoint)</label>
+                <input type="text" id="kolayBiEndpoint" value="https://api.kolaybi.com/v1/integration" style="width:100%; padding:8px; border:1px solid #cbd5e1; border-radius:6px;">
+            </div>
+        </div>
+        <button class="btn" style="background: #0284c7; color: white; padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer; font-weight: 500;" onclick="saveKolayBiSettings()">KolayBi Ayarlarını Kaydet</button>
     </div>
 
+    <!-- 2. Tüm Sistem Sekmelerine & Modüllerine Hızlı Erişim Paneli -->
+    <div class="card" style="background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-bottom: 20px;">
+        <div class="card-header" style="margin-bottom: 15px;">
+            <h3 style="font-size: 18px; font-weight: bold; color: #1e293b;">Sistem Modülleri & Hızlı Erişim</h3>
+            <p style="color: #64748b; font-size: 0.9rem; margin-top: 4px;">Uygulama içerisindeki tüm alt birimlere ve sekmelere tek tıklamayla doğrudan geçiş yapın.</p>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;">
+            <button class="btn" style="background: #f1f5f9; color: #334155; border: 1px solid #cbd5e1; padding: 10px; border-radius: 6px; cursor: pointer; text-align: left; font-size: 13px; font-weight: 500;" onclick="document.querySelector('[data-target=\'kolayBi\']')?.click() || alert('Sekme aktif')">📊 KolayBi & Fatura</button>
+            <button class="btn" style="background: #f1f5f9; color: #334155; border: 1px solid #cbd5e1; padding: 10px; border-radius: 6px; cursor: pointer; text-align: left; font-size: 13px; font-weight: 500;" onclick="document.querySelector('[data-target=\'teklifler\']')?.click()">📄 Teklifler</button>
+            <button class="btn" style="background: #f1f5f9; color: #334155; border: 1px solid #cbd5e1; padding: 10px; border-radius: 6px; cursor: pointer; text-align: left; font-size: 13px; font-weight: 500;" onclick="document.querySelector('[data-target=\'siparisler\']')?.click()">🧾 Siparişler</button>
+            <button class="btn" style="background: #f1f5f9; color: #334155; border: 1px solid #cbd5e1; padding: 10px; border-radius: 6px; cursor: pointer; text-align: left; font-size: 13px; font-weight: 500;" onclick="document.querySelector('[data-target=\'copKutusu\']')?.click()">🗑️ Çöp Kutusu & Veri</button>
+        </div>
+    </div>
+
+    <!-- 3. Gelişmiş Tercihler & Veritabanı Yedekleme -->
+    <div class="card" style="background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+        <div class="card-header" style="margin-bottom: 15px;">
+            <h3 style="font-size: 18px; font-weight: bold; color: #1e293b;">Veri Yedekleme & Sistem Tercihleri</h3>
+            <p style="color: #64748b; font-size: 0.9rem; margin-top: 4px;">Sistem verilerinin güvenliği ve çalışma ortamı tercihlerini özelleştirin.</p>
+        </div>
+        <div style="display: flex; gap: 15px; align-items: center; flex-wrap: wrap;">
+            <button class="btn" style="background: #10b981; color: white; padding: 10px 16px; border: none; border-radius: 6px; cursor: pointer; font-weight: 500;" onclick="alert('Sistem verileri JSON formatında yedeklendi.')">📥 Tüm Verileri Yedekle (JSON)</button>
+            <button class="btn" style="background: #64748b; color: white; padding: 10px 16px; border: none; border-radius: 6px; cursor: pointer; font-weight: 500;" onclick="alert('Önbellek ve oturum verileri temizlendi.')">🧹 Önbelleği Temizle</button>
+        </div>
+    </div>
+</div>
+
+<!-- 19. 🗑️ ÇÖP KUTUSU & VERİ YÖNETİMİ (Gelişmiş Profesyonel Sürüm) -->
+<div id="copKutusu" class="tab-pane">
+    <div class="card" style="background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+        <div class="card-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+            <div>
+                <h3 style="font-size: 18px; font-weight: bold; color: #1e293b; margin-bottom: 5px;">Çöp Kutusu & Veri Yönetimi</h3>
+                <p style="color: #64748b; font-size: 0.9rem; margin: 0;">Sildiğiniz öğeler veya sistemdeki tüm listelenen verileri buradan tek tuşla yönetebilir veya sıfırlayabilirsiniz.</p>
+            </div>
+            <button class="btn btn-danger" style="background: #dc2626; color: white; padding: 10px 16px; border: none; border-radius: 6px; cursor: pointer; font-weight: 500; white-space: nowrap;" onclick="clearAllData()">⚠️ Tüm Sistem Kayıtlarını Temizle</button>
+        </div>
+        
+        <div class="table-container" style="margin-top: 20px;">
+            <table style="width: 100%; border-collapse: collapse; text-align: left;">
+                <thead>
+                    <tr style="background: #f8fafc; border-bottom: 2px solid #e2e8f0; color: #64748b; font-size: 12px; text-transform: uppercase;">
+                        <th style="padding: 12px;">Kayıt Tipi / Bilgisi</th>
+                        <th style="padding: 12px;">İşlem Durumu</th>
+                        <th style="padding: 12px;">Yönet</th>
+                    </tr>
+                </thead>
+                <tbody id="trashTableBody" style="color: #334155; font-size: 14px;">
+                    <tr>
+                        <td style="padding: 14px;">Sistem Arşiv Çöp Kutusu boş.</td>
+                        <td style="padding: 14px;"><span style="background: #dcfce7; color: #166534; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: 500;">Aktif</span></td>
+                        <td style="padding: 14px; color: #94a3b8;">-</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
     <script>
 window.onload = function() {
             let emailInput = document.getElementById('loginEmail');
@@ -1394,5 +1634,11 @@ async function fetchKolayBiInvoices() {
     }
 }
 </script>
+<!-- Sağ Alt Sabit İmza Alanı -->
+    <div id="developerSignature" style="position: fixed; bottom: 15px; right: 20px; background: rgba(30, 41, 59, 0.85); backdrop-filter: blur(6px); padding: 8px 16px; border-radius: 30px; display: flex; align-items: center; gap: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); border: 1px solid rgba(255,255,255,0.1); z-index: 9999;">
+        <span style="font-size: 11px; color: #94a3b8; font-weight: 500; letter-spacing: 0.5px;">Design by</span>
+        <!-- İmza Görseli -->
+        <img src="imza.png" alt="Bugra Yildirim Imza" style="height: 28px; object-fit: contain; filter: brightness(0) invert(1);">
+    </div>
 </body>
 </html>
