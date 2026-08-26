@@ -603,10 +603,12 @@ body {
             </ul>
         </aside>
 
-<!-- ÜST BAR -->
+        <!-- ANA İÇERİK ALANI -->
+        <main class="main-content">
+            
+            <!-- ÜST BAR -->
             <div class="top-navbar">
-                
-                <!-- 1. SOL TARAF: Menü ve Arama (Orijinal hali) -->
+                <!-- 1. SOL TARAF: Menü ve Arama -->
                 <div style="display: flex; align-items: center; gap: 12px;">
                     <button class="hamburger-btn" onclick="toggleSidebar()">☰ Menü</button>
                     <div class="search-box">
@@ -615,9 +617,8 @@ body {
                     </div>
                 </div>
 
-                <!-- 2. SAĞ TARAF: İmza, Bildirim ve Profil (Hepsi tek bir yapıda) -->
+                <!-- 2. SAĞ TARAF: Bildirim ve Profil -->
                 <div class="top-actions" style="display: flex; align-items: center; gap: 15px;">
-                    
                     <div class="notification-bell" onclick="toggleNotifications()">
                         🔔
                         <span class="notification-badge" id="notifBadge">2</span>
@@ -630,7 +631,6 @@ body {
                         <button onclick="handleLogout()" class="btn btn-outline" style="padding: 6px 12px; font-size: 0.78rem;">Çıkış</button>
                     </div>
                 </div>
-
             </div>
 
             <!-- BİLDİRİM PANELİ -->
@@ -817,23 +817,12 @@ body {
             <div id="catiGes" class="tab-pane">
                 <div class="card">
                     <div class="card-header"><h3>Çatı GES & Trafo Projeleri</h3></div>
-                    <div class="form-grid">
-                        <div class="form-group"><label>Barkod</label><input type="text" id="catiBarkod"></div>
-                        <div class="form-group"><label>Tesis Adı</label><input type="text" id="catiTesis"></div>
-                        <div class="form-group"><label>Güç</label><input type="text" id="catiGuc"></div>
-                        <div class="form-group full"><label>📸 Fotoğraflar</label><input type="file" id="catiDosya" multiple accept="image/*"></div>
-                    </div>
-                    <button class="btn" style="width:auto;" onclick="addItem('cati')">Kaydet</button>
-                </div>
-                <div class="card">
-                    <div class="table-container">
-                        <table>
-                            <thead><tr><th>Barkod</th><th>Tesis</th><th>Güç</th><th>Fotoğraflar</th><th>İşlem</th></tr></thead>
-                            <tbody id="catiTableBody"></tbody>
-                        </table>
-                    </div>
+                    <p style="color:var(--text-muted); font-size: 0.9rem;">Bu alandan çatı üzeri GES ve trafo projelerinizi yönetebilirsiniz.</p>
                 </div>
             </div>
+
+        </main>
+    </div>
 
             <!-- 5. 📝 SAHA FİŞLERİ -->
             <div id="sahaFisi" class="tab-pane">
