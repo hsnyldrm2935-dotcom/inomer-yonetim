@@ -512,6 +512,28 @@ body {
                 padding: 16px;
             }
         }
+        /* Kurumsal İmza Çubuğu (Sabit Alt Bar) */
+        .app-signature-footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: var(--slate-900);
+            color: #a1a1aa;
+            text-align: center;
+            padding: 8px 20px;
+            font-size: 0.75rem;
+            letter-spacing: 0.5px;
+            border-top: 1px solid var(--border);
+            z-index: 1000;
+        }
+
+        /* Çöp kutusu ve geri yükleme butonlarının düzgün görünmesi için */
+        .btn-restore, .trash-actions {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }s
     </style>
 </head>
 <body>
