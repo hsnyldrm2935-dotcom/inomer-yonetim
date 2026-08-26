@@ -34,12 +34,13 @@
             font-family: 'Inter', system-ui, -apple-system, sans-serif;
         }
 
-        body {
+body {
             background-color: var(--slate-100);
             color: var(--text-main);
-            min-height: 100vh;
+            height: 100vh;
             display: flex;
             flex-direction: column;
+            overflow: hidden;
         }
 
         /* Giriş Ekranı */
@@ -140,6 +141,7 @@
             flex: 1;
             position: relative;
             overflow: hidden;
+            height: calc(100vh - 40px);
         }
 
         .sidebar {
@@ -221,7 +223,7 @@
             background: var(--slate-100);
             transition: all 0.3s ease;
             width: 100%;
-            height: calc(100vh - 40px);
+            height: 100%;
         }
 
         .top-navbar {
@@ -426,8 +428,13 @@
             color: var(--text-main);
         }
 
-        .tab-pane { display: none; }
-        .tab-pane.active { display: block; }
+        .tab-pane { 
+            display: none; 
+            width: 100%;
+        }
+        .tab-pane.active { 
+            display: block; 
+        }
         
         .file-preview-box {
             display: flex;
