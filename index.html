@@ -603,32 +603,36 @@ body {
             </ul>
         </aside>
 
-        <!-- İÇERİK ALANI -->
-        <main class="main-content">
-            
-            <!-- ÜST BAR -->
-            <div class="top-navbar">
-                <div style="display: flex; align-items: center; gap: 12px;">
-                    <button class="hamburger-btn" onclick="toggleSidebar()">☰ Menü</button>
-                    <div class="search-box">
-                        <span>🔍</span>
-                        <input type="text" id="globalSearch" placeholder="Genel arama yap...">
-                    </div>
-                </div>
-                <div class="top-actions">
-                    <div class="notification-bell" onclick="toggleNotifications()">
-                        🔔
-                        <span class="notification-badge" id="notifBadge">2</span>
-                    </div>
-                    <div class="user-profile-area">
-                        <div class="user-info">
-                            <div class="name" id="userNameDisplay">Hasan Buğra Yıldırım</div>
-                            <div class="role">Yönetici (Admin)</div>
-                        </div>
-                        <button onclick="handleLogout()" class="btn btn-outline" style="padding: 6px 12px; font-size: 0.78rem;">Çıkış</button>
-                    </div>
+<!-- ÜST BAR -->
+        <div class="top-navbar">
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <button class="hamburger-btn" onclick="toggleSidebar()">☰ Menü</button>
+                <div class="search-box">
+                    <span>🔍</span>
+                    <input type="text" id="globalSearch" placeholder="Genel arama yap...">
                 </div>
             </div>
+
+            <!-- İMZA ALANI BURAYA EKLENİYOR -->
+            <div style="display: flex; align-items: center; gap: 8px; border-left: 1px solid var(--border); padding-left: 15px;">
+                <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600;">Geliştirici: Buğra Yıldırım</span>
+                <img src="imza.png" alt="İmza" style="height: 30px; object-fit: contain;">
+            </div>
+
+            <div class="top-actions">
+                <div class="notification-bell" onclick="toggleNotifications()">
+                    🔔
+                    <span class="notification-badge" id="notifBadge">2</span>
+                </div>
+                <div class="user-profile-area">
+                    <div class="user-info">
+                        <div class="name" id="userNameDisplay">Hasan Buğra Yıldırım</div>
+                        <div class="role">Yönetici (Admin)</div>
+                    </div>
+                    <button onclick="handleLogout()" class="btn btn-outline" style="padding: 6px 12px; font-size: 0.78rem;">Çıkış</button>
+                </div>
+            </div>
+        </div>
 
             <!-- BİLDİRİM PANELİ -->
             <div id="notificationDropdown">
